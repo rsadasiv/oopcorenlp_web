@@ -4,3 +4,9 @@ WebContent/brat-master
 WebContent/js/jquery-ui-themes*
 data/
 WebContent/images/cached/
+.classpath
+.gitconfig
+.project
+.settings/
+TODO.txt
+
