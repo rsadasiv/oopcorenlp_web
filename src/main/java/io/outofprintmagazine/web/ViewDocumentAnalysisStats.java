@@ -3,6 +3,13 @@ package io.outofprintmagazine.web;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -346,6 +353,22 @@ public class ViewDocumentAnalysisStats extends HttpServlet {
 			request.setAttribute("Stats", stats);
 			request.getSession().getServletContext().getRequestDispatcher("/CoreNLPCloudViewer.jsp").forward(request, response);
 		}
+		else if (request.getParameter("Analysis").equals("CloudViz")) {
+            BufferedReader br = new BufferedReader(
+                	new InputStreamReader(
+                		request.getSession().getServletContext().getResourceAsStream(
+                			"/Corpora/"+pCorpus+"/Annotations/OOP/" + request.getParameter("Document") + ".json"
+                		)
+                	)	
+                );
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode stats = objectMapper.readTree(br);
+			request.setAttribute("Author", stats.findValue("edu.stanford.nlp.ling.CoreAnnotations$AuthorAnnotation").asText());
+			request.setAttribute("Date", stats.findValue("edu.stanford.nlp.ling.CoreAnnotations$DocDateAnnotation").asText());
+			request.setAttribute("Title", stats.findValue("edu.stanford.nlp.ling.CoreAnnotations$DocTitleAnnotation").asText());
+			request.setAttribute("Stats", stats);
+			request.getSession().getServletContext().getRequestDispatcher("/CoreNLPCloudViewerEmbed.jsp").forward(request, response);
+		}
 		else if (request.getParameter("Analysis").equals("Aggregate")) {
             BufferedReader br = new BufferedReader(
                 	new InputStreamReader(
@@ -361,6 +384,28 @@ public class ViewDocumentAnalysisStats extends HttpServlet {
 			request.setAttribute("Title", stats.findValue("edu.stanford.nlp.ling.CoreAnnotations$DocTitleAnnotation").asText());
 			request.setAttribute("Stats", stats);
 			request.getSession().getServletContext().getRequestDispatcher("/CoreNLPAggregateViewer.jsp").forward(request, response);
+		}
+		else if (request.getParameter("Analysis").equals("Summary")) {
+            BufferedReader br = new BufferedReader(
+                	new InputStreamReader(
+                		request.getSession().getServletContext().getResourceAsStream(
+                			"/Corpora/"+pCorpus+"/Annotations/OOP/" + request.getParameter("Document") + ".json"
+                		)
+                	)	
+                );
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode stats = objectMapper.readTree(br);
+			request.setAttribute("Author", stats.findValue("edu.stanford.nlp.ling.CoreAnnotations$AuthorAnnotation").asText());
+			request.setAttribute("Date", stats.findValue("edu.stanford.nlp.ling.CoreAnnotations$DocDateAnnotation").asText());
+			request.setAttribute("Title", stats.findValue("edu.stanford.nlp.ling.CoreAnnotations$DocTitleAnnotation").asText());
+			request.setAttribute("Stats", stats);
+			br.close();
+			request.getSession().getServletContext().getRequestDispatcher("/CoreNLPSummaryViewer.jsp").forward(request, response);
+
+			
+
+			
+
 		}
 		else {
 			response.sendError(404, "Analysis: " + request.getParameter("Analysis") + " not found");
