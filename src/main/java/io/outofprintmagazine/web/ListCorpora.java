@@ -2,6 +2,7 @@ package io.outofprintmagazine.web;
 
 import java.io.File;
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,7 +25,6 @@ public class ListCorpora extends HttpServlet {
      */
     public ListCorpora() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -41,14 +41,6 @@ public class ListCorpora extends HttpServlet {
 		response.setContentType("application/json");
 		response.getWriter().write(mapper.writeValueAsString(json));
 		response.flushBuffer();
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
 	}
 
 }

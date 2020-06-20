@@ -58,49 +58,7 @@ public class JsonSort {
 		((ObjectNode) tree).setAll(map);
 	}
 
-	// private static void gen(JsonNode tree, JsonGenerator generator)
-	// throws JsonGenerationException, IOException {
-	//
-	// if (tree.isObject()) {
-	// genObject(tree, generator);
-	// } else if (tree.isArray()) {
-	// genArray(tree, generator);
-	// } else if (tree.isValueNode()) {
-	// genValue(tree, generator);
-	// }
-	//
-	// }
-	//
-	// private static void genValue(JsonNode tree, JsonGenerator generator)
-	// throws JsonGenerationException, IOException {
-	// generator.writeString(tree.asText());
-	// }
-	//
-	// private static void genArray(JsonNode tree, JsonGenerator generator)
-	// throws JsonGenerationException, IOException {
-	// generator.writeStartArray();
-	// List<JsonNode> list = Lists.newArrayList(tree.elements());
-	// for (JsonNode jsonNode : list) {
-	// gen(jsonNode, generator);
-	// }
-	//
-	// generator.writeEndArray();
-	// }
-	//
-	// private static void genObject(JsonNode tree, JsonGenerator generator)
-	// throws IOException, JsonGenerationException {
-	// generator.writeStartObject();
-	//
-	// for (Iterator<String> iterator = tree.fieldNames(); iterator.hasNext();)
-	// {
-	// String f = iterator.next();
-	// JsonNode fValue = tree.get(f);
-	// generator.writeFieldName(f);
-	// gen(fValue, generator);
-	// }
-	//
-	// generator.writeEndObject();
-	// }
+
 
 	public static class JsonNodeComparator implements Comparator<JsonNode> {
 		public int compare(JsonNode o1, JsonNode o2) {

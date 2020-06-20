@@ -1,17 +1,9 @@
 package io.outofprintmagazine.web;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Iterator;
-import java.util.List;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,13 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.univocity.parsers.common.record.Record;
-import com.univocity.parsers.tsv.TsvParser;
-import com.univocity.parsers.tsv.TsvParserSettings;
 
 import io.outofprintmagazine.web.util.JsonSort;
 
@@ -97,7 +84,11 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 					Iterator<String> valueNamesIter = sentence.get(annotation).fieldNames();
 					while (valueNamesIter.hasNext()) {
 						String valueName = valueNamesIter.next();
-						sz = sz.add(new BigDecimal(sentence.get(annotation).get(valueName).asInt(0)));
+						sz = sz.add(
+								new BigDecimal(
+										sentence.get(annotation).get(valueName).asInt(0)
+								)
+						);
 					}
 					stats.add(sz);
 
@@ -151,7 +142,11 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 						Iterator<String> valueNamesIter = token.get(annotation).fieldNames();
 						while (valueNamesIter.hasNext()) {
 							String valueName = valueNamesIter.next();
-							sz = sz.add(new BigDecimal(token.get(annotation).get(valueName).asInt(0)));
+							sz = sz.add(
+									new BigDecimal(
+											token.get(annotation).get(valueName).asInt(0)
+									)
+							);
 						}
 						stats.add(sz);
 	
@@ -188,7 +183,11 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 						while (valueNamesIter.hasNext()) {
 							String valueName = valueNamesIter.next();
 							if (valueName.equals(subannotation)) {
-								sz = sz.add(new BigDecimal(token.get(annotation).get(valueName).asInt(0)));
+								sz = sz.add(
+										new BigDecimal(
+												token.get(annotation).get(valueName).asInt(0)
+										)
+								);
 							}
 						}
 						stats.add(sz);
@@ -227,7 +226,11 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 							Iterator<String> valueNamesIter = token.get(annotation).fieldNames();
 							while (valueNamesIter.hasNext()) {
 								String valueName = valueNamesIter.next();
-								sz = sz.add(new BigDecimal(token.get(annotation).get(valueName).asInt(0)));
+								sz = sz.add(
+										new BigDecimal(
+												token.get(annotation).get(valueName).asInt(0)
+										)
+								);
 							}
 							stats.add(sz);
 	    				}
@@ -251,129 +254,127 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String pCorpus = request.getParameter("Corpus");
-		
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		if (request.getParameter("Scope") != null 
 				&& request.getParameter("Scope").equalsIgnoreCase("Document")
-		) {
-    		response.setContentType("application/json");
-			getMapper().writeValue(
-					response.getWriter(),
-					getDocumentScores(
-							request.getParameter("Corpus"), 
-							request.getParameter("Document")
-					)
-    		);
-    		response.flushBuffer();
+				) {
+					response.setContentType("application/json");
+					getMapper().writeValue(
+							response.getWriter(),
+							getDocumentScores(
+									request.getParameter("Corpus"), 
+									request.getParameter("Document")
+							)
+					);
+					response.flushBuffer();
 
 		}
 		else if (request.getParameter("Scope") != null 
 				&& request.getParameter("Scope").equalsIgnoreCase("Sentence")
 				&& request.getParameter("Id") != null
-		) {
-    		response.setContentType("application/json");
-			getMapper().writeValue(
-					response.getWriter(),
-					getSentenceScores(
-							request.getParameter("Corpus"), 
-							request.getParameter("Document"),
-							Integer.parseInt(request.getParameter("Id"))
-					)
-    		);
-    		response.flushBuffer();
+				) {
+					response.setContentType("application/json");
+					getMapper().writeValue(
+							response.getWriter(),
+							getSentenceScores(
+									request.getParameter("Corpus"), 
+									request.getParameter("Document"),
+									Integer.parseInt(request.getParameter("Id"))
+							)
+					);
+					response.flushBuffer();
 		}
 		else if (request.getParameter("Scope") != null 
 				&& request.getParameter("Scope").equalsIgnoreCase("Token")
 				&& request.getParameter("Id") != null
-		) {
-    		response.setContentType("application/json");
-			getMapper().writeValue(
-					response.getWriter(),
-					getTokenScores(
-							request.getParameter("Corpus"), 
-							request.getParameter("Document"),
-							Integer.parseInt(request.getParameter("Id"))
-					)
-    		);
-    		response.flushBuffer();
+				) {
+					response.setContentType("application/json");
+					getMapper().writeValue(
+							response.getWriter(),
+							getTokenScores(
+									request.getParameter("Corpus"), 
+									request.getParameter("Document"),
+									Integer.parseInt(request.getParameter("Id"))
+							)
+					);
+					response.flushBuffer();
 		}
 		else if (request.getParameter("Annotation") != null 
 				&& request.getParameter("Scope") != null 
 				&& request.getParameter("Scope").equalsIgnoreCase("DocumentAnnotation")
 				) {
-    		response.setContentType("application/json");
-			getMapper().writeValue(
-					response.getWriter(),
-					getDocumentAnnotationScores(
-							request.getParameter("Corpus"), 
-							request.getParameter("Document"),
-							request.getParameter("Annotation")
-					)
-    		);
-    		response.flushBuffer();
+					response.setContentType("application/json");
+					getMapper().writeValue(
+							response.getWriter(),
+							getDocumentAnnotationScores(
+									request.getParameter("Corpus"), 
+									request.getParameter("Document"),
+									request.getParameter("Annotation")
+							)
+					);
+					response.flushBuffer();
 		}
 		else if (request.getParameter("Annotation") != null 
 				&& request.getParameter("Scope") != null 
 				&& request.getParameter("Scope").equalsIgnoreCase("SentencesAnnotation")
 				) {
-    		response.setContentType("application/json");
-			getMapper().writeValue(
-					response.getWriter(),
-					getSentencesAnnotationScores(
-							request.getParameter("Corpus"), 
-							request.getParameter("Document"),
-							request.getParameter("Annotation")
-					)
-    		);
-    		response.flushBuffer();
+		    		response.setContentType("application/json");
+					getMapper().writeValue(
+							response.getWriter(),
+							getSentencesAnnotationScores(
+									request.getParameter("Corpus"), 
+									request.getParameter("Document"),
+									request.getParameter("Annotation")
+							)
+		    		);
+		    		response.flushBuffer();
 		}
 		else if (request.getParameter("Annotation") != null
 				&& request.getParameter("Subannotation") != null
 				&& request.getParameter("Scope") != null 
 				&& request.getParameter("Scope").equalsIgnoreCase("TokensAnnotation")
 				) {
-    		response.setContentType("application/json");
-			getMapper().writeValue(
-					response.getWriter(),
-					getTokensAnnotationSubannotationScores(
-							request.getParameter("Corpus"), 
-							request.getParameter("Document"),
-							request.getParameter("Annotation"),
-							request.getParameter("Subannotation")
-					)
-			);
-    		response.flushBuffer();
+					response.setContentType("application/json");
+					getMapper().writeValue(
+							response.getWriter(),
+							getTokensAnnotationSubannotationScores(
+									request.getParameter("Corpus"), 
+									request.getParameter("Document"),
+									request.getParameter("Annotation"),
+									request.getParameter("Subannotation")
+							)
+					);
+					response.flushBuffer();
 		}
 		else if (request.getParameter("Annotation") != null 
 				&& request.getParameter("Scope") != null 
 				&& request.getParameter("Scope").equalsIgnoreCase("TokensAnnotation")
 				) {
-    		response.setContentType("application/json");
-			getMapper().writeValue(
-					response.getWriter(),
-					getTokensAnnotationScores(
-							request.getParameter("Corpus"), 
-							request.getParameter("Document"),
-							request.getParameter("Annotation")
-					)
-			);
-    		response.flushBuffer();
+					response.setContentType("application/json");
+					getMapper().writeValue(
+							response.getWriter(),
+							getTokensAnnotationScores(
+									request.getParameter("Corpus"), 
+									request.getParameter("Document"),
+									request.getParameter("Annotation")
+							)
+					);
+					response.flushBuffer();
 		}
 		else if (request.getParameter("Annotation") != null 
 				&& request.getParameter("Scope") != null 
 				&& request.getParameter("Scope").equalsIgnoreCase("SyllablesAnnotation")
 				) {
-    		response.setContentType("application/json");
-			getMapper().writeValue(
-					response.getWriter(),
-					getSyllablesAnnotationScores(
-							request.getParameter("Corpus"), 
-							request.getParameter("Document"),
-							request.getParameter("Annotation")
-					)
-			);
-    		response.flushBuffer();
+					response.setContentType("application/json");
+					getMapper().writeValue(
+							response.getWriter(),
+							getSyllablesAnnotationScores(
+									request.getParameter("Corpus"), 
+									request.getParameter("Document"),
+									request.getParameter("Annotation")
+							)
+					);
+					response.flushBuffer();
 		}
 		else {
 			response.sendError(404, "Scope: " + request.getParameter("Scope") + " not found");

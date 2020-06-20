@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,7 +28,6 @@ public class ViewCorpusDocuments extends HttpServlet {
      */
     public ViewCorpusDocuments() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -59,13 +57,4 @@ public class ViewCorpusDocuments extends HttpServlet {
 		request.setAttribute("corpora", json);
 		request.getSession().getServletContext().getRequestDispatcher("/CorpusDocumentsViewer.jsp").forward(request, response);
 	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
-
 }

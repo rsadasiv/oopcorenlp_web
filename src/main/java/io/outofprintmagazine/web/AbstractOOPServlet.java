@@ -39,8 +39,8 @@ public abstract class AbstractOOPServlet extends HttpServlet {
     }
 
 	protected String getBaseUrl() {
-    	return "http://localhost:8080/oopcorenlp_web/Corpora";
-    }
+		return "http://localhost:8080/oopcorenlp_web/Corpora";
+	}
     
     protected String getCorpusDocumentTxtString(String corpus, String document) throws IOException {
     	return getCorpusDocumentString(getBaseUrl()+"/"+corpus+"/TXT_"+document+".txt");
@@ -172,14 +172,7 @@ public abstract class AbstractOOPServlet extends HttpServlet {
     }
     
     public void setMetadataAttributes(HttpServletRequest request, String corpus, String document) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode stats = mapper.readTree(
-        		new BufferedReader(
-        				new StringReader(
-        						getCorpusDocumentOOPString(corpus, document)
-        				)
-        		)
-        );
+        JsonNode stats = getCorpusDocumentOOPJson(corpus, document);
         request.setAttribute("Author", stats.get("metadata").get("AuthorAnnotation").asText());
         request.setAttribute("Date", stats.get("metadata").get("DocDateAnnotation").asText());
         request.setAttribute("Title", stats.get("metadata").get("DocTitleAnnotation").asText());    	
