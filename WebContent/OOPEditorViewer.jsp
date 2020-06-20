@@ -16,9 +16,16 @@
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-	crossorigin="anonymous">
-<link href="js/jquery-ui-themes-1.12.1/jquery-ui.css" rel="stylesheet">
-<title>OOP Fact Checker Document Viewer</title>
+	crossorigin="anonymous"/>
+<link rel="stylesheet" 
+	href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" 
+	integrity="sha256-rByPlHULObEjJ6XQxW/flG2r+22R5dKiAoef+aXWfik=" 
+	crossorigin="anonymous" />
+<link rel="stylesheet" 
+	href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css" 
+	integrity="sha256-AjyoyaRtnGVTywKH/Isxxu5PXI0s4CcE0BzPAX83Ppc=" 
+	crossorigin="anonymous" />
+<title>OOP Editor Document Viewer</title>
 	<!-- Optional JavaScript -->
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<script
@@ -40,13 +47,18 @@
 		var docId = "<%=request.getParameter("Document")%>";
 		var corpus = "<%=request.getParameter("Corpus")%>";
 	</script>
+	<script 
+		src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/7.0.1/math.min.js" 
+		integrity="sha256-vT3LwbZg753BzMyE25HfnWHVnMOcbuzde2XvX2wuD7U=" 
+		crossorigin="anonymous">
+	</script>
 	<script src="js/oopcorenlp_viewer.js">
 		
 	</script>
 	<script>
     $(document).ready(function() {
         setProperties(); 
-        getAnnotation(getProperties(),displayFactCheckerTextAnnotations);
+        getAnnotation(getProperties(),displayEditorTextAnnotations);
 
      });
 	</script>

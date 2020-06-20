@@ -33,20 +33,6 @@
 </head>
 <body>
 <a href="index.html"><img src="images/OOP/logo.png" class="logo" /></a>
-<div class="container-fluid">
-	<table class="table table-hover">
-			<tr>
-				<th scope="col"></th>
-				<th scope="col"></th>
-				<th scope="col"></th>
-				<th scope="col">
-					<p><a href="ViewCorpusAnalysisStats?Analysis=Cloud&Corpus=Published&Document=00a6605b-22d8-4b48-91cd-f26a130f20e7">Corpus Clouds</a></p>
-					<p><a href="ViewCorpusAnalysisStats?Analysis=Stream&Corpus=Published&Document=00a6605b-22d8-4b48-91cd-f26a130f20e7">Corpus Documents</a></p>
-				</th>
-				<th scope="col"></th>
-			</tr>
-	</table>
-</div>
 		
 <div class="container-fluid">
 	<table class="table table-hover">
@@ -75,30 +61,28 @@ while (corporaDocumentIter.hasNext()) {
    			<p>Title: <%= d.get("Title").asText()%></p>
    			<p>Author: <%= d.get("Author").asText()%></p>
    			<p>Date: <%= d.get("Date").asText()%></p> 
- 			<p><a href="ListDocumentAnalyses?Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Analyses</a></p>  			
+ 			<p><a href="Corpora/<%= pCorpus %>/PIPELINE_<%= corpusDocumentId %>.json">Pipeline info</a></p>  			
    		</th>
    		<td>
-   			<p><a href="Corpora/<%= pCorpus %>/Text/<%= corpusDocumentId %>.txt">Plain Text</a></p>
-			<p><a href="ViewDocumentAnalysisStats?Analysis=Text&Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>&Viewer=oop">OOP</a></p>
-			<p><a href="ViewDocumentAnalysisStats?Analysis=Text&Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>&Viewer=medium">Medium</a></p>
+   			<p><a href="Corpora/<%= pCorpus %>/TXT_<%= corpusDocumentId %>.txt">Plain Text</a></p>
+			<p><a href="TextOutOfPrintViewer?Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Out Of Print</a></p>
+			<p><a href="TextMediumViewer?Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Medium</a></p>
+			<p><a href="Corpora/<%= pCorpus %>/POLLY_<%= corpusDocumentId %>.mp3">Audio</a></p>
 		</td>
 		<td>
-			<p><a href="ViewDocumentAnalysisStats?Analysis=OOPFactChecker&Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Fact Checker</a></p>
-			<p><a href="ViewDocumentAnalysisStats?Analysis=OOPEditor&Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Editor</a></p>
+			<p><a href="OOPFactCheckerViewer?Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Fact Checker</a></p>
+			<p><a href="OOPEditorViewer?Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Editor</a></p>
 		</td>
 		<td>
-			<p><a href="ViewDocumentAnalysisStats?Analysis=Cloud&Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Word Clouds</a></p>
-			<p><a href="ViewDocumentAnalysisStats?Analysis=Stream&Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Sentences</a></p>
-			<p><a href="ViewDocumentAnalysisStats?Analysis=StreamTokens&Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Tokens</a></p>
-			<p><a href="ViewDocumentAnalysisStats?Analysis=Aggregate&Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Aggregates</a></p>
+			<p><a href="OOPCloudViewer?Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Word Clouds</a></p>
+			<p><a href="OOPStreamViewer?Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Sentences</a></p>
+			<p><a href="OOPStreamViewerTokens?Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Tokens</a></p>
 		</td>
 		<td>
-			<p><a href="ViewDocumentAnalysisStats?Analysis=OOPCoreNLP&Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">OOPCoreNLP</a></p>
-			<p><a href="GetDocumentAnalysisStats?Analysis=OOPCoreNLP&Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">OOPCoreNLP json</a></p>
-			<p><a href="ViewDocumentAnalysisStats?Analysis=StanfordCoreNLP&Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">StanfordCoreNLP</a></p>
-			<p><a href="GetDocumentAnalysisStats?Analysis=StanfordCoreNLP&Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">StanfordCoreNLP json</a></p>			
-			<p><a href="ViewDocumentAnalysisStats?Analysis=Actors&Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Actors</a></p>
-			<p><a href="ViewDocumentAnalysisStats?Analysis=Summary&Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Summary</a></p>
+			<p><a href="OOPDocumentViewer?Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">OOPCoreNLP</a></p>
+			<p><a href="Corpora/<%= pCorpus %>/OOP_<%= corpusDocumentId %>.json">OOPCoreNLP json</a></p>
+			<p><a href="StanfordBratViewer?Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">StanfordCoreNLP</a></p>
+			<p><a href="Corpora/<%= pCorpus %>/STANFORD_<%= corpusDocumentId %>.json">StanfordCoreNLP json</a></p>			
 		</td>
 	</tr>
 <%

@@ -20,7 +20,16 @@
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
 	crossorigin="anonymous">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.css" rel="stylesheet" crossorigin="anonymous">
+
+<link rel="stylesheet" 
+	href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" 
+	integrity="sha256-rByPlHULObEjJ6XQxW/flG2r+22R5dKiAoef+aXWfik=" 
+	crossorigin="anonymous" />
+<link rel="stylesheet" 
+	href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css" 
+	integrity="sha256-AjyoyaRtnGVTywKH/Isxxu5PXI0s4CcE0BzPAX83Ppc=" 
+	crossorigin="anonymous" />
+	
 <title>OOP Annotation Cloud Viewer</title>
 
 
@@ -52,7 +61,7 @@
 	<script>
 		var docId = "<%=request.getParameter("Document")%>";
 		var corpus = "<%=request.getParameter("Corpus")%>";
-		var annotation = "<%=request.getParameter("Annotation")==null||request.getParameter("Annotation").equals("")?"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$VaderSentimentAnnotation":request.getParameter("Annotation")%>";
+		var annotation = "<%=request.getParameter("Annotation")==null||request.getParameter("Annotation").equals("")?"OOPNounsAnnotation":request.getParameter("Annotation")%>";
 	</script>
 	<script src="js/oopcorenlp_d3_viewer.js">
 		
@@ -73,7 +82,7 @@
 		
 		$('#annotators').change(
 				function() {
-			    	window.location.href = location.protocol + '//' + location.host + location.pathname + "?Analysis=Cloud&Corpus="+ properties.corpus+"&Document=" + properties.docId + "&Annotation=" + $('#annotators option:selected').val() + ($('#normalized').prop('checked')?"&Aggregate=Normalized":"");
+			    	window.location.href = location.protocol + '//' + location.host + location.pathname + "?Corpus="+corpus+"&Document="+docId+"&Annotation=" + $('#annotators option:selected').val();
 			    }
 			);
     });

@@ -32,12 +32,14 @@ public class ListCorpusDocuments extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String pCorpus = request.getParameter("Corpus");
-		File[] documents = new File(request.getSession().getServletContext().getRealPath("/Corpora/"+pCorpus+"/Annotations/OOP/")).listFiles(File::isFile);
+		File[] documents = new File(request.getSession().getServletContext().getRealPath("/Corpora/"+pCorpus+"/")).listFiles(File::isFile);
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode json = mapper.createObjectNode();
 		ArrayNode corporaNode = json.putArray("Documents");
 		for (int i=0;i<documents.length;i++) {
-			corporaNode.add(documents[i].getName().substring(0, documents[i].getName().lastIndexOf(".")));
+			if (documents[i].getName().substring(0, documents[i].getName().lastIndexOf(".")).startsWith("OOP_")) {
+				corporaNode.add(documents[i].getName().substring(4, documents[i].getName().lastIndexOf(".")));
+			}
 		}
 		response.setContentType("application/json");
 		response.getWriter().write(mapper.writeValueAsString(json));

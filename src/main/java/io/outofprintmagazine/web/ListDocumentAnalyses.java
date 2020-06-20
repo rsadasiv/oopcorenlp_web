@@ -42,7 +42,7 @@ public class ListDocumentAnalyses extends HttpServlet {
         BufferedReader br = new BufferedReader(
         	new InputStreamReader(
         		request.getSession().getServletContext().getResourceAsStream(
-        			"/Corpora/"+pCorpus+"/Annotations/PIPELINE/" + request.getParameter("Document") + ".json"
+        			"/Corpora/"+pCorpus+"/PIPELINE_" + request.getParameter("Document") + ".json"
         		)
         	)	
         );

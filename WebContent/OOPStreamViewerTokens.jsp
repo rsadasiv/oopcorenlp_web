@@ -17,7 +17,14 @@
 		href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
 		crossorigin="anonymous">
-	<link href="js/jquery-ui-themes-1.12.1/jquery-ui.css" rel="stylesheet">
+<link rel="stylesheet" 
+	href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" 
+	integrity="sha256-rByPlHULObEjJ6XQxW/flG2r+22R5dKiAoef+aXWfik=" 
+	crossorigin="anonymous" />
+<link rel="stylesheet" 
+	href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css" 
+	integrity="sha256-AjyoyaRtnGVTywKH/Isxxu5PXI0s4CcE0BzPAX83Ppc=" 
+	crossorigin="anonymous" />
 	<title>OOP Annotation Tokens Stream Viewer</title>
 
 	<!-- Optional JavaScript -->
@@ -42,7 +49,7 @@
 	<script>
 		var docId = "<%=request.getParameter("Document")%>";
 		var corpus = "<%=request.getParameter("Corpus")%>";
-		var annotation = "<%=request.getParameter("Annotation")==null||request.getParameter("Annotation").equals("")?"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPPeopleAnnotation":request.getParameter("Annotation")%>";
+		var annotation = "<%=request.getParameter("Annotation")==null||request.getParameter("Annotation").equals("")?"OOPPeopleAnnotation":request.getParameter("Annotation")%>";
 
 	</script>
 	<script src="js/oopcorenlp_d3_viewer.js">
@@ -63,7 +70,7 @@
       	makeTokenScoreBarCharts(annotation, "#AnnotationViz");
 		$('#annotators').change(
 				function() {
-			    	window.location.href = location.protocol + '//' + location.host + location.pathname + "?Analysis=StreamTokens&Corpus="+ properties.corpus+"&Document=" + properties.docId + "&Annotation=" + $('#annotators option:selected').val() + ($('#normalized').prop('checked')?"&Aggregate=Normalized":"");
+			    	window.location.href = location.protocol + '//' + location.host + location.pathname + "?Analysis=StreamTokens&Corpus="+ properties.corpus+"&Document=" + properties.docId + "&Annotation=" + $('#annotators option:selected').val();
 			    }
 			); 
         

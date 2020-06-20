@@ -87,7 +87,7 @@ function displayPos(divId) {
 		$.ajax(
 			{
 				dataType: "json",
-				url: "GetDocumentAnalysisStats?Analysis=StanfordCoreNLP&Corpus="+corpus+"&Document="+ docId
+				url: "Corpora/"+corpus+"/STANFORD_"+docId+".json"
 			}
 		)
 	).done(
@@ -160,7 +160,7 @@ function displaySentiment(divId) {
 		$.ajax(
 			{
 				dataType: "json",
-				url: "GetDocumentAnalysisStats?Analysis=StanfordCoreNLP&Corpus="+corpus+"&Document="+ docId
+				url: "Corpora/"+corpus+"/STANFORD_"+docId+".json"
 			}
 		)
 	).done(
@@ -231,7 +231,7 @@ function displayNer(divId) {
 		$.ajax(
 			{
 				dataType: "json",
-				url: "GetDocumentAnalysisStats?Analysis=StanfordCoreNLP&Corpus="+corpus+"&Document="+ docId
+				url: "Corpora/"+corpus+"/STANFORD_"+docId+".json"
 			}
 		)
 	).done(
@@ -302,7 +302,7 @@ function displayNerPerson(divId) {
 		$.ajax(
 			{
 				dataType: "json",
-				url: "GetDocumentAnalysisStats?Analysis=StanfordCoreNLP&Corpus="+corpus+"&Document="+ docId
+				url: "Corpora/"+corpus+"/STANFORD_"+docId+".json"
 			}
 		)
 	).done(
@@ -349,7 +349,7 @@ function displayParse(divId) {
 		$.ajax(
 			{
 				dataType: "json",
-				url: "GetDocumentAnalysisStats?Analysis=StanfordCoreNLP&Corpus="+corpus+"&Document="+ docId
+				url: "Corpora/"+corpus+"/STANFORD_"+docId+".json"
 			}
 		)
 	).done(
@@ -443,7 +443,7 @@ function displayCoref(divId) {
 		$.ajax(
 			{
 				dataType: "json",
-				url: "GetDocumentAnalysisStats?Analysis=StanfordCoreNLP&Corpus="+corpus+"&Document="+ docId
+				url: "Corpora/"+corpus+"/STANFORD_"+docId+".json"
 			}
 		)
 	).done(
@@ -522,7 +522,7 @@ function displayDep(divId) {
 		$.ajax(
 			{
 				dataType: "json",
-				url: "GetDocumentAnalysisStats?Analysis=StanfordCoreNLP&Corpus="+ properties.corpus+"&Document="+ properties.docId
+				url: "Corpora/"+corpus+"/STANFORD_"+docId+".json"
 			}
 		)
 	).done(
@@ -554,33 +554,6 @@ head.ready(function() {
 	//displayDep("story_text");
 });
 
-var properties = {};
-var annotation = {};
-
-
-function setProperties() {
-	//properties.corpus = "Corpora/Submissions";
-	//properties.textDir = "Text";
-	//properties.annotationDir = "Annotations";
-	properties.docId = docId;
-	properties.corpus = corpus;
-	
-}
-
-function getProperties() {
-	return properties;
-}
-
-function getAnnotation(properties, cb) {
-	//let url = properties.corpus + "/" + properties.annotationDir + "/" + properties.docId + ".json";
-	let url = "GetDocumentAnalysisStats?Analysis=StanfordCoreNLP&Corpus="+ properties.corpus+"&Document="+ properties.docId;
-	$.ajax({
-		dataType: "json",
-        url: url, 
-        async: true,
-        success: cb
-    });
-}
 
 function isString (value) {
 	return typeof value === 'string' || value instanceof String;

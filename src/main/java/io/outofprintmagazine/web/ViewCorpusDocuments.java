@@ -37,26 +37,24 @@ public class ViewCorpusDocuments extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String pCorpus = request.getParameter("Corpus");
-		File[] documents = new File(request.getSession().getServletContext().getRealPath("/Corpora/"+pCorpus+"/Annotations/OOP/")).listFiles(File::isFile);
+		File[] documents = new File(request.getSession().getServletContext().getRealPath("/Corpora/"+pCorpus+"/")).listFiles(File::isFile);
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode json = mapper.createObjectNode();
 		ArrayNode corporaNode = json.putArray("Documents");
 		for (int i=0;i<documents.length;i++) {
-			ObjectNode documentNode = mapper.createObjectNode();
-			documentNode.put("DocID", documents[i].getName().substring(0, documents[i].getName().lastIndexOf(".")));
-            BufferedReader br = new BufferedReader(new FileReader(documents[i]));
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode stats = objectMapper.readTree(br);
-            try {
-            	documentNode.put("Author", stats.findValue("edu.stanford.nlp.ling.CoreAnnotations$AuthorAnnotation").asText());
-            	documentNode.put("Date", stats.findValue("edu.stanford.nlp.ling.CoreAnnotations$DocDateAnnotation").asText());
-            	documentNode.put("Title", stats.findValue("edu.stanford.nlp.ling.CoreAnnotations$DocTitleAnnotation").asText());
+			if (documents[i].getName().substring(0, documents[i].getName().lastIndexOf(".")).startsWith("OOP_")) {
+				ObjectNode documentNode = mapper.createObjectNode();
+				documentNode.put("DocID", documents[i].getName().substring(4, documents[i].getName().lastIndexOf(".")));
+	            BufferedReader br = new BufferedReader(new FileReader(documents[i]));
+	            ObjectMapper objectMapper = new ObjectMapper();
+	            JsonNode stats = objectMapper.readTree(br);
+            	documentNode.put("Author", stats.findValue("AuthorAnnotation").asText());
+            	documentNode.put("Date", stats.findValue("DocDateAnnotation").asText());
+            	documentNode.put("Title", stats.findValue("DocTitleAnnotation").asText());
             	corporaNode.add(documentNode);
-            }
-            catch (Exception e) {
-            	System.err.println(documents[i] + " NPE");
-            }
-			br.close();
+
+				br.close();
+			}
 		}
 		request.setAttribute("corpora", json);
 		request.getSession().getServletContext().getRequestDispatcher("/CorpusDocumentsViewer.jsp").forward(request, response);

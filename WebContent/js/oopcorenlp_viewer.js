@@ -1,138 +1,157 @@
 'use strict';
 var properties = {};
 var annotation = {};
-var allAnnotations = [];
+//var allAnnotations = [];
 /*var allAnnotations = [
-	"edu.stanford.nlp.ling.CoreAnnotations$DocIDAnnotation",
-	"edu.stanford.nlp.ling.CoreAnnotations$DocTitleAnnotation",
-	"edu.stanford.nlp.ling.CoreAnnotations$DocSourceTypeAnnotation",
-	"edu.stanford.nlp.ling.CoreAnnotations$DocTypeAnnotation",
-	"edu.stanford.nlp.ling.CoreAnnotations$AuthorAnnotation",
-	"edu.stanford.nlp.ling.CoreAnnotations$DocDateAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPBiberDimensionsAnnotation" ,
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPPointlessAdverbsAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPVerblessSentencesAnnotation",
+	"DocIDAnnotation",
+	"DocTitleAnnotation",
+	"DocSourceTypeAnnotation",
+	"DocTypeAnnotation",
+	"AuthorAnnotation",
+	"DocDateAnnotation",
+	"OOPBiberDimensionsAnnotation" ,
+	"OOPPointlessAdverbsAnnotation",
+	"OOPVerblessSentencesAnnotation",
 
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPLocationsAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPPointlessAdjectivesAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPNounHypernymsAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPSyllablesAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPFleschKincaidAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPUntaggedTopicsAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPBiberAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPVerbsAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWordnetGlossAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPColorsAnnotation",
+	"OOPLocationsAnnotation",
+	"OOPPointlessAdjectivesAnnotation",
+	"OOPNounHypernymsAnnotation",
+	"OOPSyllablesAnnotation",
+	"OOPFleschKincaidAnnotation",
+	"OOPUntaggedTopicsAnnotation",
+	"OOPBiberAnnotation",
+	"OOPVerbsAnnotation",
+	"OOPWordnetGlossAnnotation",
+	"OOPColorsAnnotation",
 
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPNounsAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPTopicsAnnotation",
+	"OOPNounsAnnotation",
+	"OOPTopicsAnnotation",
 
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPTemporalNGramsAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPCommonWordsAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPAdjectiveCategoriesAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPPunctuationMarkAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPSimileAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPGenderAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWordsAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$CoreNlpGenderAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPVerbGroupsAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWikipediaRelatedNounsAnnotation",
-	"edu.stanford.nlp.ling.CoreAnnotations$ParagraphIndexAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPVerbHypernymsAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPActionlessVerbsAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWordlessWordsAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWikipediaCategoriesAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPNonAffirmativeAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPPossessivesAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPPrepositionsAnnotation",
+	"OOPTemporalNGramsAnnotation",
+	"OOPCommonWordsAnnotation",
+	"OOPAdjectiveCategoriesAnnotation",
+	"OOPPunctuationMarkAnnotation",
+	"OOPSimileAnnotation",
+	"OOPGenderAnnotation",
+	"OOPWordsAnnotation",
+	"CoreNlpGenderAnnotation",
+	"OOPVerbGroupsAnnotation",
+	"OOPWikipediaRelatedNounsAnnotation",
+	"ParagraphIndexAnnotation",
+	"OOPVerbHypernymsAnnotation",
+	"OOPActionlessVerbsAnnotation",
+	"OOPWordlessWordsAnnotation",
+	"OOPWikipediaCategoriesAnnotation",
+	"OOPNonAffirmativeAnnotation",
+	"OOPPossessivesAnnotation",
+	"OOPPrepositionsAnnotation",
 
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPActorsAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPPronounAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWikipediaPageviewTopicsAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPFlavorsAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPDocumentLengthAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPAdverbsAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPUncommonWordsAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPAdverbCategoriesAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPVerbTenseAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWikipediaGlossAnnotation",
+	"OOPActorsAnnotation",
+	"OOPPronounAnnotation",
+	"OOPWikipediaPageviewTopicsAnnotation",
+	"OOPFlavorsAnnotation",
+	"OOPDocumentLengthAnnotation",
+	"OOPAdverbsAnnotation",
+	"OOPUncommonWordsAnnotation",
+	"OOPAdverbCategoriesAnnotation",
+	"OOPVerbTenseAnnotation",
+	"OOPWikipediaGlossAnnotation",
 
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPPeopleAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$CoreNlpSentimentAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPAdjectivesAnnotation",
-	"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$VaderSentimentAnnotation"
+	"OOPPeopleAnnotation",
+	"CoreNlpSentimentAnnotation",
+	"OOPAdjectivesAnnotation",
+	"VaderSentimentAnnotation"
 ]*/
 
 
 var coreNLPAnnotationCategories = {
 	"Metadata": [
-		"edu.stanford.nlp.ling.CoreAnnotations$DocIDAnnotation",
-		"edu.stanford.nlp.ling.CoreAnnotations$DocTitleAnnotation",
-		"edu.stanford.nlp.ling.CoreAnnotations$AuthorAnnotation",
-		"edu.stanford.nlp.ling.CoreAnnotations$DocDateAnnotation",
-		"edu.stanford.nlp.ling.CoreAnnotations$DocTypeAnnotation",
-		"edu.stanford.nlp.ling.CoreAnnotations$DocSourceTypeAnnotation"
+		"DocIDAnnotation",
+		"DocTitleAnnotation",
+		"AuthorAnnotation",
+		"DocDateAnnotation",
+		"DocTypeAnnotation",
+		"DocSourceTypeAnnotation"
 	],
 	"Document": [
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPDocumentLengthAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPSyllablesAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPFleschKincaidAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$CoreNlpSentimentAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$VaderSentimentAnnotation"
+		"OOPCharCountAnnotation",
+		"OOPSyllableCountAnnotation",
+		"OOPTokenCountAnnotation",
+		"OOPWordCountAnnotation",
+		"OOPSentenceCountAnnotation",
+		"OOPParagraphCountAnnotation",
+		"OOPVerblessSentencesAnnotation",
+		"OOPFleschKincaidAnnotation",
+		"CoreNlpSentimentAnnotation",
+		"VaderSentimentAnnotation"
 	],
 	"Diction": [
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPCommonWordsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWordlessWordsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPUncommonWordsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPTemporalNGramsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPPunctuationMarkAnnotation"
-		
+		"OOPWordsAnnotation",
+		"OOPFunctionWordsAnnotation",
+		"OOPCommonWordsAnnotation",
+		"OOPUncommonWordsAnnotation",
+		"OOPWordlessWordsAnnotation",
+		"OOPTemporalNGramsAnnotation",
+		"OOPNonAffirmativeAnnotation",
+		"OOPAngliciseAnnotation",
+		"OOPAmericanizeAnnotation"
 	],
 	"Lede": [
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPPeopleAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPDatesAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPVerbTenseAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPLocationsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPSVOAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWhaAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPQuestionsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPQuotesAnnotation"
+		"OOPWhoAnnotation",
+		"OOPWhatAnnotation",
+		"OOPWhenAnnotation",
+		"OOPWhereAnnotation",
+		"OOPWhyAnnotation",
+		"OOPHowAnnotation",
+		"OOPIfAnnotation",
+		"OOPBecauseAnnotation",
+		"OOPPeopleAnnotation",
+		"OOPTopicsAnnotation",
+		"OOPVerbTenseAnnotation",
+		"OOPDatesAnnotation",
+		"OOPLocationsAnnotation",
+		"OOPQuotesAnnotation"
 	],
 	"GenderNumber": [
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPGenderAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$CoreNlpGenderAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPPronounAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPPossessivesAnnotation"
+		"OOPGenderAnnotation",
+		"CoreNlpGenderAnnotation",
+		"OOPPronounAnnotation",
+		"OOPPossessivesAnnotation"
 	],
 	"Description": [
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPSimileAnnotationList",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPFlavorsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPColorsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPAdjectivesAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPPointlessAdjectivesAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPAdjectiveCategoriesAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPAdverbsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPPointlessAdverbsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPAdverbCategoriesAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPPrepositionsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPPrepositionCategoriesAnnotation"
+		"OOPAdjectivesAnnotation",
+		"OOPPointlessAdjectivesAnnotation",
+		"OOPAdverbsAnnotation",
+		"OOPPointlessAdverbsAnnotation",
+		"OOPLikeAnnotation",
+		"OOPAsAnnotation",
+		"OOPFlavorsAnnotation",
+		"OOPColorsAnnotation",
 	],
 	"Semantics": [
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWikipediaPageviewTopicsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWikipediaRelatedNounsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWikipediaCategoriesAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPTopicsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPNounHypernymsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPNounsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPNounGroupsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPVerbsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPActionlessVerbsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPVerbHypernymsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPVerbGroupsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPVerbnetGroupsAnnotation"
+		"OOPNounsAnnotation",
+		"OOPNounGroupsAnnotation",
+		"OOPNounHypernymsAnnotation",
+		"OOPVerbsAnnotation",
+		"OOPActionlessVerbsAnnotation",
+		"OOPVerbGroupsAnnotation",
+		"OOPVerbnetGroupsAnnotation",
+		"OOPVerbHypernymsAnnotation",
+		"OOPPrepositionsAnnotation",
+		"OOPPrepositionCategoriesAnnotation",
+		"OOPAdjectiveCategoriesAnnotation",
+		"OOPAdverbCategoriesAnnotation",
+		"OOPPunctuationMarkAnnotation",
+		"OOPBiberAnnotation",
+		"OOPBiberDimensionsAnnotation"
 	],
-	"Actors": [
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPActorsAnnotation"
+	"SemanticsDocument": [
+		"OOPWikipediaPageviewTopicsAnnotation",
+		"OOPWikipediaCategoriesAnnotation"
+	],
+	"Contextual": [
+		"OOPActorsAnnotation",
+		"OOPSettingsAnnotation"
 	]
 }
 
@@ -141,8 +160,8 @@ function setProperties() {
 	//properties.textDir = "Text";
 	//properties.annotationDir = "Annotations";
 	properties.docId = docId;
-	properties.corpus = corpus;
-	getAllAnnotations();
+	//properties.corpus = corpus;
+	//getAllAnnotations();
 }
 
 function getProperties() {
@@ -166,15 +185,15 @@ function getAllAnnotations() {
 						}
 					}
 				});
-	
+
 }
 
 function getAnnotation(properties, cb) {
 	//let url = properties.corpus + "/" + properties.annotationDir + "/" + properties.docId + ".json";
-	let url = "GetDocumentAnalysisStats?Analysis=OOPCoreNLP&Corpus="+ properties.corpus+"&Document="+ properties.docId;
+
 	$.ajax({
 		dataType: "json",
-        url: url, 
+		url: "Corpora/"+corpus+"/OOP_"+docId+".json",
         async: true,
         success: cb
     });
@@ -210,27 +229,32 @@ function listMapAnnotationToUl(data, annotation_list, div) {
 			ul.append(scalarAnnotationToLi(data, annotationName));
 		}
 		else if (isArray(data[annotationName])) {
-			let li = $('<li>');
-			ul.append(li);
-			li.attr("class", "list-group-item list-group-item-light");
-			li.append("<span data-toggle='toolip' data-placement='right' title='"+annotationName+"' boundary='window'>"+annotationName+ ":</span>");
-			let sul = $('<ul>');
-			li.append(sul);
-			sul.attr("class", "list-group list-group-flush");
+			let displayName = annotationName.substring(annotationName.lastIndexOf("$")+1, endIdx);
+			let scoreTotal = data[annotationName].length;
+			div.append(createAccordionButtonNoColorPicker(displayName, scoreTotal, annotationName));
+
 			data[annotationName].forEach(function (listItem, listIndex) {
+				let d = $("<div>");
+				d.attr("class", "container-fluid collapse");
+				d.attr("id", displayName+"_div");
+				div.append(d);
+				let ul = $('<ul>');
+				d.append(ul);
+				ul.attr("class", "list-group list-group-flush");
+				//ul.append(scalarAnnotationToLi(data[annotationName], annotation, annotationName));
 				let li = $('<li>');
 				li.attr("class", "list-group-item list-group-item-light");
-				li.append("<span data-toggle='toolip' data-placement='right' title='"+listItem+"' boundary='window'>"+listItem+ "</span>");
-				sul.append(li);
+				li.append("<span data-toggle='toolip' data-placement='right' title='"+listItem["name"]+"' boundary='window'>"+listItem["name"]+ "</span>");
+				ul.append(li);
 			});
-			
+
 		}
 		else if (isObject(data[annotationName])) {
 			let displayName = annotationName.substring(annotationName.lastIndexOf("$")+1, endIdx);
 			let scoreTotal = 0;
 			let list = Object.keys(data[annotationName]);
 			list.sort((a, b) => (parseFloat(data[annotationName][a]) < parseFloat(data[annotationName][b])) ? 1 : -1);
-	
+
 			for (let key in data[annotationName]) {
 				scoreTotal = scoreTotal + Number(data[annotationName][key]);
 			}
@@ -249,6 +273,64 @@ function listMapAnnotationToUl(data, annotation_list, div) {
 	});
 }
 
+function listMapAnnotationToUlNoColorPicker(data, annotation_list, div) {
+	annotation_list.forEach(function(annotationName, index) {
+		let endIdx = annotationName.lastIndexOf("Annotation");
+		if (endIdx == -1) {
+			endIdx = annotationName.length;
+		}
+
+		if (isNumber(data[annotationName])) {
+			let ul = $('<ul>');
+			div.append(ul);
+			ul.attr("class", "list-group list-group-flush");
+			ul.append(scalarAnnotationToLiNoColorPicker(data, annotationName));
+		}
+		else if (isArray(data[annotationName])) {
+			let displayName = annotationName.substring(annotationName.lastIndexOf("$")+1, endIdx);
+			let scoreTotal = data[annotationName].length;
+			div.append(createAccordionButtonNoColorPicker(displayName, scoreTotal, annotationName));
+
+			data[annotationName].forEach(function (listItem, listIndex) {
+				let d = $("<div>");
+				d.attr("class", "container-fluid collapse");
+				d.attr("id", displayName+"_div");
+				div.append(d);
+				let ul = $('<ul>');
+				d.append(ul);
+				ul.attr("class", "list-group list-group-flush");
+				//ul.append(scalarAnnotationToLi(data[annotationName], annotation, annotationName));
+				let li = $('<li>');
+				li.attr("class", "list-group-item list-group-item-light");
+				li.append("<span data-toggle='toolip' data-placement='right' title='"+listItem["name"]+"' boundary='window'>"+listItem["name"]+ "</span>");
+				ul.append(li);
+			});
+
+		}
+		else if (isObject(data[annotationName])) {
+			let displayName = annotationName.substring(annotationName.lastIndexOf("$")+1, endIdx);
+			let scoreTotal = 0;
+			let list = Object.keys(data[annotationName]);
+			list.sort((a, b) => (parseFloat(data[annotationName][a]) < parseFloat(data[annotationName][b])) ? 1 : -1);
+
+			for (let key in data[annotationName]) {
+				scoreTotal = scoreTotal + Number(data[annotationName][key]);
+			}
+			div.append(createAccordionButtonNoColorPicker(displayName, scoreTotal, annotationName));
+			list.forEach(function(annotation, index) {
+				let d = $("<div>");
+				d.attr("class", "container-fluid collapse");
+				d.attr("id", displayName+"_div");
+				div.append(d);
+				let ul = $('<ul>');
+				d.append(ul);
+				ul.attr("class", "list-group list-group-flush");
+				ul.append(scalarAnnotationToLiNoColorPicker(data[annotationName], annotation, annotationName));
+			});
+		}
+	});
+}
+
 function listActorsAnnotationToUl(data, annotationName, div) {
 
 	let list = [];
@@ -260,7 +342,7 @@ function listActorsAnnotationToUl(data, annotationName, div) {
 	let actors = [];
 	list.forEach(function (actor, index) {
 		actors.push(actor.canonicalName);
-	});	
+	});
 
 	actors.forEach(function(actorCanonicalName, index) {
 		let actor = data[annotationName][actorCanonicalName];
@@ -303,7 +385,7 @@ function listActorsAnnotationToUl(data, annotationName, div) {
 					li.append("<span data-toggle='toolip' data-placement='right' title='"+listItem+"' boundary='window'>"+listItem+ "</span>");
 					sul.append(li);
 				});
-				
+
 			}
 			else if (isString(actor[attrName])) {
 				ul.append(actorAnnotationToLi(actor, attrName, annotationName+"."+divName));
@@ -351,7 +433,7 @@ function getAnnotationDisplayName(annotationName) {
 	if (endIdx == -1) {
 		endIdx = annotationName.length;
 	}
-	return annotationName.substring(annotationName.lastIndexOf("$")+1, endIdx);	
+	return annotationName.substring(annotationName.lastIndexOf("$")+1, endIdx);
 }
 
 function actorAnnotationToLi(data, annotationName, annotationGroupName) {
@@ -366,10 +448,10 @@ function actorAnnotationToLi(data, annotationName, annotationGroupName) {
 		displayName = getAnnotationDisplayName(annotationName);
 	}
 	let dataValue = data[annotationName];
-	
+
 	//format differently if scalar, array, object
 	//filter out sentiment for now
-	
+
 	li.append("<span data-toggle='toolip' data-placement='right' title='"+fullName+"' boundary='window'>"+displayName+ "</span>: "+ dataValue);
 	//where should this click go?
 		li.click(function() {
@@ -404,7 +486,7 @@ function createAccordionButton(displayName, score, annotationName) {
 		let cp = $("<div>");
 		cp.addClass("ui-colorpicker-swatch")
 		cp.addClass(color);
-		cp.click(function() {			
+		cp.click(function() {
 			getAnnotation(getProperties(), function(annotationName) {
 				return function(d) {
 					highlightTokenAnnotation(d, annotationName, color);
@@ -413,6 +495,22 @@ function createAccordionButton(displayName, score, annotationName) {
 		})
 		h5.append(cp);
 	});
+	return d1;
+}
+
+function createAccordionButtonNoColorPicker(displayName, score, annotationName) {
+	let d1 = $("<div class='container-fluid accordion'/>");
+	let d2 = $("<div class='card'/>");
+	d1.append(d2);
+	let d3 = $("<div class='card-header'/>");
+	d2.append(d3);
+	let h5 = $("<h5 class='mb-0'/>");
+	d3.append(h5);
+	let btn = $("<button class='btn btn-link' type='button' data-toggle='collapse'  aria-expanded='true'/>");
+	btn.attr("data-target", "#"+displayName+"_div");
+	btn.attr("aria-controls", "collapse"+displayName);
+	btn.text(displayName +": "+score);
+	h5.append(btn);
 	return d1;
 }
 
@@ -474,7 +572,7 @@ function scalarAnnotationToLi(data, annotationName, annotationGroupName) {
 		let cp = $("<div>");
 		cp.addClass("ui-colorpicker-swatch")
 		cp.addClass(color);
-		cp.click(function() {			
+		cp.click(function() {
 			getAnnotation(getProperties(), function(annotationName) {
 				return function(d) {
 					highlightTokenAnnotation(d, fullName, color);
@@ -486,6 +584,31 @@ function scalarAnnotationToLi(data, annotationName, annotationGroupName) {
 	return li;
 }
 
+function scalarAnnotationToLiNoColorPicker(data, annotationName, annotationGroupName) {
+	let li = $('<li>');
+	li.attr("class", "list-group-item list-group-item-light");
+	let displayName = annotationName;
+	let fullName = annotationName;
+	if (annotationGroupName) {
+		fullName = annotationGroupName+"."+annotationName;
+	}
+	else {
+		let endIdx = annotationName.lastIndexOf("Annotation");
+		if (endIdx == -1) {
+			endIdx = annotationName.length;
+		}
+		displayName = annotationName.substring(annotationName.lastIndexOf("$")+1, endIdx);
+	}
+	let dataValue = data[annotationName];
+	if (!Number.isNaN(Number(dataValue)) && dataValue.indexOf(".") != -1) {
+		dataValue = Number(dataValue).toFixed(4);
+	}
+	let lbl = ""
+	li.append("<span data-toggle='toolip' data-placement='right' title='"+fullName+"' boundary='window'>"+displayName+ "</span>: "+ dataValue);
+
+	return li;
+}
+
 
 function displayMetadataAnnotations(data, cb) {
 	$('#metadata_div').empty();
@@ -493,20 +616,20 @@ function displayMetadataAnnotations(data, cb) {
 	ul.attr("class", "list-group list-group-flush");
 	ul.appendTo('#metadata_div');
 	coreNLPAnnotationCategories["Metadata"].forEach(function(annotationName, index) {
-		ul.append(scalarAnnotationToLi(data, annotationName));
+		ul.append(scalarAnnotationToLiNoColorPicker(data["metadata"], annotationName));
 	});
 	cb && typeof cb === 'function' && cb(data);
 }
 
 function displayDocumentAnnotations(data, cb) {
 	$('#document_div').empty();
-	let ul = mapScalarAnnotationToUl(data, "io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPDocumentLengthAnnotation");
+	//let ul = mapScalarAnnotationToUl(data, "OOPDocumentLengthAnnotation");
+	let ul = $('<ul>');
 	ul.appendTo($('#document_div'));
 	ul.attr("class", "list-group list-group-flush");
-	ul.append(scalarAnnotationToLi(data, "io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPSyllablesAnnotation"));
-	ul.append(scalarAnnotationToLi(data, "io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPFleschKincaidAnnotation"));
-	ul.append(scalarAnnotationToLi(data, "io.outofprintmagazine.nlp.pipeline.OOPAnnotations$CoreNlpSentimentAnnotation"));
-	ul.append(scalarAnnotationToLi(data, "io.outofprintmagazine.nlp.pipeline.OOPAnnotations$VaderSentimentAnnotation"));
+	coreNLPAnnotationCategories["Document"].forEach(function(annotationName, index) {
+		ul.append(scalarAnnotationToLiNoColorPicker(data, annotationName));
+	});
 
 	cb && typeof cb === 'function' && cb(data);
 }
@@ -521,56 +644,64 @@ function displayDictionAnnotations(data, cb) {
 function displayLedeAnnotations(data, cb) {
 	$('#lede_div').empty();
 	listMapAnnotationToUl(data, coreNLPAnnotationCategories["Lede"], $('#lede_div'));
-	
+
 	cb && typeof cb === 'function' && cb(data);
 }
 
 function displayGenderNumberAnnotations(data, cb) {
 	$('#gendernumber_div').empty();
 	listMapAnnotationToUl(data, coreNLPAnnotationCategories["GenderNumber"], $('#gendernumber_div'));
-	
+
 	cb && typeof cb === 'function' && cb(data);
 }
-	
+
 function displayDescriptionAnnotations(data, cb) {
 	$('#description_div').empty();
 	listMapAnnotationToUl(data, coreNLPAnnotationCategories["Description"], $('#description_div'));
-	
+
 	cb && typeof cb === 'function' && cb(data);
 }
 
 function displaySemanticsAnnotations(data, cb) {
 	$('#semantics_div').empty();
 	listMapAnnotationToUl(data, coreNLPAnnotationCategories["Semantics"], $('#semantics_div'));
-	
+	listMapAnnotationToUlNoColorPicker(data, coreNLPAnnotationCategories["SemanticsDocument"], $('#semantics_div'));
 	cb && typeof cb === 'function' && cb(data);
 }
+
 
 function displayUncategorizedAnnotations(data, cb) {
 	$('#uncategorized_div').empty();
 	let uncategorizedAnnotationsList = [];
+	let skipAnnotations = ["corefs", "quotes", "sentences", "metadata"];
+	let allAnnotations = Object.keys(data);
 	allAnnotations.forEach(function(annotation, allindex) {
 		let found = false;
-		for (let key in coreNLPAnnotationCategories) {
-			coreNLPAnnotationCategories[key].forEach(function(categorizedAnnotation, annindex) {
-				if (categorizedAnnotation === annotation) {
-					found = true;
-				}
-			});
-		};
+		if (skipAnnotations.includes(annotation)) {
+			found = true;
+		}
+		else {
+			for (let key in coreNLPAnnotationCategories) {
+				coreNLPAnnotationCategories[key].forEach(function(categorizedAnnotation, annindex) {
+					if (categorizedAnnotation === annotation) {
+						found = true;
+					}
+				});
+			};
+		}
 		if (!found) {
 			uncategorizedAnnotationsList.push(annotation);
 		};
 	});
 	listMapAnnotationToUl(data, uncategorizedAnnotationsList, $('#uncategorized_div'));
-	
+
 	cb && typeof cb === 'function' && cb(data);
 }
 
 
 function displayActorsAnnotation(data, cb) {
 	$('#actors_div').empty();
-	listActorsAnnotationToUl(data, "io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPActorsAnnotation", $('#actors_div'));
+	listActorsAnnotationToUl(data, "OOPActorsAnnotation", $('#actors_div'));
 
 	cb && typeof cb === 'function' && cb(data);
 }
@@ -620,22 +751,22 @@ function displayTextAnnotation(data, cb) {
 	let centerCol = null;
 	let rightCol = null;
 	data.sentences.forEach(function(sentence, index) {
-		if (sentence["edu.stanford.nlp.ling.CoreAnnotations$ParagraphIndexAnnotation"] > paragraphIdx) {
-			paragraphIdx = sentence["edu.stanford.nlp.ling.CoreAnnotations$ParagraphIndexAnnotation"];
+		if (sentence["ParagraphIndexAnnotation"] > paragraphIdx) {
+			paragraphIdx = sentence["ParagraphIndexAnnotation"];
 			currentParagraphNode = $("<p>");
 			currentParagraphNode.attr("id", "paragraph_"+paragraphIdx);
 			currentParagraphNode.attr("ref", "paragraph_"+paragraphIdx);
 			currentParagraphNode.appendTo('#story_text');
 		}
 		let sentenceNode = $("<span>");
-		sentenceNode.attr("id", "sentence_"+sentence["edu.stanford.nlp.ling.CoreAnnotations$SentenceIndexAnnotation"]);
-		sentenceNode.attr("ref", "sentence_"+sentence["edu.stanford.nlp.ling.CoreAnnotations$SentenceIndexAnnotation"]);
+		sentenceNode.attr("id", "sentence_"+sentence["SentenceIndexAnnotation"]);
+		sentenceNode.attr("ref", "sentence_"+sentence["SentenceIndexAnnotation"]);
 		sentenceNode.attr("class", "sentence");
 		//sentenceNode.text(sentence.text + " ");
 		currentParagraphNode.append(sentenceNode);
 		sentence.tokens.forEach(function(token, index) {
 			tokenIdx++;
-			sentenceNode.append(token["edu.stanford.nlp.ling.CoreAnnotations$TokensAnnotation"].before);
+			sentenceNode.append(token["TokensAnnotation"].before);
 			let tokenNode = $("<span>");
 			tokenNode.attr("id", "token_"+tokenIdx);
 			tokenNode.attr("ref", "token_"+tokenIdx);
@@ -646,21 +777,21 @@ function displayTextAnnotation(data, cb) {
 			if (index === sentence.tokens.length -1) {
 				tokenNode.click(function(sentence) {
 					return function() {
-						window.open("GetDocumentAnalysisStats?Analysis=OOPCoreNLP&Corpus="+ properties.corpus+"&Document="+docId+"&Scope=Sentence&Id="+sentence["edu.stanford.nlp.ling.CoreAnnotations$SentenceIndexAnnotation"], "_documentScores");
+						window.open("GetDocumentAnalysisScores?Corpus="+corpus+"&Document="+docId+"&Scope=Sentence&Id="+sentence["SentenceIndexAnnotation"], "_documentScores");
 					}
 				}(sentence));
 			}
 			else {
 				tokenNode.click(function(tokenIdx) {
 					return function() {
-						window.open("GetDocumentAnalysisStats?Analysis=OOPCoreNLP&Corpus="+ properties.corpus+"&Document="+docId+"&Scope=Token&Id="+tokenIdx, "_documentScores");
+						window.open("GetDocumentAnalysisScores?Corpus="+corpus+"&Document="+docId+"&Scope=Token&Id="+tokenIdx, "_documentScores");
 					}
 				}(tokenIdx));
 			}
 			tokenNode.attr("class", "token");
-			tokenNode.text(token["edu.stanford.nlp.ling.CoreAnnotations$TokensAnnotation"].originalText);
+			tokenNode.text(token["TokensAnnotation"].originalText);
 			sentenceNode.append(tokenNode);
-			if (token["edu.stanford.nlp.ling.CoreAnnotations$TokensAnnotation"].after == '\n\n' || token["edu.stanford.nlp.ling.CoreAnnotations$TokensAnnotation"].after == '\n') {
+			if (token["TokensAnnotation"].after == '\n\n' || token["TokensAnnotation"].after == '\n') {
 				sentenceNode.append($("<p>"));
 			}
 		});
@@ -689,22 +820,22 @@ function displayFactCheckerTextAnnotations(data) {
 	let centerCol = null;
 	let rightCol = null;
 	data.sentences.forEach(function(sentence, index) {
-		if (sentence["edu.stanford.nlp.ling.CoreAnnotations$ParagraphIndexAnnotation"] > paragraphIdx) {
-			paragraphIdx = sentence["edu.stanford.nlp.ling.CoreAnnotations$ParagraphIndexAnnotation"];
+		if (sentence["ParagraphIndexAnnotation"] > paragraphIdx) {
+			paragraphIdx = sentence["ParagraphIndexAnnotation"];
 			currentParagraphNode = $("<p>");
 			currentParagraphNode.attr("id", "paragraph_"+paragraphIdx);
 			currentParagraphNode.attr("ref", "paragraph_"+paragraphIdx);
 			currentParagraphNode.appendTo('#story_text');
 		}
 		let sentenceNode = $("<span>");
-		sentenceNode.attr("id", "sentence_"+sentence["edu.stanford.nlp.ling.CoreAnnotations$SentenceIndexAnnotation"]);
-		sentenceNode.attr("ref", "sentence_"+sentence["edu.stanford.nlp.ling.CoreAnnotations$SentenceIndexAnnotation"]);
+		sentenceNode.attr("id", "sentence_"+sentence["SentenceIndexAnnotation"]);
+		sentenceNode.attr("ref", "sentence_"+sentence["SentenceIndexAnnotation"]);
 		sentenceNode.attr("class", "sentence");
 		//sentenceNode.text(sentence.text + " ");
 		currentParagraphNode.append(sentenceNode);
 		sentence.tokens.forEach(function(token, index) {
 			tokenIdx++;
-			sentenceNode.append(token["edu.stanford.nlp.ling.CoreAnnotations$TokensAnnotation"].before);
+			sentenceNode.append(token["TokensAnnotation"].before);
 			let tokenNode = $("<span>");
 			let dataContent = getFactCheckerAnnotations(token);
 			if (dataContent.length > '<div class="popover-message"></div>'.length) {
@@ -718,7 +849,7 @@ function displayFactCheckerTextAnnotations(data) {
 			}
 			tokenNode.attr("class", "token");
 
-			tokenNode.text(token["edu.stanford.nlp.ling.CoreAnnotations$TokensAnnotation"].originalText);
+			tokenNode.text(token["TokensAnnotation"].originalText);
 			sentenceNode.append(tokenNode);
 		});
 		//let sentenceNodeGlyph = $("<span>");
@@ -745,16 +876,26 @@ function displayEditorTextAnnotations(data) {
 	let leftCol = null;
 	let centerCol = null;
 	let rightCol = null;
+	let sentenceLength = [];
+	let sentenceLengthMean = 0;
+	let sentenceLengthStddev = 0;
+	
 	data.sentences.forEach(function(sentence, index) {
-		if (sentence["edu.stanford.nlp.ling.CoreAnnotations$ParagraphIndexAnnotation"] > paragraphIdx) {
-			paragraphIdx = sentence["edu.stanford.nlp.ling.CoreAnnotations$ParagraphIndexAnnotation"];
+		sentenceLength.push(sentence.tokens.length);
+	});
+	sentenceLengthMean = math.mean(sentenceLength);
+	sentenceLengthStddev = math.std(sentenceLength);
+	
+	data.sentences.forEach(function(sentence, index) {
+		if (sentence["ParagraphIndexAnnotation"] > paragraphIdx) {
+			paragraphIdx = sentence["ParagraphIndexAnnotation"];
 			currentParagraphNode = $("<p>");
 			currentParagraphNode.attr("id", "paragraph_"+paragraphIdx);
 			currentParagraphNode.attr("ref", "paragraph_"+paragraphIdx);
 			currentParagraphNode.appendTo('#story_text');
 		}
 		let sentenceNode = {};
-		let dataContent = getEditorAnnotationsSentence(sentence);
+		let dataContent = getEditorAnnotationsSentence(sentence, sentenceLengthMean+(sentenceLengthStddev*2));
 		if (dataContent.length > '<div class="popover-message"></div>'.length) {
 			sentenceNode = $("<s>");
 			sentenceNode.attr("id", "token_"+tokenIdx);
@@ -768,14 +909,14 @@ function displayEditorTextAnnotations(data) {
 		else {
 			sentenceNode = $("<span>");
 		}
-		sentenceNode.attr("id", "sentence_"+sentence["edu.stanford.nlp.ling.CoreAnnotations$SentenceIndexAnnotation"]);
-		sentenceNode.attr("ref", "sentence_"+sentence["edu.stanford.nlp.ling.CoreAnnotations$SentenceIndexAnnotation"]);
+		sentenceNode.attr("id", "sentence_"+sentence["SentenceIndexAnnotation"]);
+		sentenceNode.attr("ref", "sentence_"+sentence["SentenceIndexAnnotation"]);
 		sentenceNode.attr("class", "sentence");
 		//sentenceNode.text(sentence.text + " ");
 		currentParagraphNode.append(sentenceNode);
 		sentence.tokens.forEach(function(token, index) {
 			tokenIdx++;
-			sentenceNode.append(token["edu.stanford.nlp.ling.CoreAnnotations$TokensAnnotation"].before);
+			sentenceNode.append(token["TokensAnnotation"].before);
 			let tokenNode = {};
 			let dataContent = getEditorAnnotationsToken(token);
 			if (dataContent.length > '<div class="popover-message"></div>'.length) {
@@ -793,7 +934,7 @@ function displayEditorTextAnnotations(data) {
 			}
 			tokenNode.attr("class", "token");
 
-			tokenNode.text(token["edu.stanford.nlp.ling.CoreAnnotations$TokensAnnotation"].originalText);
+			tokenNode.text(token["TokensAnnotation"].originalText);
 			sentenceNode.append(tokenNode);
 		});
 	});
@@ -808,9 +949,9 @@ function getSentenceAnnotation(token) {
 	      "sentenceIndex",
 	      "paragraphIndex",
 	      "text",
-	      "io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPSyllablesAnnotation",
-	      "io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPTemporalNGramsAnnotation",
-	      "io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPDolchAnnotation"
+	      "OOPSyllablesAnnotation",
+	      "OOPTemporalNGramsAnnotation",
+	      "OOPDolchAnnotation"
 	];
 	let list = [];
 	for (let key in token) {
@@ -819,7 +960,7 @@ function getSentenceAnnotation(token) {
 		}
 	};
 	list.sort((a, b) => (a > b) ? 1 : -1);
-	
+
 	let retval = "";
 	list.forEach(function(scoreName, index) {
 		retval+=("<br/>" + token[scoreName] + "<br/>");
@@ -830,42 +971,43 @@ function getSentenceAnnotation(token) {
 
 function getFactCheckerAnnotations(token) {
 	let annotations = [
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWordnetGlossAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWikipediaGlossAnnotation"
+		"OOPWordnetGlossAnnotation",
+		"OOPWikipediaGlossAnnotation"
 	];
 	let retval = '<div class="popover-message">';
 	for (let scoreName in token) {
 		if (annotations.includes(scoreName)) {
-			let lemma = token["edu.stanford.nlp.ling.CoreAnnotations$TokensAnnotation"].lemma;
-			let glosses = token[scoreName][lemma];
-			retval += ("<p>" + glosses[0] + "</p>");
+			let lemma = token["TokensAnnotation"].lemma;
+			let glosses = token[scoreName];
+			retval += ("<p>" + glosses + "</p>");
 		}
 	}
 	retval += "</div>";
 	return retval;
 }
 
-function getEditorAnnotationsSentence(sentence) {
+function getEditorAnnotationsSentence(sentence, normalSentenceLength) {
 	let annotations = {
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPVerblessSentencesAnnotation" : 0
+		"OOPVerblessSentencesAnnotation" : 0
 	};
 	let annotationsDesc = {
-			"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPFleschKinkiadAnnotation" : .7
-		};
+		"OOPFleschKincaidAnnotation" : .8
+	};
+	
 	let retval = '<div class="popover-message">';
 	for (let scoreName in sentence) {
 		if (Object.keys(annotations).includes(scoreName)) {
-			if (sentence[scoreName] > annotations[scoreName]) {
+			if (Number(sentence[scoreName]) > Number(annotations[scoreName])) {
 				retval += ("<p>" + getAnnotationDisplayName(scoreName) + "</p>");
 			}
 		}
 		else if (Object.keys(annotationsDesc).includes(scoreName)) {
-			if (sentence[scoreName] < annotations[scoreName]) {
+			if (Number(sentence[scoreName]) < Number(annotationsDesc[scoreName])) {
 				retval += ("<p>" + getAnnotationDisplayName(scoreName) + "</p>");
 			}
 		}
 	}
-	if (sentence.tokens.length > 50) {
+	if (sentence.tokens.length > normalSentenceLength) {
 		retval += ("<p>" + "sentence.tokens.length" + "</p>");
 	}
 	retval += "</div>";
@@ -874,17 +1016,18 @@ function getEditorAnnotationsSentence(sentence) {
 
 function getEditorAnnotationsToken(token) {
 	let annotations = [
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWordlessWordsAnnotation"
+		"OOPWordlessWordsAnnotation"
 	];
 	let annotationsLemma = [
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPPointlessAdverbsAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPPointlessAdjectivesAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPNonAffirmativeAnnotation",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPAngliciseAnnotation"
+		"OOPPointlessAdverbsAnnotation",
+		"OOPPointlessAdjectivesAnnotation",
+		"OOPNonAffirmativeAnnotation",
+		"OOPAngliciseAnnotation"
 	];
 	let subAnnotations = {
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPTemporalNGramsAnnotation" : "novel",
-		"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPBiberAnnotation" : "PASS"
+		"OOPTemporalNGramsAnnotation" : "novel",
+		"OOPBiberAnnotation" : "PASS",
+		"OOPBiberAnnotation" : "EX"
 	};
 	let retval = '<div class="popover-message">';
 	for (let scoreName in token) {
@@ -894,7 +1037,7 @@ function getEditorAnnotationsToken(token) {
 			}
 		}
 		else if (annotationsLemma.includes(scoreName)) {
-			let lemma = token["edu.stanford.nlp.ling.CoreAnnotations$TokensAnnotation"].lemma;		
+			let lemma = token["TokensAnnotation"].lemma;
 			if (token[scoreName][lemma] > 0) {
 				retval += ("<p>" + getAnnotationDisplayName(scoreName) + "</p>");
 			}
@@ -940,10 +1083,10 @@ function displayAnnotationSelectList(data, cb) {
 	let excludeAnnotations = [];
 	excludeAnnotationGroups.forEach(function(annotationGroupName, index) {
 		coreNLPAnnotationCategories[annotationGroupName].forEach(function(annotationName, index) {
-			excludeAnnotations.push(annotationName);			
+			excludeAnnotations.push(annotationName);
 		});
 	});
-	
+
 	let annotationList = [];
 	for(let key in data) {
 		if (!excludeAnnotations.includes(key)) {
@@ -951,14 +1094,14 @@ function displayAnnotationSelectList(data, cb) {
 		}
 	}
 	annotationList.sort((a, b) => (a > b) ? 1 : -1);
-	
+
 	annotationList.forEach(function(annotationName, index) {
 		let btn = $("<button>");
 		btn.addClass("dropdown-item");
 		btn.attr("type", "button");
 		btn.attr("id", "annotationSelectListItem_"+ getAnnotationDisplayName(annotationName));
 		btn.text(annotationName);
-		btn.click(function() {			
+		btn.click(function() {
 			getAnnotation(getProperties(), function(annotationName) {
 				return function(d) {
 					displayAnnotationValueSelectList(d, annotationName);
@@ -967,7 +1110,7 @@ function displayAnnotationSelectList(data, cb) {
 		})
 		$("#annotationSelectList").append(btn);
 	});
-	
+
 	cb && typeof cb === 'function' && cb(data);
 
 }
@@ -979,7 +1122,7 @@ function displayAnnotationValueSelectList(data, annotationName, cb) {
 	allbtn.attr("type", "button");
 	allbtn.attr("id", "annotationValueSelectListItem_all");
 	allbtn.text(annotationName);
-	allbtn.click(function() {			
+	allbtn.click(function() {
 		getAnnotation(getProperties(), function(annotationName) {
 			return function(param) {
 				alert(annotationName);
@@ -988,10 +1131,10 @@ function displayAnnotationValueSelectList(data, annotationName, cb) {
 		}("all"));
 	})
 	$("#annotationValueSelectList").append(allbtn);
-	
-	
+
+
 	let list = Object.keys(data);
-	list.sort((a, b) => (parseFloat(data[a]) < parseFloat(data[b])) ? 1 : -1);	
+	list.sort((a, b) => (parseFloat(data[a]) < parseFloat(data[b])) ? 1 : -1);
 
 	list.forEach(function(annotationValueName, index) {
 		let btn = $("<button>");
@@ -999,7 +1142,7 @@ function displayAnnotationValueSelectList(data, annotationName, cb) {
 		btn.attr("type", "button");
 		btn.attr("id", "annotationValueSelectListItem_"+ getAnnotationDisplayName(annotationName + "." + annotationValueName));
 		btn.text(annotationValueName);
-		btn.click(function() {			
+		btn.click(function() {
 			getAnnotation(getProperties(), function(annotationValueName) {
 				return function(param) {
 					alert(annotationValueName);
@@ -1009,7 +1152,7 @@ function displayAnnotationValueSelectList(data, annotationName, cb) {
 		})
 		$("#annotationValueSelectList").append(btn);
 	});
-	
+
 	cb && typeof cb === 'function' && cb(data);
 
 }

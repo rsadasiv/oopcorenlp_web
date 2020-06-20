@@ -3,9 +3,6 @@ var properties = {};
 
 
 function setProperties() {
-	//properties.corpus = "Corpora/Submissions";
-	//properties.textDir = "Text";
-	//properties.annotationDir = "Annotations";
 	properties.docId = docId;
 	properties.corpus = corpus;
 }
@@ -31,15 +28,7 @@ function isArray (value) {
 }
 
 function getBaseUrl() {
-	return "GetDocumentAnalysisStats?Analysis=OOPCoreNLP&Corpus="+ properties.corpus+"&Document="+ properties.docId;
-}
-
-function getCorpusAggregatesUrl(selectedAnnotation) {
-	return "Corpora/Published/Annotations/CORPUS/"+selectedAnnotation+".json";
-}
-
-function getNormalizeSelection() {
-	return $("#normalized").is(':checked');
+	return "Corpora/"+corpus+"/OOP_"+docId+".json";
 }
 
 function drawSentenceAnnotators(selectedAnnotation) {
@@ -55,7 +44,9 @@ function drawSentenceAnnotators(selectedAnnotation) {
 					let annotators = {};
 					for (const sentence of data.sentences) {
 						for (let [key, val] of Object.entries(sentence)) {
-							annotators[key] = 0;
+							if (!key.startsWith("text") && !annotation.startsWith("tokens")) {
+								annotators[key] = 0;
+							}
 						}
 					}
 					let sortedAnnotators = Object.keys(annotators);
@@ -119,41 +110,7 @@ function drawDocumentAnnotators(selectedAnnotation) {
 
 					let annotators = {};
 					for (const annotation of Object.keys(data)) {
-						if (annotation.startsWith("io") && !annotation.endsWith("Aggregate")) {
-							if (isObject(data[annotation])) {
-								annotators[annotation] = 0;
-							}
-						}
-					}
-					let sortedAnnotators = Object.keys(annotators);
-					sortedAnnotators.sort();
-					for (let key of sortedAnnotators) {
-						let optionNode = $("<option>");
-						optionNode.attr("value", key);
-						if (key == selectedAnnotation) {
-							optionNode.attr("selected","selected");
-						}
-						optionNode.text(getAnnotationDisplayName(key));
-						$("#annotators").append(optionNode);
-					}
-				}
-		);
-}
-
-function drawAggregateAnnotators(selectedAnnotation) {
-	$.when(
-			$.ajax(
-				{
-					dataType: "json",
-					url: getBaseUrl()
-				}
-			)
-		).done(
-				function(data) {
-
-					let annotators = {};
-					for (const annotation of Object.keys(data)) {
-						if (annotation.endsWith("Aggregate")) {
+						if (!annotation.startsWith("metadata") && !annotation.startsWith("sentences") && !annotation.startsWith("corefs") && !annotation.startsWith("quotes")) {
 							if (isObject(data[annotation])) {
 								annotators[annotation] = 0;
 							}
@@ -199,7 +156,7 @@ function showSentenceTextForTokenId(tokenIdx) {
 			)
 		).done(
 				function(raw_data) {
-					let sortedTokenIdx = raw_data["io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPDocumentLengthAnnotation"]["tokenCount"]-tokenIdx;
+					let sortedTokenIdx = raw_data["OOPTokenCountAnnotation"]-tokenIdx;
 					console.log("tokenIdx: " + tokenIdx);
 					console.log("sortedTokenIdx: " + sortedTokenIdx)
 					let currentTokenId = 0;
@@ -214,552 +171,6 @@ function showSentenceTextForTokenId(tokenIdx) {
 		);
 }
 
-
-//top left table
-function showAggregateScore(selectedAnnotation, div) {
-	$.when(
-			$.ajax(
-				{
-					dataType: "json",
-					url: getBaseUrl()
-				}
-			)
-		).done(
-				function(data) {
-					for (let annotation of Object.keys(data)) {
-						if (annotation == selectedAnnotation) {
-							if (isObject(data[annotation])) {
-								//$('#aggregateScore').empty();
-								div.empty();
-								
-								let tb = $('<table>');
-								tb.attr("class", "table table-sm");
-								//tb.appendTo($('#aggregateScore'));
-								tb.appendTo(div);
-								let tbody = $('<tbody>');
-								tbody.appendTo(tb);
-								let scoreProperties = ["raw", "count", "normalized"];
-								//for (let prop of Object.keys(data[annotation]["scoreStats"]["score"])) {
-								for (let prop of scoreProperties) {
-									let tr = $('<tr>');
-									tr.appendTo(tbody);
-									let th = $('<th>');
-									th.appendTo(tr);
-									th.attr("scope", "row");
-									th.text(prop);
-									let td = $('<td>');
-									td.appendTo(tr);
-									td.text(data[annotation]["scoreStats"]["score"][prop]);
-								}
-								let statsProperties = ["median", "mean", "min", "max", "stddev"];
-								//for (let prop of Object.keys(data[annotation]["scoreStats"]["stats"])) {
-								for (let prop of statsProperties) {
-									let tr = $('<tr>');
-									tr.appendTo(tbody);
-									let th = $('<th>');
-									th.appendTo(tr);
-									th.attr("scope", "row");
-									th.text(prop);
-									let td = $('<td>');
-									td.appendTo(tr);
-									td.text(data[annotation]["scoreStats"]["stats"][prop]);
-								}
-							}
-						}
-					}
-				});
-}
-
-//middle data table, based on document
-function showAggregateScores(selectedAnnotation, div) {
-	$.when(
-			$.ajax(
-				{
-					dataType: "json",
-					url: getBaseUrl()
-				}
-			)
-		).done(
-				function(data) {
-					for (let annotation of Object.keys(data)) {
-						if (annotation == selectedAnnotation) {
-							if (isObject(data[annotation])) {
-								let scoreCount = data[annotation].scoreStats.score.count;
-								$.when(
-										$.ajax(
-											{
-												dataType: "json",
-												url: getCorpusAggregatesUrl(selectedAnnotation)
-											}
-										)
-									).done(
-											function(corpusData) {
-								
-												//$('#aggregateScores').empty();
-												div.empty();
-				
-												for (let subAnnotationScore of data[annotation]["aggregatedScores"]) {
-													let tb = $('<table>');
-													tb.attr("class", "table table-sm table-bordered");
-													//tb.appendTo($('#aggregateScores'));
-													tb.appendTo(div);
-													let thead = $('<thead>');
-													
-													thead.appendTo(tb);
-													let headerRow = $('<tr>');
-													headerRow.appendTo(thead);
-													let thSubAnnotationName = $('<th>');
-													thSubAnnotationName.attr("class", "table-dark");
-													thSubAnnotationName.appendTo(headerRow);
-													thSubAnnotationName.attr("scope", "column");
-													thSubAnnotationName.text(subAnnotationScore["name"]);
-													let scoreNames = ["raw", "normalized", "count"];
-													let aggregateScoreNames = ["rank", "percentage", "percentile"];
-													for (let prop of scoreNames) {
-													//for (let prop of Object.keys(subAnnotationScore["score"])) {
-														let th = $('<th>');
-														th.appendTo(headerRow);
-														th.attr("scope", "column");
-														th.text(prop);
-													}
-													for (let prop of aggregateScoreNames) {
-													//for (let prop of Object.keys(subAnnotationScore["aggregateScore"])) {
-														let th = $('<th>');
-														th.appendTo(headerRow);
-														th.attr("scope", "column");
-														th.text(prop);
-													}
-													let tbody = $('<tbody>');
-													tbody.appendTo(tb);
-													let scoreRow = $('<tr>');
-													scoreRow.appendTo(tbody);
-													let thSubAnnotationScore = $('<th>');
-													thSubAnnotationScore.appendTo(scoreRow);
-													thSubAnnotationScore.attr("scope", "row");
-													thSubAnnotationScore.text("score");
-				
-													for (let prop of scoreNames) {
-													//for (let prop of Object.keys(subAnnotationScore["score"])) {
-														let td = $('<td>');
-														td.appendTo(scoreRow);
-														td.text(subAnnotationScore["score"][prop]);
-													}
-				
-													for (let prop of aggregateScoreNames) {
-													//for (let prop of Object.keys(subAnnotationScore["aggregateScore"])) {
-														let td = $('<td>');
-														td.appendTo(scoreRow);
-														td.text(subAnnotationScore["aggregateScore"][prop]);
-													}
-													//showAggregateSubAnnotationScores(selectedAnnotation, subAnnotationScore["name"], tbody);
-													for (let corpusSubAnnotationScore of corpusData["detailScores"]) {
-														if (subAnnotationScore.name == corpusSubAnnotationScore.name) {
-															let rows = ["median", "mean", "min", "max", "stddev"];
-															let columns = ["raw", "normalized", "count", "rank", "percentage", "percentile"];
-															for (let rowName of rows) {
-																let tr = $('<tr>');
-																tr.appendTo(tbody);
-																let th = $('<th>');
-																th.appendTo(tr);
-																th.attr("scope", "column");
-																th.text(rowName);
-																for (let columnName of columns) {
-																	let td = $('<td>');
-																	td.appendTo(tr);
-																	td.text(corpusSubAnnotationScore[columnName]["scoreStats"]["stats"][rowName]);
-																}
-															}
-														}
-													}
-												}
-											});
-								}
-							}
-						}
-					});
-}
-
-//middle data table, based on corpus
-//get the number of entries from the document
-//sort the corpus subAnnotation detailScores by normalized.scoreStats.score.normalized 
-function showCorpusAggregateScores(selectedAnnotation, div) {
-	$.when(
-			$.ajax(
-				{
-					dataType: "json",
-					url: getBaseUrl()
-				}
-			)
-		).done(
-				function(data) {
-					for (let annotation of Object.keys(data)) {
-						if (annotation == selectedAnnotation) {
-							if (isObject(data[annotation])) {
-								let scoreCount = data[annotation].scoreStats.score.count;
-								$.when(
-										$.ajax(
-											{
-												dataType: "json",
-												url: getCorpusAggregatesUrl(selectedAnnotation)
-											}
-										)
-									).done(
-											function(corpusData) {
-												div.empty();
-												//sort
-												let sortedDetailScores = [];
-												for (let subAnnotationScore of corpusData["detailScores"]) {
-													sortedDetailScores.push(subAnnotationScore);
-												}
-												sortedDetailScores.sort((a, b) => (parseFloat(a.normalized.scoreStats.score.normalized) < parseFloat(b.normalized.scoreStats.score.normalized) ? 1 : -1));
-												for (let subAnnotationScore of sortedDetailScores.slice(0, scoreCount)) {
-													let tb = $('<table>');
-													tb.attr("class", "table table-sm table-bordered");
-													//tb.appendTo($('#aggregateScores'));
-													tb.appendTo(div);
-													let thead = $('<thead>');
-													thead.appendTo(tb);
-													let headerRow = $('<tr>');
-													headerRow.appendTo(thead);
-													
-													let thSubAnnotationName = $('<th>');
-													thSubAnnotationName.attr("class", "table-dark");
-													thSubAnnotationName.appendTo(headerRow);
-													thSubAnnotationName.attr("scope", "column");
-													thSubAnnotationName.text(subAnnotationScore["name"]);
-													
-													let scoreProperties = ["raw", "normalized", "count", "rank", "percentage", "percentile"];
-													//let scoreProperties = ["z", "percentile", "percentage", "rank", "count", "normalized", "raw"];
-													for (let prop of scoreProperties) {
-														let th = $('<th>');
-														th.appendTo(headerRow);
-														th.attr("scope", "column");
-														th.text(prop);
-													}
-													
-
-													
-													let tbody = $('<tbody>');
-													tbody.appendTo(tb);
-													let scoreRow = $('<tr>');
-													scoreRow.appendTo(tbody);
-													
-													let thSubAnnotationScore = $('<th>');
-													thSubAnnotationScore.appendTo(scoreRow);
-													thSubAnnotationScore.attr("scope", "row");
-													thSubAnnotationScore.text("score");
-													//find this subAnnotation name in data[annotation].aggregatedScores
-													for (let aggregatedScore of data[annotation]["aggregatedScores"]) {
-
-														if (aggregatedScore.name == subAnnotationScore.name) {
-															//console.log("matched");
-															//console.log(aggregatedScore);
-															//let scoreNames = ["count", "normalized", "raw"];
-															let scoreNames = ["raw", "normalized", "count"];
-															for (let prop of scoreNames) {
-																let td = $('<td>');
-																td.appendTo(scoreRow);
-																td.text(aggregatedScore["score"][prop]);
-															}
-															//let aggregateScoreNames = ["z","percentile","percentage","rank"];
-															let aggregateScoreNames = ["rank", "percentage", "percentile"];
-															for (let prop of aggregateScoreNames) {
-																let td = $('<td>');
-																td.appendTo(scoreRow);
-																td.text(aggregatedScore["aggregateScore"][prop]);
-															}
-														}
-													}
-
-
-													//showAggregateSubAnnotationScores(selectedAnnotation, subAnnotationScore["name"], tbody);
-													//let rows = ["total", "median", "mean", "min", "max", "stddev"];
-													let rows = ["median", "mean", "min", "max", "stddev"];
-													//let columns = ["z","percentile","percentage","rank","count","normalized","raw"];
-													let columns = ["raw", "normalized", "count", "rank", "percentage", "percentile"];
-													for (let rowName of rows) {
-														let tr = $('<tr>');
-														tr.appendTo(tbody);
-														let th = $('<th>');
-														th.appendTo(tr);
-														th.attr("scope", "column");
-														th.text(rowName);
-														
-														for (let columnName of columns) {
-															let td = $('<td>');
-															td.appendTo(tr);
-															if (rowName == "total") {
-																if (columnName == "rank" || columnName == "percentage" || columnName == "percentile") {
-																	td.text("");
-																}
-																else {
-																	td.text(subAnnotationScore[columnName]["scoreStats"]["score"]["normalized"]);
-																}
-															}
-															else {
-																td.text(subAnnotationScore[columnName]["scoreStats"]["stats"][rowName]);
-															}
-														}
-
-													}
-
-												}
-											});
-
-							}
-						}
-					}
-				});
-}
-
-
-
-
-//top right table, based on corpus
-function showCorpusAggregateScore(selectedAnnotation, div) {
-	$.when(
-			$.ajax(
-				{
-					dataType: "json",
-					url: getCorpusAggregatesUrl(selectedAnnotation)
-				}
-			)
-		).done(
-				function(data) {
-//					$('#corpusAggregateScore').empty();
-//					$('#corpusAggregateScores').empty();
-//					$('#corpusAggregateScoresDelta').empty();
-					div.empty();
-					
-					let tb = $('<table>');
-					tb.attr("class", "table table-sm");
-					//tb.appendTo($('#corpusAggregateScore'));
-					tb.appendTo(div);
-					let tbody = $('<tbody>');
-					tbody.appendTo(tb);
-					let scoreProperties = ["raw", "count", "normalized"];
-					for (let prop of scoreProperties) {
-					//for (let prop of Object.keys(data["scoreStats"]["score"])) {
-						let tr = $('<tr>');
-						tr.appendTo(tbody);
-						let td = $('<td>');
-						td.appendTo(tr);
-						td.text(data["scoreStats"]["score"][prop]);
-						let th = $('<th>');
-						th.appendTo(tr);
-						th.attr("scope", "row");
-						th.text(prop);
-
-					}
-					let statsProperties = ["median", "mean", "min", "max", "stddev"];
-					for (let prop of statsProperties) {
-					//for (let prop of Object.keys(data["scoreStats"]["stats"])) {
-						let tr = $('<tr>');
-						tr.appendTo(tbody);
-						let td = $('<td>');
-						td.appendTo(tr);
-						td.text(data["scoreStats"]["stats"][prop]);
-						let th = $('<th>');
-						th.appendTo(tr);
-						th.attr("scope", "row");
-						th.text(prop);
-
-					}
-				});
-}
-
-//for a given annotation/subannotation in the document, add the matching corpus scores to the table
-function showAggregateSubAnnotationScores(selectedAnnotation, subAnnotationName, tbody) {
-	$.when(
-			$.ajax(
-				{
-					dataType: "json",
-					url: getCorpusAggregatesUrl(selectedAnnotation)
-				}
-			)
-		).done(
-				function(data) {
-					for (let subAnnotationScore of data["detailScores"]) {
-						if (subAnnotationScore.name == subAnnotationName) {
-							let rows = ["median", "mean", "min", "max", "stddev"];
-							let columns = ["raw", "normalized", "count", "rank", "percentage", "percentile"];
-							for (let rowName of rows) {
-								let tr = $('<tr>');
-								tr.appendTo(tbody);
-								let th = $('<th>');
-								th.appendTo(tr);
-								th.attr("scope", "column");
-								th.text(rowName);
-								for (let columnName of columns) {
-									let td = $('<td>');
-									td.appendTo(tr);
-									td.text(subAnnotationScore[columnName]["scoreStats"]["stats"][rowName]);
-								}
-							}
-						}
-					}
-				});
-}
-
-//for a given annotation/subannotation in the corpus, add the matching document scores to the table
-function showCorpusAggregateSubAnnotationScores(selectedAnnotation, subAnnotationName, tbody) {
-	$.when(
-			$.ajax(
-				{
-					dataType: "json",
-					url: getCorpusAggregatesUrl(selectedAnnotation)
-				}
-			)
-		).done(
-				function(data) {
-					for (let subAnnotationScore of data["detailScores"]) {
-						if (subAnnotationScore.name == subAnnotationName) {
-							let rows = ["median", "mean", "min", "max", "stddev"];
-							let columns = ["raw", "normalized", "count", "rank", "percentage", "percentile"];
-							for (let rowName of rows) {
-								let tr = $('<tr>');
-								tr.appendTo(tbody);
-								let th = $('<th>');
-								th.appendTo(tr);
-								th.attr("scope", "column");
-								th.text(rowName);
-								for (let columnName of columns) {
-									let td = $('<td>');
-									td.appendTo(tr);
-									td.text(subAnnotationScore[columnName]["scoreStats"]["stats"][rowName]);
-								}
-							}
-						}
-					}
-				});
-}
-
-
-function showCorpusAggregateScoresDelta(selectedAnnotation, subAnnotationScore) {
-	$.when(
-			$.ajax(
-				{
-					dataType: "json",
-					url: getCorpusAggregatesUrl(selectedAnnotation)
-				}
-			)
-		).done(
-				function(data) {
-					for (let subAnnotationAggregateScore of data["detailScores"]) {
-						if (subAnnotationScore.name == subAnnotationAggregateScore.name) {
-//							if (isObject(data[annotation])) {
-
-
-								//for (let subAnnotationScore of data[annotation]["aggregatedScores"]) {
-									let tb = $('<table>');
-									tb.attr("class", "table table-sm table-bordered");
-									tb.appendTo($('#corpusAggregateScores'));
-									let tbody = $('<tbody>');
-									tbody.appendTo(tb);
-									let tr = $('<tr>');
-									tr.appendTo(tbody);
-									let th = $('<th>');
-									th.appendTo(tr);
-									th.attr("scope", "row");
-									th.text(subAnnotationAggregateScore["name"]);
-									let td = $('<td>');
-									td.appendTo(tr);
-
-//									for (let prop of Object.keys(subAnnotationScore["normalized"]["scoreStats"]["score"])) {
-//										let tr = $('<tr>');
-//										tr.appendTo(tbody);
-//										let th = $('<td>');
-//										th.appendTo(tr);
-//										th.attr("scope", "row");
-//										th.text(prop);
-//										let td = $('<td>');
-//										td.appendTo(tr);
-//										td.text(subAnnotationScore["normalized"]["scoreStats"]["score"][prop]);
-//									}
-									for (let prop of Object.keys(subAnnotationAggregateScore[aggregateName]["scoreStats"]["stats"])) {
-										let tr = $('<tr>');
-										tr.appendTo(tbody);
-										let th = $('<td>');
-										th.appendTo(tr);
-										th.attr("scope", "row");
-										th.text(prop);
-										let td = $('<td>');
-										td.appendTo(tr);
-										td.text(subAnnotationScore[aggregateName]["scoreStats"]["stats"][prop]);
-										
-									}
-									//spacer rows
-									let tr1 = $('<tr>');
-									tr1.appendTo(tbody);
-									let th1 = $('<td>');
-									th1.appendTo(tr1);
-									th1.attr("scope", "row");
-									th1.text('&nbsp;');
-									
-									let tr2 = $('<tr>');
-									tr2.appendTo(tbody);
-									let th2 = $('<td>');
-									th2.appendTo(tr2);
-									th2.attr("scope", "row");
-									th2.text('&nbsp;');
-								//}
-							//}
-						}
-					}
-				});
-}
-
-function showSubAnnotationScores(subAnnotationIdx) {
-	$.when(
-			$.ajax(
-				{
-					dataType: "json",
-					url: getBaseUrl()
-				}
-			)
-		).done(
-				function(data) {
-					for (let dannotation of Object.keys(data)) {
-						if (annotation == dannotation) {
-							if (isObject(data[annotation])) {
-
-								let idx = 0;
-								for (let subAnnotation of data[annotation]["aggregateScores"]) {
-									console.log(idx + " : " + subAnnotationIdx);
-									console.log(data[annotation]["aggregateScores"]);
-									if (idx == subAnnotationIdx) {
-
-										$('#subAnnotationScores').empty();
-										
-										let tb = $('<table>');
-										tb.attr("class", "table table-sm");
-										tb.appendTo($('#subAnnotationScores'));
-										let tbody = $('<tbody>');
-										tbody.appendTo(tb);
-										let properties = ["name", "raw", "normalized", "rank", "percentile", "percentage"];
-										for (let prop of properties) {
-											let tr = $('<tr>');
-											tr.appendTo(tbody);
-											let th = $('<th>');
-											th.appendTo(tr);
-											th.attr("scope", "row");
-											th.text(prop);
-											let td = $('<td>');
-											td.appendTo(tr);
-											td.text(subAnnotation[prop]);
-										}
-									}
-									idx++;
-								}
-
-							}
-						}
-					}
-				});
-}
-
-
-
 function getAnnotationDisplayName(annotationName) {
 	let endIdx = annotationName.lastIndexOf("Annotation");
 	if (endIdx == -1) {
@@ -769,13 +180,12 @@ function getAnnotationDisplayName(annotationName) {
 }
 
 
-//&Annotation=io.outofprintmagazine.nlp.pipeline.OOPAnnotations$VaderSentimentAnnotation
 function makeSentenceBarChart(annotationName, svgName) {
 	$.when( 
 			$.ajax(
 				{
 					dataType: "json",
-					url: getBaseUrl() + "&Scope=Sentences&Annotation="+annotationName+(getNormalizeSelection()?"&Aggregate=Normalized":"")
+					url: "GetDocumentAnalysisScores?Corpus="+ corpus+"&Document="+ docId + "&Scope=SentencesAnnotation&Annotation="+annotationName
 				}
 			)
 		).done(
@@ -799,7 +209,7 @@ function makeTokenBarChart(annotationName, svgName) {
 			$.ajax(
 				{
 					dataType: "json",
-					url: getBaseUrl() + "&Scope=Tokens&Annotation="+annotationName
+					url: "GetDocumentAnalysisScores?Corpus="+ corpus+"&Document="+ docId + "&Scope=TokensAnnotation&Annotation="+annotationName
 				}
 			)
 		).done(
@@ -813,10 +223,12 @@ function makeTokenBarChart(annotationName, svgName) {
 							)
 						).done(
 								function(raw_data) {
-									let tokenCount = raw_data["io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPDocumentLengthAnnotation"]["tokenCount"];
+									let tokenCount = raw_data["OOPTokenCountAnnotation"];
 									let data = [];
 									for (let [index, val] of rawData[annotationName].entries()) {
+
 										if (isNumber(val) || isString(val)) {
+											
 											data.push({"name": tokenCount-index, "value": val});
 										}
 										else if (isObject(val)) {
@@ -826,15 +238,18 @@ function makeTokenBarChart(annotationName, svgName) {
 													s = (s + Number(val[key]));
 												}
 											}
+											
 											data.push({"name": tokenCount-index, "value": s});
 										}
 										else {
+											
 											data.push({"name": tokenCount-index, "value": 0});
 										}
 				
 									}
-									//console.log(data);
-									drawTokensBarChart(data, svgName, getAnnotationDisplayName(annotationName), showSentenceTextForTokenId);
+									console.log("makeTokenBarChart");
+									console.log(data);
+									drawTokensBarChart(JSON.parse(JSON.stringify(data)), svgName, getAnnotationDisplayName(annotationName), showSentenceTextForTokenId);
 								})
 				});
 		
@@ -869,7 +284,7 @@ function makeTokenScoreBarChart(annotationName, scoreName, svgName) {
 			$.ajax(
 				{
 					dataType: "json",
-					url: getBaseUrl() + "&Scope=Tokens&Annotation="+annotationName
+					url: "GetDocumentAnalysisScores?Corpus="+ corpus+"&Document="+ docId + "&Scope=TokensAnnotation&Annotation="+annotationName+"&Subannotation="+scoreName
 				}
 			)
 		).done(
@@ -883,10 +298,10 @@ function makeTokenScoreBarChart(annotationName, scoreName, svgName) {
 							)
 						).done(
 								function(raw_data) {
-									let tokenCount = raw_data["io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPDocumentLengthAnnotation"]["tokenCount"];
+									let tokenCount = raw_data["OOPTokenCountAnnotation"];
 									let data = [];
 									for (let [key, val] of rawData[annotationName].entries()) {
-				//						if (key == scoreName) {
+										//if (key == scoreName) {
 											if (isNumber(val) || isString(val)) {
 												data.push({"name": tokenCount-key, "value": val});
 											}
@@ -904,43 +319,16 @@ function makeTokenScoreBarChart(annotationName, scoreName, svgName) {
 											else {
 												data.push({"name": tokenCount-key, "value": 0});
 											}
-				//						}
-				//						else {
-				//							data.push({"name": scoreName, "value": 0});
-				//						}
+										//}
+										//else {
+										//	data.push({"name": scoreName, "value": 0});
+										//}
 									}
-									//console.log(data);
-									drawTokensBarChart(data, svgName, scoreName, showSentenceTextForTokenId);
+									console.log(data);
+									drawTokensBarChart(JSON.parse(JSON.stringify(data)), svgName, scoreName, showSentenceTextForTokenId);
 								})
 							});
 					
-		
-}
-
-function makeAggregateBarChart(annotationName, svgName) {
-	$.when( 
-			$.ajax(
-				{
-					dataType: "json",
-					url: getBaseUrl()
-				}
-			)
-		).done(
-				function(rawData) {
-					let subAnnotationAttribute = "normalized";
-					let data = [];
-					for (let annotation of Object.keys(rawData)) {
-
-						if (annotation == annotationName) {
-							if (isObject(rawData[annotation])) {
-								for (let subAnnotation of rawData[annotationName]["aggregateScores"]) {
-									data.push({"name": subAnnotation["name"], "value": subAnnotation[subAnnotationAttribute]});
-								}
-							}
-						}
-					}
-					drawBarChart(data, svgName, getAnnotationDisplayName(annotationName), showSubAnnotationScores);
-				});
 		
 }
 
@@ -1014,6 +402,7 @@ function drawBarChart(data, svgName, yLabel, onclick) {
 }
 
 function drawTokensBarChart(data, svgName, yLabel, onclick) {
+	console.log(data);
 //    data = data.sort(function (a, b) {
 //        return d3.ascending(Number(a.value), Number(b.value));
 //    });
@@ -1072,12 +461,7 @@ function drawTokensBarChart(data, svgName, yLabel, onclick) {
 	})
 	.attr("width", x.bandwidth())
 	.attr("height", function (d) {
-		if ((height - y(d.value)) < 0) {
-			return 0;
-		}
-		else {
-			return height - y(d.value);
-		}
+		return d.value;
 	});
 	g.selectAll(".bar")
 	.on("click", function(d, i) {
