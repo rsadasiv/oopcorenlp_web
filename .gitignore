@@ -1,7 +1,9 @@
 WebContent/Corpora
+webapp/Corpora
 target
 data/
 WebContent/images/cached/
+webapp/images/cached/
 .classpath
 .gitconfig
 .project
