@@ -102,7 +102,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 						String valueName = valueNamesIter.next();
 						sz = sz.add(
 								new BigDecimal(
-										sentence.get(annotation).get(valueName).asInt(0)
+										sentence.get(annotation).get(valueName).asDouble(0.0)
 								)
 						);
 					}
@@ -110,7 +110,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 
     			}
     			else {
-    				stats.add(sentence.get(annotation).asInt(0));
+    				stats.add(sentence.get(annotation).asDouble(0.0));
     			}
     		}
     		else {
@@ -160,7 +160,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 							String valueName = valueNamesIter.next();
 							sz = sz.add(
 									new BigDecimal(
-											token.get(annotation).get(valueName).asInt(0)
+											token.get(annotation).get(valueName).asDouble(0.0)
 									)
 							);
 						}
@@ -168,7 +168,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 	
 	    			}
 	    			else {
-	    				stats.add(token.get(annotation).asInt(0));
+	    				stats.add(token.get(annotation).asDouble(0.0));
 	    			}
 	    		}
 	    		else {
@@ -201,7 +201,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 							if (valueName.equals(subannotation)) {
 								sz = sz.add(
 										new BigDecimal(
-												token.get(annotation).get(valueName).asInt(0)
+												token.get(annotation).get(valueName).asDouble(0.0)
 										)
 								);
 							}
@@ -210,7 +210,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 	
 	    			}
 	    			else {
-	    				stats.add(token.get(annotation).asInt(0));
+	    				stats.add(token.get(annotation).asDouble(0.0));
 	    			}
 	    		}
 	    		else {
@@ -244,7 +244,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 								String valueName = valueNamesIter.next();
 								sz = sz.add(
 										new BigDecimal(
-												token.get(annotation).get(valueName).asInt(0)
+												token.get(annotation).get(valueName).asDouble(0.0)
 										)
 								);
 							}
@@ -253,7 +253,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 	    			}
 	    			else {
 	    				for (int i=0;i<token.get("OOPSyllablesAnnotation").asInt(1);i++) {
-	    					stats.add(token.get(annotation).asInt(0));
+	    					stats.add(token.get(annotation).asDouble(0.0));
 	    				}
 	    			}
 	    		}

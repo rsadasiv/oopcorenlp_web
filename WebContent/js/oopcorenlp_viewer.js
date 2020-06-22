@@ -220,7 +220,7 @@ function isString (value) {
 }
 
 function isNumber (value) {
-	return typeof value === 'number' || isFinite(value);
+	return !isArray(value) && (typeof value === 'number' || isFinite(value));
 }
 
 function isObject (value) {
@@ -237,7 +237,6 @@ function listMapAnnotationToUl(data, annotation_list, div) {
 		if (endIdx == -1) {
 			endIdx = annotationName.length;
 		}
-
 		if (isNumber(data[annotationName])) {
 			let ul = $('<ul>');
 			div.append(ul);
@@ -274,17 +273,22 @@ function listMapAnnotationToUl(data, annotation_list, div) {
 			for (let key in data[annotationName]) {
 				scoreTotal = scoreTotal + Number(data[annotationName][key]);
 			}
-			div.append(createAccordionButton(displayName, scoreTotal, annotationName));
-			list.forEach(function(annotation, index) {
-				let d = $("<div>");
-				d.attr("class", "container-fluid collapse");
-				d.attr("id", displayName+"_div");
-				div.append(d);
-				let ul = $('<ul>');
-				d.append(ul);
-				ul.attr("class", "list-group list-group-flush");
-				ul.append(scalarAnnotationToLi(data[annotationName], annotation, annotationName));
-			});
+			if (scoreTotal == 0) {
+				div.append(createAccordionButtonNoColorPicker(displayName, scoreTotal, annotationName));
+			}
+			else {
+				div.append(createAccordionButton(displayName, scoreTotal, annotationName));
+				list.forEach(function(annotation, index) {
+					let d = $("<div>");
+					d.attr("class", "container-fluid collapse");
+					d.attr("id", displayName+"_div");
+					div.append(d);
+					let ul = $('<ul>');
+					d.append(ul);
+					ul.attr("class", "list-group list-group-flush");
+					ul.append(scalarAnnotationToLi(data[annotationName], annotation, annotationName));
+				});
+			}
 		}
 	});
 }
@@ -334,114 +338,20 @@ function listMapAnnotationToUlNoColorPicker(data, annotation_list, div) {
 			}
 			div.append(createAccordionButtonNoColorPicker(displayName, scoreTotal, annotationName));
 			list.forEach(function(annotation, index) {
-				let d = $("<div>");
-				d.attr("class", "container-fluid collapse");
-				d.attr("id", displayName+"_div");
-				div.append(d);
-				let ul = $('<ul>');
-				d.append(ul);
-				ul.attr("class", "list-group list-group-flush");
-				ul.append(scalarAnnotationToLiNoColorPicker(data[annotationName], annotation, annotationName));
+				if (data[annotationName][annotation] != 1) {
+					let d = $("<div>");
+					d.attr("class", "container-fluid collapse");
+					d.attr("id", displayName+"_div");
+					div.append(d);
+					let ul = $('<ul>');
+					d.append(ul);
+					ul.attr("class", "list-group list-group-flush");
+					
+					ul.append(scalarAnnotationToLiNoColorPicker(data[annotationName], annotation, annotationName));
+				}
 			});
 		}
 	});
-}
-
-function listActorsAnnotationToUl(data, annotationName, div) {
-
-	let list = [];
-
-	for(let key in data[annotationName]){
-		list.push(data[annotationName][key]);
-	}
-	list.sort((a, b) => (a.importance > b.importance) ? -1 : 1);
-	let actors = [];
-	list.forEach(function (actor, index) {
-		actors.push(actor.canonicalName);
-	});
-
-	actors.forEach(function(actorCanonicalName, index) {
-		let actor = data[annotationName][actorCanonicalName];
-		let divName = actor.canonicalName.replace(" ", "_");
-		div.append(createAccordionButton(divName, actor.importance));
-		let d = $("<div>");
-		d.attr("class", "container-fluid collapse");
-		d.attr("id", divName+"_div");
-		div.append(d);
-		let ul = $('<ul>');
-		d.append(ul);
-		ul.attr("class", "list-group list-group-flush");
-		//let actorAttrs = Object.keys(actor);
-		//sort attrs?
-		let actorAttrs = [
-			"canonicalName",
-			"importance",
-			"firstAppearance",
-			"lastAppearance",
-			"coreNlpGender",
-			"oopgender",
-			"quotes",
-			"attributes"
-		]
-		actorAttrs.forEach(function(attrName, index) {
-			if (attrName === "coreNlpSentiment" || attrName === "vaderSentiment") {
-				//pass
-			}
-			else if (isArray(actor[attrName])) {
-				let li = $('<li>');
-				ul.append(li);
-				li.attr("class", "list-group-item list-group-item-light");
-				li.append("<span data-toggle='toolip' data-placement='right' title='"+attrName+"' boundary='window'>"+attrName+ ":</span>");
-				let sul = $('<ul>');
-				li.append(sul);
-				sul.attr("class", "list-group list-group-flush");
-				actor[attrName].forEach(function (listItem, listIndex) {
-					let li = $('<li>');
-					li.attr("class", "list-group-item list-group-item-light");
-					li.append("<span data-toggle='toolip' data-placement='right' title='"+listItem+"' boundary='window'>"+listItem+ "</span>");
-					sul.append(li);
-				});
-
-			}
-			else if (isString(actor[attrName])) {
-				ul.append(actorAnnotationToLi(actor, attrName, annotationName+"."+divName));
-			}
-			else if (isNumber(actor[attrName])) {
-				ul.append(actorAnnotationToLi(actor, attrName, annotationName+"."+divName));
-			}
-			else if (isObject(actor[attrName])) {
-				Object.keys(actor[attrName]).forEach(function (listItem, listIndex) {
-					let li = $('<li>');
-					ul.append(li);
-					li.attr("class", "list-group-item list-group-item-light");
-					li.append("<span data-toggle='toolip' data-placement='right' title='"+getAnnotationDisplayName(listItem)+"' boundary='window'>"+getAnnotationDisplayName(listItem)+ ":</span>");
-					let sul = $('<ul>');
-					li.append(sul);
-					sul.attr("class", "list-group list-group-flush");
-					let sublist = Object.keys(actor[attrName][listItem]);
-					sublist.sort((a, b) => (parseFloat(actor[attrName][listItem][a]) < parseFloat(actor[attrName][listItem][b])) ? 1 : -1);
-					sublist.forEach(function (sublistItem, sublistIndex) {
-						let li = $('<li>');
-						li.attr("class", "list-group-item list-group-item-light");
-						li.append("<span data-toggle='toolip' data-placement='right' title='"+sublistItem+"' boundary='window'>"+sublistItem+": "+actor[attrName][listItem][sublistItem]+ "</span>");
-						sul.append(li);
-					});
-				});
-			}
-		});
-	});
-}
-
-function actorAnnotationToUl(data, annotationGroupName) {
-	let list = Object.keys(data);
-	list.sort((a, b) => (parseFloat(data[a]) < parseFloat(data[b])) ? 1 : -1);
-	let ul = $('<ul>');
-	ul.attr("class", "list-group list-group-flush");
-	list.forEach(function(annotationName, index) {
-		ul.append(actorAnnotationToLi(data, annotationName, annotationGroupName));
-
-	});
-	return ul;
 }
 
 function getAnnotationDisplayName(annotationName) {
@@ -450,31 +360,6 @@ function getAnnotationDisplayName(annotationName) {
 		endIdx = annotationName.length;
 	}
 	return annotationName.substring(annotationName.lastIndexOf("$")+1, endIdx);
-}
-
-function actorAnnotationToLi(data, annotationName, annotationGroupName) {
-	let li = $('<li>');
-	li.attr("class", "list-group-item list-group-item-light");
-	let displayName = annotationName;
-	let fullName = annotationName;
-	if (annotationGroupName) {
-		fullName = annotationGroupName+"."+annotationName;
-	}
-	else {
-		displayName = getAnnotationDisplayName(annotationName);
-	}
-	let dataValue = data[annotationName];
-
-	//format differently if scalar, array, object
-	//filter out sentiment for now
-
-	li.append("<span data-toggle='toolip' data-placement='right' title='"+fullName+"' boundary='window'>"+displayName+ "</span>: "+ dataValue);
-	//where should this click go?
-		li.click(function() {
-			alert(fullName);
-		});
-	//}
-	return li;
 }
 
 function createAccordionButton(displayName, score, annotationName) {

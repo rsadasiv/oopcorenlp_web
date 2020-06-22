@@ -57,6 +57,9 @@ public class CorpusDocumentsViewer extends HttpServlet {
             	documentNode.put("Author", stats.findValue("AuthorAnnotation").asText());
             	documentNode.put("Date", stats.findValue("DocDateAnnotation").asText());
             	documentNode.put("Title", stats.findValue("DocTitleAnnotation").asText());
+            	if (stats.findValue("OOPThumbnailAnnotation")!= null) {
+            		documentNode.put("Thumbnail", stats.findValue("OOPThumbnailAnnotation").asText());
+            	}
             	corporaNode.add(documentNode);
 
 				br.close();

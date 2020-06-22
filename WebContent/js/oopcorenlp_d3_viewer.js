@@ -208,14 +208,16 @@ function makeSentenceBarChart(annotationName, svgName) {
 				function(rawData) {
 					let data = [];
 					for (let [index, val] of rawData[annotationName].entries()) {
+						console.log("val: " + val)
 						if (isNumber(val) || isString(val)) {
 							data.push({"name": index, "value": val});
 						}
 						else {
+							console.log("datatype missing?")
 							data.push({"name": index, "value": 0});
 						}
 					}
-					drawBarChart(data, svgName, getAnnotationDisplayName(annotationName), showSentenceText);
+					drawBarChart(JSON.parse(JSON.stringify(data)), svgName, getAnnotationDisplayName(annotationName), showSentenceText);
 				});
 		
 }

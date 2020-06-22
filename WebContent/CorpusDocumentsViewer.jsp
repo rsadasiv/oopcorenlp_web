@@ -54,6 +54,7 @@
 	<table class="table table-hover">
 		<thead>
 			<tr>
+				<th scope="col"></th>
 				<th scope="col">Metadata</th>
 				<th scope="col">Read</th>
 				<th scope="col">Interact</th>
@@ -72,6 +73,15 @@ while (corporaDocumentIter.hasNext()) {
 	String corpusDocumentId = d.get("DocID").asText();
 %>
    	<tr>
+   		<td scope="row">
+   			<%
+   				if (d.has("Thumbnail")) {
+   					%>
+   					<img src="<%=d.get("Thumbnail") %>" />
+   					<% 
+   				}
+   			%>
+   		</td>
    		<th scope="row">
    			<p>DocID: <%= corpusDocumentId %></p>
    			<p>Title: <%= d.get("Title").asText()%></p>

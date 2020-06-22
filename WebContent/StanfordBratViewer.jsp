@@ -63,8 +63,7 @@
 <!-- d3 -->
 <script type="text/javascript"
 	src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js" crossorigin="anonymous"></script>
-<script type="text/javascript"
-	src="http://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.4.17/dagre-d3.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.4.17/dagre-d3.min.js" integrity="sha256-X4zma2GcAwVB3HkYqRbLl5ihF4ZnVc95EzZLsQ6ZAKE=" crossorigin="anonymous"></script>
 
 <!-- CoreNLP -->
 <link rel="stylesheet" type="text/css" href="css/brat/corenlp-brat.css" />
@@ -130,7 +129,7 @@
         
         $('#annotators').change(
         		function() {
-        	    	window.location.href = location.protocol + '//' + location.host + location.pathname + "?Corpus="+ properties.corpus+"&Document=" + properties.docId + "&Annotation=" + $('#annotators option:selected').val();
+        	    	window.location.href = location.protocol + '//' + location.host + location.pathname + "?Corpus="+ corpus+"&Document=" + docId + "&Annotation=" + $('#annotators option:selected').val();
         	    }
         	);
 
