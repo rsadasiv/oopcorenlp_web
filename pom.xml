@@ -46,6 +46,12 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.5.6</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.maven.doxia</groupId>
+			<artifactId>doxia-site-renderer</artifactId>
+			<version>1.9.2</version>
+		</dependency>
 
 	</dependencies>
 	<build>
@@ -77,6 +83,11 @@
         			<server>TomcatServer</server>
 			    </configuration>
 			</plugin>
+			<plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-javadoc-plugin</artifactId>
+        		<version>3.2.0</version>
+	      	</plugin>
 		</plugins>
 	</build>
 </project>
