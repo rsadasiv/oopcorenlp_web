@@ -4,6 +4,7 @@ target
 data/
 WebContent/images/cached/
 webapp/images/cached/
+.dbeaver/
 .classpath
 .gitconfig
 .project
