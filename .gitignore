@@ -2,6 +2,7 @@ WebContent/Corpora
 webapp/Corpora
 target
 data/
+temp/
 WebContent/images/cached/
 webapp/images/cached/
 .dbeaver/

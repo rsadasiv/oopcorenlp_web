@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Developer's Guide - Dependencies</title>
+	</head>
+	<body>
+		<h4>Java Dependencies</h4>
+		<p>oopcorenlp_web depends on a few <a href="dependencies.html">external java libraries</a>. These dependencies are specified in pom.xml and are managed by maven.</p>
+		<p>All java dependencies are available from <a href="https://search.maven.org/">maven central</a>. Please respect the licensing on any 3rd party libraries.</p>
+		<p>
+		oopcorenlp_web does not have an explicit dependency on <a href="../oopcorenlp/index.html">oopcorenlp</a> or <a href="https://stanfordnlp.github.io/CoreNLP/">Stanford CoreNLP</a>.
+		However the StandfordBrat visualizations in particular are highly indebted to code in the Stanford CoreNLP package, and in general I think it will be very difficult to run oopcorenlp_web without oopcorenlp.
+		See <a href="../oopcorenlp_ci/index.html">oopcorenlp_ci</a> for automated build scripts to manage these dependencies.
+		</p>
+		<p>The oopcorenlp_web.war file should be compatible with any J2EE web container. However, I strongly recommend running it under <a href="https://tomcat.apache.org/index.html">Tomcat</a>.</p>
+		<h4>Browser Dependencies</h4>
+		<p>oopcorenlp_web depends on several external libraries:</p>
+		<ul>
+			<li><a href="https://getbootstrap.com/">Bootstrap</a> JS and CSS (v4.3.1)</li>
+			<li><a href="https://jquery.com/">jQuery</a> (v3.4.1)</li>
+			<li><a href="https://jqueryui.com/">jQuery UI</a> (v1.12.1)</li>
+			<li><a href="https://d3js.org/">D3</a> (v5)</li>
+			<li><a href="https://d3js.org/">D3</a> (v3) for word clouds</li>
+			<li><a href="https://popper.js.org/">Popper</a> (v1.4.7)</li>
+		</ul>
+		<p>These dependencies are specified as html link or script tags and are resolved in the browser via internet based cdn sites.</p>
+		<h4>Image dependencies</h4>
+		<p>Various oopcorenlp annotations include thumbnail image references. oopcorenlp_web passes these references directly through to the browser as html img src attributes with no validation. YMMV.</p>  
+	</body>
+</html>

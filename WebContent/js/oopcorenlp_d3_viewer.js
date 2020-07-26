@@ -147,19 +147,23 @@ function drawDocumentAnnotators(selectedAnnotation) {
 		);
 }
 
-function showSentenceText(sentenceIdx) {
-	$.when(
-			$.ajax(
-				{
-					dataType: "json",
-					url: getBaseUrl()
-				}
-			)
-		).done(
-				function(raw_data) {
-					 $("#sentenceText").html(raw_data.sentences[sentenceIdx].text);
-				}
-		);
+
+
+function createSentenceTextInDivCb(div) {
+	return function(sentenceIdx) {
+		$.when(
+				$.ajax(
+					{
+						dataType: "json",
+						url: getBaseUrl()
+					}
+				)
+			).done(
+					function(raw_data) {
+						 $(div).html(raw_data.sentences[sentenceIdx].text);
+					}
+			);
+	}
 }
 
 function showSentenceTextForTokenId(tokenIdx) {
@@ -196,7 +200,8 @@ function getAnnotationDisplayName(annotationName) {
 }
 
 
-function makeSentenceBarChart(annotationName, svgName) {
+
+function makeSentenceBarChart(annotationName, svgName, textDiv) {
 	$.when( 
 			$.ajax(
 				{
@@ -217,7 +222,9 @@ function makeSentenceBarChart(annotationName, svgName) {
 							data.push({"name": index, "value": 0});
 						}
 					}
-					drawBarChart(JSON.parse(JSON.stringify(data)), svgName, getAnnotationDisplayName(annotationName), showSentenceText);
+					let cb = createSentenceTextInDivCb(textDiv);
+					console.log(cb);
+					drawBarChart(JSON.parse(JSON.stringify(data)), svgName, getAnnotationDisplayName(annotationName), cb);
 				});
 		
 }
@@ -351,7 +358,8 @@ function makeTokenScoreBarChart(annotationName, scoreName, svgName) {
 }
 
 function drawBarChart(data, svgName, yLabel, onclick) {
-	$(svgName).empty();
+	//$(svgName).empty();
+	console.log(svgName);
 	let svg = d3.select(svgName),
 	margin = {
 		top: 20,
@@ -556,6 +564,40 @@ function makeCloud(annotationName, svgName) {
 						//console.log(data.slice(0,50));
 						drawCloud(data.slice(0,50), svgName, getAnnotationDisplayName(annotationName));
 						showCloudData(tdata, "#tableViz");
+					}
+				});
+		
+}
+
+function makeActorCloud(selectedActor, annotationName, svgName, tableName) {
+	$.when( 
+			$.ajax(
+				{
+					dataType: "json",
+					url: getBaseUrl()
+				}
+			)
+		).done(
+				function(rawData) {
+					let data = [];
+					for (const actor of rawData.OOPActorsAnnotation) {
+						if (actor.canonicalName == selectedActor && actor.attributes.hasOwnProperty(annotationName)) {
+							for (const annotation of Object.keys(actor.attributes[annotationName])) {
+							//for (let [key, val] of rawData[annotationName].entries()) {
+								if (isNumber(actor.attributes[annotationName][annotation]) || isString(actor.attributes[annotationName][annotation])) {
+									data.push({"text": annotation, "size": actor.attributes[annotationName][annotation]});
+								}
+								else {
+									data.push({"text": annotation, "size": 0});
+								}
+							}
+							console.log(data);
+							data.sort((a, b) => (parseFloat(a.size) < parseFloat(b.size)) ? 1 : -1);
+							let tdata = $.extend(true, [], data.slice(0,50));
+							//console.log(data.slice(0,50));
+							drawSmallCloud(data.slice(0,50), svgName, getAnnotationDisplayName(annotationName));
+							//showCloudData(tdata, tableName);
+						}
 					}
 				});
 		

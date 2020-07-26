@@ -14,9 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine.web;
+package io.outofprintmagazine.web.servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,19 +28,53 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
-@WebServlet("/OOPDocumentViewer")
-public class OOPDocumentViewer extends AbstractOOPServlet {
+
+@WebServlet("/OOPStoryArcViewer")
+public class OOPStoryArcViewer extends AbstractOOPServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public OOPDocumentViewer() {
+    public OOPStoryArcViewer() {
         super();
     }
     
-
+    public void setReadingStats(HttpServletRequest request, String corpus, String document) throws IOException {
+    	JsonNode oop = getCorpusDocumentOOPJson(corpus, document);
+		request.setAttribute(
+				"ReadingTime",
+				String.format(
+					"%.0f",
+					oop.get("OOPWordCountAnnotation").asDouble()/250
+				)
+		);
+		request.setAttribute(
+				"ListeningTime",
+				String.format(
+					"%.0f",
+					oop.get("OOPSyllableCountAnnotation").asDouble()/160
+				)
+		);
+		request.setAttribute(
+				"ReadingLevel",
+				String.format(
+					"%.0f",
+					oop.get("OOPFleschKincaidAnnotation").asDouble()*100
+				)
+		);
+		request.setAttribute(
+				"EmotionalLevel",
+				String.format(
+					"%.0f",
+					oop.get("VaderSentimentAnnotation").asDouble()*100
+				)
+		);
+    }
+    
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -44,6 +82,7 @@ public class OOPDocumentViewer extends AbstractOOPServlet {
 		String corpus = request.getParameter("Corpus");
 		String document = request.getParameter("Document");
         setMetadataAttributes(request, corpus, document);
-        request.getSession().getServletContext().getRequestDispatcher("/OOPDocumentViewer.jsp").forward(request, response);
+        setReadingStats(request, corpus, document);
+        request.getSession().getServletContext().getRequestDispatcher("/OOPStoryArcViewer.jsp").forward(request, response);
 	}
 }

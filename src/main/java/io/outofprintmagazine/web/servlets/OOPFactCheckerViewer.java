@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine.web;
+package io.outofprintmagazine.web.servlets;
 
 import java.io.IOException;
 
@@ -25,14 +25,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-@WebServlet("/TextMediumViewer")
-public class TextMediumViewer extends AbstractOOPServlet {
+@WebServlet("/OOPFactCheckerViewer")
+public class OOPFactCheckerViewer extends AbstractOOPServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public TextMediumViewer() {
+    public OOPFactCheckerViewer() {
         super();
     }
     
@@ -44,11 +44,6 @@ public class TextMediumViewer extends AbstractOOPServlet {
 		String corpus = request.getParameter("Corpus");
 		String document = request.getParameter("Document");
         setMetadataAttributes(request, corpus, document);
-		request.setAttribute(
-				"Text", 
-				plainTextToHtml(getCorpusDocumentTxtString(corpus, document))
-		);
-
-        request.getSession().getServletContext().getRequestDispatcher("/TextMediumViewer.jsp").forward(request, response);
+        request.getSession().getServletContext().getRequestDispatcher("/OOPFactCheckerViewer.jsp").forward(request, response);
 	}
 }

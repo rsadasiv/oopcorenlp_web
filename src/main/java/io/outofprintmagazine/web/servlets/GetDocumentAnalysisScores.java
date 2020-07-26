@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine.web;
+package io.outofprintmagazine.web.servlets;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -105,6 +105,44 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 										sentence.get(annotation).get(valueName).asDouble(0.0)
 								)
 						);
+					}
+					stats.add(sz);
+
+    			}
+    			else {
+    				stats.add(sentence.get(annotation).asDouble(0.0));
+    			}
+    		}
+    		else {
+    			stats.add(0);
+    		}
+        }
+        return retval;
+    }
+    
+    protected JsonNode getSentencesAnnotationSubannotationScores(String corpus, String document, String annotation, String subannotation) throws IOException {
+        JsonNode scores = getCorpusDocumentOOPJson(corpus, document);
+        ObjectNode retval = getMapper().createObjectNode();
+        ArrayNode stats = retval.putArray(annotation);
+        Iterator<JsonNode> sentenceIterator = scores.get("sentences").elements();
+        while (sentenceIterator.hasNext()) {
+    		JsonNode sentence = sentenceIterator.next();
+    		if (sentence.hasNonNull(annotation)) {
+    			if (sentence.get(annotation).isArray()) {
+   					stats.add(sentence.get(annotation).size());
+    			}
+    			else if (sentence.get(annotation).isObject()) {
+					BigDecimal sz = new BigDecimal(0);
+					Iterator<String> valueNamesIter = sentence.get(annotation).fieldNames();
+					while (valueNamesIter.hasNext()) {
+						String valueName = valueNamesIter.next();
+						if (valueName.equals(subannotation)) {
+							sz = sz.add(
+									new BigDecimal(
+											sentence.get(annotation).get(valueName).asDouble(0.0)
+									)
+							);
+						}
 					}
 					stats.add(sz);
 
@@ -270,7 +308,8 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//all annotations at document level
 		if (request.getParameter("Scope") != null 
 				&& request.getParameter("Scope").equalsIgnoreCase("Document")
 				) {
@@ -285,6 +324,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 					response.flushBuffer();
 
 		}
+		//all annotations at sentence[id] level
 		else if (request.getParameter("Scope") != null 
 				&& request.getParameter("Scope").equalsIgnoreCase("Sentence")
 				&& request.getParameter("Id") != null
@@ -300,6 +340,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 					);
 					response.flushBuffer();
 		}
+		//all annotations at token[id] level
 		else if (request.getParameter("Scope") != null 
 				&& request.getParameter("Scope").equalsIgnoreCase("Token")
 				&& request.getParameter("Id") != null
@@ -315,6 +356,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 					);
 					response.flushBuffer();
 		}
+		//specific annotation at document level
 		else if (request.getParameter("Annotation") != null 
 				&& request.getParameter("Scope") != null 
 				&& request.getParameter("Scope").equalsIgnoreCase("DocumentAnnotation")
@@ -330,6 +372,25 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 					);
 					response.flushBuffer();
 		}
+		//specific subannotation at sentences level
+		else if (request.getParameter("Annotation") != null
+				&& request.getParameter("Subannotation") != null
+				&& request.getParameter("Scope") != null 
+				&& request.getParameter("Scope").equalsIgnoreCase("SentencesAnnotation")
+				) {
+					response.setContentType("application/json");
+					getMapper().writeValue(
+							response.getWriter(),
+							getSentencesAnnotationSubannotationScores(
+									request.getParameter("Corpus"), 
+									request.getParameter("Document"),
+									request.getParameter("Annotation"),
+									request.getParameter("Subannotation")
+							)
+					);
+					response.flushBuffer();
+		}
+		//specific annotation at sentences level
 		else if (request.getParameter("Annotation") != null 
 				&& request.getParameter("Scope") != null 
 				&& request.getParameter("Scope").equalsIgnoreCase("SentencesAnnotation")
@@ -345,6 +406,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 		    		);
 		    		response.flushBuffer();
 		}
+		//specific subannotation at tokens level
 		else if (request.getParameter("Annotation") != null
 				&& request.getParameter("Subannotation") != null
 				&& request.getParameter("Scope") != null 
@@ -362,6 +424,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 					);
 					response.flushBuffer();
 		}
+		//specific annotation at tokens level
 		else if (request.getParameter("Annotation") != null 
 				&& request.getParameter("Scope") != null 
 				&& request.getParameter("Scope").equalsIgnoreCase("TokensAnnotation")
@@ -377,6 +440,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 					);
 					response.flushBuffer();
 		}
+		//specific annotation at syllables level
 		else if (request.getParameter("Annotation") != null 
 				&& request.getParameter("Scope") != null 
 				&& request.getParameter("Scope").equalsIgnoreCase("SyllablesAnnotation")

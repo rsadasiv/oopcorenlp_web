@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Developer's Guide - Overview</title>
+	</head>
+	<body>
+		<h4>Overview</h4>
+		<p>
+			oopcorenlp_web is a java web application (war). This is not a React/Angular style Single Page App; routes are driven collaboratively via URLs.<br/>
+			oopcorenlp_web uses the <a href="https://maven.apache.org/">maven</a> (v3.6.3) toolchain.<br/>
+			The back end follows a servlet -> jsp architectural pattern and the front end is javascript v8 code leveraging jQuery, Bootstrap, and D3.<br/> 
+			The back end is unencrypted, unauthenticated, stateless and read-only; it only supports the HTTP GET verb and does not maintain HTTP sessions.<br/>
+			While there is a lot of javascript code in the project, oopcorenlp_web does not use any sort of javascript minification or webpack tooling.<br/>				
+		</p>
+		<p>
+			The back end has been tested under <a href="https://tomcat.apache.org/index.html">Tomcat</a> (v9.0.x).
+			The front end has been tested on recent versions of Chrome, Firefox, and Edge.
+		</p>
+	</body>
+</html>

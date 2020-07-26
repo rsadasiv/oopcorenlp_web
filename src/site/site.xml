@@ -1,13 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-
-<project>
-  <body>
-	<menu ref="reports" />
-  </body>
-  	<skin>
+<project name="oopcorenlp_web">
+	<body>
+	    <menu name="Overview">
+	      <item name="Audience" href="audience.html"/>
+	      <item name="Functionality" href="functionality.html" collapse="true">
+	      	<item name="CorporaViewer" href="functionality-corporaViewer.html" />
+	      	<item name="CorpusDocumentsViewer" href="functionality-corpusDocumentsViewer.html" />
+	      	<item name="Pipeline" href="functionality-pipelineInfo.html" />
+	      	<item name="Plain Text" href="functionality-plainText.html" />
+	      	<item name="TextOutOfPrintViewer" href="functionality-TextOutOfPrintViewer.html" />	      		      		      	
+	      	<item name="TextMediumViewer" href="functionality-TextMediumViewer.html" />
+	      	<item name="Audio" href="functionality-audio.html" />
+	      	<item name="OOPStoryArcViewer" href="functionality-OOPStoryArcViewer.html" />
+	      	<item name="OOPPullQuotesViewer" href="functionality-OOPPullQuotesViewer.html" />
+	      	<item name="OOPEditorViewer" href="functionality-OOPEditorViewer.html" />	
+	      	<item name="OOPActorsViewer" href="functionality-OOPActorsViewer.html" />
+	      	<item name="OOPCloudViewer" href="functionality-OOPCloudViewer.html" />
+	      	<item name="OOPStreamViewer" href="functionality-OOPStreamViewer.html" />
+	      	<item name="OOPStreamViewerTokens" href="functionality-OOPStreamViewerTokens.html" />	      	
+	      	<item name="OOPDocumentViewer" href="functionality-OOPDocumentViewer.html" />
+	      	<item name="OOP" href="functionality-oop.html" />
+	      	<item name="StanfordBratViewer" href="functionality-StanfordBratViewer.html" />
+	      	<item name="Stanford" href="functionality-stanford.html" />		      			      	
+	      </item>
+	      <item name="Developers" href="developers.html" collapse="true">
+	      	<item name="Overview" href="developers-overview.html" />
+	      	<item name="Dependencies" href="developers-dependencies.html" />
+	      	<item name="Compliation" href="developers-compilation.html" />
+	      	<item name="Testing" href="developers-testing.html" />
+	      	<item name="Deployment" href="developers-deployment.html" />
+	      	<item name="Project Documentation" href="developers-documentation.html" />
+	      	<item name="Source Code" href="developers-code.html" />	      	
+	      </item>      	    	
+	    </menu>	
+		<menu ref="reports" />
+	</body>
+	<skin>
 		<groupId>org.apache.maven.skins</groupId>
 		<artifactId>maven-fluido-skin</artifactId>
 		<version>1.9</version>
 	</skin>
+	<custom>
+	    <fluidoSkin>
+			<gitHub>
+				<projectId>rsadasiv/oopcorenlp_web</projectId>
+				<ribbonOrientation>right</ribbonOrientation>
+				<ribbonColor>black</ribbonColor>
+			</gitHub>
+			<twitter>
+	        	<user>CheerfullySynt1</user>
+	        	<showUser>true</showUser>
+	        	<showFollowers>false</showFollowers>
+	      	</twitter>
+      		<!-- a href="https://twitter.com/CheerfullySynt1?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @CheerfullySynt1</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> -->
+      	
+	    </fluidoSkin>
+	</custom>
 </project>

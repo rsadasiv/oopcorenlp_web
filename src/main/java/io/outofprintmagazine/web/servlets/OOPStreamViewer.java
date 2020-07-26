@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine.web;
+package io.outofprintmagazine.web.servlets;
 
 import java.io.IOException;
 
@@ -25,14 +25,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-@WebServlet("/OOPStreamViewerTokens")
-public class OOPStreamViewerTokens extends AbstractOOPServlet {
+@WebServlet("/OOPStreamViewer")
+public class OOPStreamViewer extends AbstractOOPServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public OOPStreamViewerTokens() {
+    public OOPStreamViewer() {
         super();
     }
     
@@ -44,6 +44,6 @@ public class OOPStreamViewerTokens extends AbstractOOPServlet {
 		String corpus = request.getParameter("Corpus");
 		String document = request.getParameter("Document");
         setMetadataAttributes(request, corpus, document);
-        request.getSession().getServletContext().getRequestDispatcher("/OOPStreamViewerTokens.jsp").forward(request, response);
+        request.getSession().getServletContext().getRequestDispatcher("/OOPStreamViewer.jsp").forward(request, response);
 	}
 }

@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine.web;
+package io.outofprintmagazine.web.servlets;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -25,40 +24,31 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
-/**
- * Servlet implementation class ListCorpusDocuments
- */
-@WebServlet("/ListCorpusDocuments")
-public class ListCorpusDocuments extends HttpServlet {
+@WebServlet("/TextOutOfPrintViewer")
+public class TextOutOfPrintViewer extends AbstractOOPServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ListCorpusDocuments() {
+    public TextOutOfPrintViewer() {
         super();
     }
+    
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String pCorpus = request.getParameter("Corpus");
-		File[] documents = new File(request.getSession().getServletContext().getRealPath("/Corpora/"+pCorpus+"/")).listFiles(File::isFile);
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode json = mapper.createObjectNode();
-		ArrayNode corporaNode = json.putArray("Documents");
-		for (int i=0;i<documents.length;i++) {
-			if (documents[i].getName().substring(0, documents[i].getName().lastIndexOf(".")).startsWith("OOP_")) {
-				corporaNode.add(documents[i].getName().substring(4, documents[i].getName().lastIndexOf(".")));
-			}
-		}
-		response.setContentType("application/json");
-		response.getWriter().write(mapper.writeValueAsString(json));
-		response.flushBuffer();
+		String corpus = request.getParameter("Corpus");
+		String document = request.getParameter("Document");
+        setMetadataAttributes(request, corpus, document);
+		request.setAttribute(
+				"Text", 
+				plainTextToHtml(getCorpusDocumentTxtString(corpus, document))
+		);
+
+        request.getSession().getServletContext().getRequestDispatcher("/TextOutOfPrintViewer.jsp").forward(request, response);
 	}
 }

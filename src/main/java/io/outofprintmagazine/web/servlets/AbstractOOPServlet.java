@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine.web;
+package io.outofprintmagazine.web.servlets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,6 +39,7 @@ import org.apache.http.util.EntityUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 public abstract class AbstractOOPServlet extends HttpServlet {
     
@@ -68,6 +69,14 @@ public abstract class AbstractOOPServlet extends HttpServlet {
     
     protected JsonNode getCorpusDocumentOOPJson(String corpus, String document) throws IOException {
     	return getCorpusDocumentJson(getBaseUrl()+"/"+corpus+"/OOP_"+document+".json");
+    }
+    
+    protected String getCorpusDocumentAggregatesString(String corpus, String document) throws IOException {
+    	return getCorpusDocumentString(getBaseUrl()+"/"+corpus+"/AGGREGATES_"+document+".json");
+    }
+    
+    protected JsonNode getCorpusDocumentAggregatesJson(String corpus, String document) throws IOException {
+    	return getCorpusDocumentJson(getBaseUrl()+"/"+corpus+"/AGGREGATES_"+document+".json");
     }
     
     protected String getCorpusDocumentString(String url) throws IOException {
@@ -192,6 +201,10 @@ public abstract class AbstractOOPServlet extends HttpServlet {
         request.setAttribute("Author", stats.get("metadata").get("AuthorAnnotation").asText());
         request.setAttribute("Date", stats.get("metadata").get("DocDateAnnotation").asText());
         request.setAttribute("Title", stats.get("metadata").get("DocTitleAnnotation").asText());    	
+    }
+    
+    public void setStatsAttribute(HttpServletRequest request, String corpus, String document) throws IOException {
+		request.setAttribute("Stats", getCorpusDocumentOOPJson(corpus, document));
     }
 
 }

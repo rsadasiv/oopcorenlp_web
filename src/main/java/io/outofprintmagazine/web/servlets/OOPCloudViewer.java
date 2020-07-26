@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine.web;
+package io.outofprintmagazine.web.servlets;
 
 import java.io.IOException;
 
@@ -25,14 +25,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-@WebServlet("/StanfordBratViewer")
-public class StanfordBratViewer extends AbstractOOPServlet {
+@WebServlet("/OOPCloudViewer")
+public class OOPCloudViewer extends AbstractOOPServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public StanfordBratViewer() {
+    public OOPCloudViewer() {
         super();
     }
     
@@ -44,6 +44,6 @@ public class StanfordBratViewer extends AbstractOOPServlet {
 		String corpus = request.getParameter("Corpus");
 		String document = request.getParameter("Document");
         setMetadataAttributes(request, corpus, document);
-        request.getSession().getServletContext().getRequestDispatcher("/StanfordBratViewer.jsp").forward(request, response);
+        request.getSession().getServletContext().getRequestDispatcher("/OOPCloudViewer.jsp").forward(request, response);
 	}
 }

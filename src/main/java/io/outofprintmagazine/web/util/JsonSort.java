@@ -1,5 +1,6 @@
 package io.outofprintmagazine.web.util;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -18,49 +20,45 @@ public class JsonSort {
 	public static void sort(JsonNode tree) {
 
 		if (tree.isObject()) {
-			sortObject(tree);
+			sortObject((ObjectNode)tree);
 		} else if (tree.isArray()) {
-			sortArray(tree);
+			sortArray((ArrayNode)tree);
 		}
 
 	}
-
-	private static void sortArray(JsonNode tree) {
-
-		for (JsonNode jsonNode : tree) {
-			sort(jsonNode);
-		}
+	
+	private static void sortArray(ArrayNode ar) {
 		List<JsonNode> asList = new ArrayList<JsonNode>();
-		Iterator<JsonNode> fieldsIter = tree.elements();
-		while (fieldsIter.hasNext()) {
-			asList.add(fieldsIter.next());
+		for (JsonNode n : ar) {
+			asList.add(n);
 		}
-		Collections.sort(asList, new JsonNodeComparator());
-		((ArrayNode) tree).removeAll();
-		((ArrayNode) tree).addAll(asList);
+		Collections.sort(asList, new PhraseAnnotationComparator());
+
+		ar.removeAll();
+		ar.addAll(asList);
 	}
 
-	private static void sortObject(JsonNode tree) {
-		List<String> asList = new ArrayList<String>();
+	private static void sortObject(ObjectNode tree) {
+		ObjectMapper mapper = new ObjectMapper();
+		List<JsonNode> asList = new ArrayList<JsonNode>();
 		Iterator<String> fieldsIter = tree.fieldNames();
 		while (fieldsIter.hasNext()) {
-			asList.add(fieldsIter.next());
+			String fieldName = fieldsIter.next();
+			asList.add(
+					mapper.createObjectNode()
+					.put("name", fieldName)
+					.put("value", new BigDecimal(tree.get(fieldName).asText()))
+			);
 		}
-		Collections.sort(asList);
-		LinkedHashMap<String, JsonNode> map = new LinkedHashMap<String, JsonNode>();
-		for (String f : asList) {
-
-			JsonNode value = tree.get(f);
-			sort(value);
-			map.put(f, value);
+		Collections.sort(asList, new PhraseAnnotationComparator());
+		tree.removeAll();
+		for (JsonNode n : asList) {
+			tree.put(n.get("name").asText(), n.get("value").asText());
 		}
-		((ObjectNode) tree).removeAll();
-		((ObjectNode) tree).setAll(map);
 	}
 
 
-
-	public static class JsonNodeComparator implements Comparator<JsonNode> {
+	public static class PhraseAnnotationComparator implements Comparator<JsonNode> {
 		public int compare(JsonNode o1, JsonNode o2) {
 			if (o1 == null && o2 == null) {
 				return 0;
@@ -74,82 +72,55 @@ public class JsonSort {
 			}
 
 			if (o1.isObject() && o2.isObject()) {
-				return compObject(o1, o2);
-			} else if (o1.isArray() && o2.isArray()) {
-				return compArray(o1, o2);
-			} else if (o1.isValueNode() && o2.isValueNode()) {
-				return compValue(o1, o2);
+				int retval = new BigDecimal(o2.get("value").asText()).compareTo(new BigDecimal(o1.get("value").asText()));
+				if (retval == 0) {
+					retval = o1.get("name").asText().compareTo(o2.get("name").asText());
+				}
+				return retval;
 			} else {
 				return 1;
 			}
 		}
+	}
 
-		private int compValue(JsonNode o1, JsonNode o2) {
 
-			if (o1.isNull()) {
-				return -1;
+	
+	public static void sortActors(JsonNode tree) {
+		List<JsonNode> asList = new ArrayList<JsonNode>();
+		Iterator<JsonNode> iter = tree.elements();
+		while (iter.hasNext()) {
+			asList.add(iter.next());
+		}
+		Collections.sort(asList, new ActorsNodeComparator());
+		((ArrayNode) tree).removeAll();
+		((ArrayNode) tree).addAll(asList);
+	}
+	
+	
+	public static class ActorsNodeComparator implements Comparator<JsonNode> {
+		public int compare(JsonNode o1, JsonNode o2) {
+			if (o1 == null && o2 == null) {
+				return 0;
 			}
 
-			if (o2.isNull()) {
+			if (o1 == null) {
+				return -1;
+			}
+			if (o2 == null) {
 				return 1;
 			}
 
-			if (o1.isNumber() && o2.isNumber()) {
-				return o1.decimalValue().compareTo(o2.decimalValue());
-			}
-
-			return o1.asText().compareTo(o2.asText());
-		}
-
-		private int compArray(JsonNode o1, JsonNode o2) {
-
-			int c = ((ArrayNode) o1).size() - ((ArrayNode) o2).size();
-			if (c != 0) {
-				return c;
-			}
-			for (int i = 0; i < ((ArrayNode) o1).size(); i++) {
-				c = compare(o1.get(i), o2.get(i));
-				if (c != 0) {
-					return c;
+			if (o1.isObject() && o2.isObject()) {
+				int retval = new BigDecimal(o2.get("importance").asText("0")).compareTo(new BigDecimal(o1.get("importance").asText("0")));
+				if (retval == 0) {
+					retval = o1.get("canonicalName").asText().compareTo(o2.get("canonicalName").asText());
 				}
+				return retval;
+			} else {
+				return 1;
 			}
-
-			return 0;
-		}
-
-		private int compObject(JsonNode o1, JsonNode o2) {
-
-			String id1 = o1.get("id") == null ? null : o1.get("id").asText();
-			String id2 = o2.get("id") == null ? null : o2.get("id").asText();
-			if (id1 != null) {
-				int c = id1.compareTo(id2);
-				if (c != 0) {
-					return c;
-				}
-			}
-			int c = ((ObjectNode) o1).size() - ((ObjectNode) o2).size();
-			if (c != 0) {
-				return c;
-			}
-
-			Iterator<String> fieldNames1 = ((ObjectNode) o1).fieldNames();
-			Iterator<String> fieldNames2 = ((ObjectNode) o2).fieldNames();
-			for (; fieldNames1.hasNext();) {
-				String f = fieldNames1.next();
-
-				c = f.compareTo(fieldNames2.next());
-				if (c != 0) {
-					return c;
-				}
-
-				JsonNode n1 = o1.get(f);
-				JsonNode n2 = o2.get(f);
-				c = compare(n1, n2);
-				if (c != 0) {
-					return c;
-				}
-			}
-			return 0;
 		}
 	}
+	
+	
 }

@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine.web;
+package io.outofprintmagazine.web.servlets;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -25,38 +24,26 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
-/**
- * Servlet implementation class ListCorpora
- */
-@WebServlet("/ListCorpora")
-public class ListCorpora extends HttpServlet {
+@WebServlet("/OOPEditorViewer")
+public class OOPEditorViewer extends AbstractOOPServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ListCorpora() {
+    public OOPEditorViewer() {
         super();
     }
+    
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		File[] directories = new File(request.getSession().getServletContext().getRealPath("/Corpora")).listFiles(File::isDirectory);
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode json = mapper.createObjectNode();
-		ArrayNode corporaNode = json.putArray("Corpora");
-		for (int i=0;i<directories.length;i++) {
-			corporaNode.add(directories[i].getName());
-		}
-		response.setContentType("application/json");
-		response.getWriter().write(mapper.writeValueAsString(json));
-		response.flushBuffer();
+		String corpus = request.getParameter("Corpus");
+		String document = request.getParameter("Document");
+        setMetadataAttributes(request, corpus, document);
+        request.getSession().getServletContext().getRequestDispatcher("/OOPEditorViewer.jsp").forward(request, response);
 	}
-
 }

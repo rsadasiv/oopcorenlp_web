@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine.web;
+package io.outofprintmagazine.web.servlets;
 
 import java.io.IOException;
 
@@ -25,14 +25,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-@WebServlet("/OOPStreamViewer")
-public class OOPStreamViewer extends AbstractOOPServlet {
+@WebServlet(name="CorporaViewer", urlPatterns={"/index.html","/CorporaViewer"})
+public class CorporaViewer extends AbstractOOPServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public OOPStreamViewer() {
+    public CorporaViewer() {
         super();
     }
     
@@ -41,9 +41,19 @@ public class OOPStreamViewer extends AbstractOOPServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String corpus = request.getParameter("Corpus");
-		String document = request.getParameter("Document");
-        setMetadataAttributes(request, corpus, document);
-        request.getSession().getServletContext().getRequestDispatcher("/OOPStreamViewer.jsp").forward(request, response);
+		request.setAttribute(
+				"corpora", 
+				getCorpusDocumentJson(
+						request.getScheme() +
+						"://" +
+						request.getServerName() +
+						":" +
+						request.getServerPort() +
+						request.getContextPath() +
+						"/ListCorpora"
+				)
+		);
+
+        request.getSession().getServletContext().getRequestDispatcher("/CorporaViewer.jsp").forward(request, response);
 	}
 }

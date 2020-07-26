@@ -96,10 +96,13 @@ while (corporaDocumentIter.hasNext()) {
 			<p><a href="Corpora/<%= pCorpus %>/POLLY_<%= corpusDocumentId %>.mp3">Audio</a></p>
 		</td>
 		<td>
+			<p><a href="OOPStoryArcViewer?Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Story Arc</a></p>
+			<p><a href="OOPPullQuotesViewer?Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Pull Quotes</a></p>			
 			<p><a href="OOPFactCheckerViewer?Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Fact Checker</a></p>
 			<p><a href="OOPEditorViewer?Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Editor</a></p>
 		</td>
 		<td>
+			<p><a href="OOPActorsViewer?Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Actors</a></p>
 			<p><a href="OOPCloudViewer?Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Word Clouds</a></p>
 			<p><a href="OOPStreamViewer?Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Sentences</a></p>
 			<p><a href="OOPStreamViewerTokens?Corpus=<%= pCorpus %>&Document=<%= corpusDocumentId %>">Tokens</a></p>

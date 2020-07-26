@@ -89,7 +89,7 @@
 
 		drawSentenceAnnotators(annotation);
 
-		makeSentenceBarChart(annotation, "#sentenceAnnotationViz");
+		makeSentenceBarChart(annotation, "#sentenceAnnotationViz", "#sentenceText");
 		//makeTokenBarChart(annotation, "#tokenAnnotationViz");
 		
 		$('#annotators').change(
