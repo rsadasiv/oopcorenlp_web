@@ -53,7 +53,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
         	String fieldName = statsIterator.next();
         	retval.add(getMapper().createObjectNode().set(fieldName, stats.get(fieldName)));
         }
-        JsonSort.sort(retval);
+        //JsonSort.sort(retval);
         return retval;
     }
     
@@ -80,7 +80,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
         	String fieldName = statsIterator.next();
         	retval.add(getMapper().createObjectNode().set(fieldName, sentenceStats.get(fieldName)));
         }
-        JsonSort.sort(retval);
+        //JsonSort.sort(retval);
         return retval;
     }
     
@@ -168,7 +168,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
         		JsonNode token = tokensIterator.next();
         		if (tokenIdx == tokenId) {
         			JsonNode retval = token.deepCopy();
-                    JsonSort.sort(retval);
+                    //JsonSort.sort(retval);
             		return retval;
         		}
         		tokenIdx++;

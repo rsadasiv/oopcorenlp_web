@@ -49,6 +49,6 @@ public class TextMediumViewer extends AbstractOOPServlet {
 				plainTextToHtml(getCorpusDocumentTxtString(corpus, document))
 		);
 
-        request.getSession().getServletContext().getRequestDispatcher("/TextMediumViewer.jsp").forward(request, response);
+        request.getSession().getServletContext().getRequestDispatcher("/jsp/TextMediumViewer.jsp").forward(request, response);
 	}
 }

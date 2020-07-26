@@ -173,6 +173,6 @@ public class OOPPullQuotesViewer extends AbstractOOPServlet {
         setMetadataAttributes(request, corpus, document);
         setStatsAttribute(request, corpus, document);
         setPullQuotes(request, corpus, document);
-        request.getSession().getServletContext().getRequestDispatcher("/OOPPullQuotesViewer.jsp").forward(request, response);
+        request.getSession().getServletContext().getRequestDispatcher("/jsp/OOPPullQuotesViewer.jsp").forward(request, response);
 	}
 }

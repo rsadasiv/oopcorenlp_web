@@ -66,6 +66,6 @@ public class CorpusDocumentsViewer extends HttpServlet {
 			}
 		}
 		request.setAttribute("corpora", json);
-		request.getSession().getServletContext().getRequestDispatcher("/CorpusDocumentsViewer.jsp").forward(request, response);
+		request.getSession().getServletContext().getRequestDispatcher("/jsp/CorpusDocumentsViewer.jsp").forward(request, response);
 	}
 }

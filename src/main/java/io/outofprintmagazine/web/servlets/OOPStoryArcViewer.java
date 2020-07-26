@@ -83,6 +83,6 @@ public class OOPStoryArcViewer extends AbstractOOPServlet {
 		String document = request.getParameter("Document");
         setMetadataAttributes(request, corpus, document);
         setReadingStats(request, corpus, document);
-        request.getSession().getServletContext().getRequestDispatcher("/OOPStoryArcViewer.jsp").forward(request, response);
+        request.getSession().getServletContext().getRequestDispatcher("/jsp/OOPStoryArcViewer.jsp").forward(request, response);
 	}
 }

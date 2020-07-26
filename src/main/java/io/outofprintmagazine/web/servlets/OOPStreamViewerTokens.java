@@ -44,6 +44,6 @@ public class OOPStreamViewerTokens extends AbstractOOPServlet {
 		String corpus = request.getParameter("Corpus");
 		String document = request.getParameter("Document");
         setMetadataAttributes(request, corpus, document);
-        request.getSession().getServletContext().getRequestDispatcher("/OOPStreamViewerTokens.jsp").forward(request, response);
+        request.getSession().getServletContext().getRequestDispatcher("/jsp/OOPStreamViewerTokens.jsp").forward(request, response);
 	}
 }

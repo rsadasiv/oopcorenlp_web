@@ -128,12 +128,17 @@ figure figcaption {
     font-size: 0.8em;
 }
 
-span.logo {
-	width: 311px;
-	height: 68px;
-	display: block;
-	text-indent:-6000px;
-	background: url(../../images/OOP/logo.png) no-repeat left top;
-	margin: 25px auto 59px auto;
-	cursor: pointer;
+p {    
+    --x-height-multiplier: 0.375;
+    --baseline-multiplier: 0.17;
+    font-family: Georgia,Cambria,"Times New Roman",Times,serif;
+    letter-spacing: .01rem;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 21px;
+    line-height: 1.58;
+    letter-spacing: -.003em;
+    color: rgba(0,0,0,.84);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
 }

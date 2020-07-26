@@ -49,6 +49,6 @@ public class TextOutOfPrintViewer extends AbstractOOPServlet {
 				plainTextToHtml(getCorpusDocumentTxtString(corpus, document))
 		);
 
-        request.getSession().getServletContext().getRequestDispatcher("/TextOutOfPrintViewer.jsp").forward(request, response);
+        request.getSession().getServletContext().getRequestDispatcher("/jsp/TextOutOfPrintViewer.jsp").forward(request, response);
 	}
 }

@@ -108,6 +108,6 @@ public class OOPActorsViewer extends AbstractOOPServlet {
         setStatsAttribute(request, corpus, document);
         setSelectedActor(request, corpus, document);
         setActorMyersBriggs(request, corpus, document);
-        request.getSession().getServletContext().getRequestDispatcher("/OOPActorsViewer.jsp").forward(request, response);
+        request.getSession().getServletContext().getRequestDispatcher("/jsp/OOPActorsViewer.jsp").forward(request, response);
 	}
 }

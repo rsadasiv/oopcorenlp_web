@@ -54,6 +54,6 @@ public class CorporaViewer extends AbstractOOPServlet {
 				)
 		);
 
-        request.getSession().getServletContext().getRequestDispatcher("/CorporaViewer.jsp").forward(request, response);
+        request.getSession().getServletContext().getRequestDispatcher("/jsp/CorporaViewer.jsp").forward(request, response);
 	}
 }
