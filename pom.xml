@@ -44,9 +44,11 @@
 		
 		<maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
 		<maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
+		<maven-cargo-plugin.version>1.7.15</maven-cargo-plugin.version>
 
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
-		<junit.jupiter.version>5.6.2</junit.jupiter.version>
+		<junit.jupiter.version>5.6.2</junit.jupiter.version>	
+		
 		<!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
 		<jsoup.version>1.13.1</jsoup.version>	
 		
@@ -80,11 +82,7 @@
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-properties -->
 		<jackson.version>2.11.0</jackson.version>
-		
-		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server -->
-		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin -->
-		<tomcat.version>9.0.37</tomcat.version>	
-			
+					
 	</properties>
 
 	<dependencies>
@@ -127,13 +125,12 @@
 			<scope>provided</scope>
 		</dependency>
 		
-		
-<!-- 		<dependency> -->
-<!-- 			<groupId>javax.servlet</groupId> -->
-<!-- 			<artifactId>jsp-api</artifactId> -->
-<!-- 			<version>${jsp-api.version}</version> -->
-<!-- 			<scope>provided</scope> -->
-<!-- 		</dependency> -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>${jsp-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<!-- jackson -->
 		<dependency>
@@ -167,7 +164,7 @@
 	        <version>${junit.jupiter.version}</version>
 	        <scope>test</scope>
 	    </dependency>
-	    
+
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
@@ -272,7 +269,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven-surefire-plugin.version}</version>
-
 				<executions>
 					<execution>
 						<goals>
@@ -284,7 +280,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>${maven-failsafe-plugin.version}</version>              
+				<version>${maven-failsafe-plugin.version}</version> 			             
 				<executions>
 					<execution>
 						<goals>
@@ -293,7 +289,49 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>												
+			</plugin>
+			<plugin>
+	            <groupId>org.codehaus.cargo</groupId>
+	            <artifactId>cargo-maven2-plugin</artifactId>
+	            <version>${maven-cargo-plugin.version}</version>
+	            <configuration>
+	                <container>
+	                    <systemProperties>
+	                    </systemProperties>
+	                    <containerId>tomcat9x</containerId>
+	                    <zipUrlInstaller>
+	                        <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/9.0.29/tomcat-9.0.29.zip</url>
+	                    </zipUrlInstaller>
+	                </container>
+	                <deployables>
+	                    <deployable>
+	                        <groupId>org.codehaus.cargo</groupId>
+	                        <artifactId>simple-war</artifactId>
+	                        <type>war</type>
+	                        <location>target/oopcorenlp_web.war</location>
+	                        <properties>
+	                            <context>oopcorenlp_web</context>
+	                        </properties>
+	                    </deployable>
+	                </deployables>
+	            </configuration>	                
+                <executions>
+                    <execution>
+                        <id>start-cargo-server</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop-cargo-server</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>                    
+                    </execution>
+                </executions>
+	        </plugin>	        															
 		</plugins>
 	</build>
 	<reporting>
@@ -333,7 +371,7 @@
 					      </reports>
 					</reportSet>			        
 				</reportSets>
-			</plugin>	      	
+			</plugin>				      	
 	     </plugins>
 	 </reporting>
 </project>

@@ -58,7 +58,7 @@
 		var docId = "<%=request.getParameter("Document")%>";
 		var corpus = "<%=request.getParameter("Corpus")%>";
 	</script>
-	<script src="js/oopcorenlp_viewer.js">
+	<script src="js/OOPDocumentViewer.js">
 		
 	</script>
 
@@ -94,14 +94,6 @@
      });
 	</script>
 	<style>
-		.logo {
-			width: 311px;
-			height: 68px;
-			display: block;
-			text-indent: -6000px;
-			margin: 25px auto 59px auto;
-			cursor: pointer;
-		}
 		.ui-colorpicker-swatch {
 		  cursor: pointer;
 		  float: right;
@@ -115,19 +107,11 @@
 	</style>
 </head>
 <body>
-	<a href="index.html"><img src="images/OOP/logo.png" class="logo" /></a>
+	<jsp:include page="include/logo.jsp" />
 	<div class="container">	
-		<div class="row">
-			<div class="col-md-4"></div>
-			<div class="col-md-4 text-center">
-				<p>
-					<h1 class="text-capitalize"><%=request.getAttribute("Title").toString().toLowerCase()%></h1>
-					<h3 class="text-capitalize">by <%=request.getAttribute("Author").toString().toLowerCase()%></h3>
-					<h5 class="text-capitalize"><%=request.getAttribute("Date").toString().toLowerCase()%></h5>
-				</p>
-			</div>
-			<div class="col-md-4"></div>
-		</div>
+		<jsp:include page="include/divRowDocumentMetadata.jsp" />
+
+		<jsp:include page="include/spacerRow.jsp" />
 		<div class="row">
 			<div class="col-md-4"></div>
 			<div class="col-md-8" id="colorGuide">
@@ -136,8 +120,7 @@
 				</p>
 			</div>
 		</div>
-	</div>
-	<div class="container-fluid">
+
 		<div class="row">
 			<div class="col-md-4"><p class="display-4 text-center">Annotations</p></div>
 			<div class="col-md-8">

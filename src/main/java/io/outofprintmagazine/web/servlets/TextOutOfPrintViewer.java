@@ -46,7 +46,7 @@ public class TextOutOfPrintViewer extends AbstractOOPServlet {
         setMetadataAttributes(request, corpus, document);
 		request.setAttribute(
 				"Text", 
-				plainTextToHtml(getCorpusDocumentTxtString(corpus, document))
+				plainTextToHtml(getStorage().getCorpusDocumentTxtString(corpus, document))
 		);
 
         request.getSession().getServletContext().getRequestDispatcher("/jsp/TextOutOfPrintViewer.jsp").forward(request, response);

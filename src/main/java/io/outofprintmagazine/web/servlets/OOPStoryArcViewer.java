@@ -44,7 +44,7 @@ public class OOPStoryArcViewer extends AbstractOOPServlet {
     }
     
     public void setReadingStats(HttpServletRequest request, String corpus, String document) throws IOException {
-    	JsonNode oop = getCorpusDocumentOOPJson(corpus, document);
+    	JsonNode oop = getStorage().getCorpusDocumentOOPJson(corpus, document);
 		request.setAttribute(
 				"ReadingTime",
 				String.format(

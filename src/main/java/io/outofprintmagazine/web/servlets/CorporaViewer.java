@@ -43,15 +43,7 @@ public class CorporaViewer extends AbstractOOPServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute(
 				"corpora", 
-				getCorpusDocumentJson(
-						request.getScheme() +
-						"://" +
-						request.getServerName() +
-						":" +
-						request.getServerPort() +
-						request.getContextPath() +
-						"/ListCorpora"
-				)
+				getStorage().listCorpora()
 		);
 
         request.getSession().getServletContext().getRequestDispatcher("/jsp/CorporaViewer.jsp").forward(request, response);

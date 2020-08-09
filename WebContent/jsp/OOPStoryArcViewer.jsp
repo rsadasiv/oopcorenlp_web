@@ -22,19 +22,19 @@
 <jsp:include page="include/meta.jsp" />
 <jsp:include page="include/bootstrap.jsp" />
 <jsp:include page="include/d3v5.jsp" />
-<script src="js/oopcorenlp_d3_viewer.js"></script>
+<script src="js/oopcorenlp.js"></script>
+<script src="js/OOPStoryArcViewer.js"></script>
 
 <script>
-	var docId = "<%=request.getParameter("Document")%>";
-	var corpus = "<%=request.getParameter("Corpus")%>";
-	
     $(document).ready(function() {
-		setProperties();
+    	getProperties()["docId"] = "<%=request.getParameter("Document")%>";
+    	getProperties()["corpus"] = "<%=request.getParameter("Corpus")%>";
 
 		makeSentenceBarChart("OOPFleschKincaidAnnotation", "#OOPFleschKincaidAnnotationViz", "#OOPFleschKincaidAnnotationSentenceText");
 		makeSentenceBarChart("VaderSentimentAnnotation", "#VaderSentimentAnnotationViz", "#VaderSentimentAnnotationSentenceText");
 		makeSentenceBarChart("OOPPeopleAnnotation", "#OOPPeopleAnnotationViz", "#OOPPeopleAnnotationSentenceText");		
 		makeSentenceBarChart("OOPLocationsAnnotation", "#OOPLocationsAnnotationViz", "#OOPLocationsAnnotationSentenceText");
+		makeSentenceScoreBarChart("OOPPunctuationMarkAnnotation", "Quotation", "#OOPQuotesAnnotationViz", "#OOPQuotesAnnotationSentenceText");
     });
 </script>
 
@@ -43,7 +43,7 @@
 <body>
 	<jsp:include page="include/logo.jsp" />
 	<div class="container">	
-		<jsp:include page="include/documentMetadata.jsp" />
+		<jsp:include page="include/divRowDocumentMetadata.jsp" />
 	</div>
 	<jsp:include page="include/spacerRow.jsp" />
 	<div class="container-fluid">
@@ -120,6 +120,22 @@
 			</div>
 		</div>
 	</div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<p class="text-center font-italic" id="OOPQuotesAnnotationSentenceText">
+					&nbsp;
+				</p>
+			</div>
+		</div>
+	</div>		
+	<div class="container-fluid">
+			<div class="row">
+				<div class="col-lg-12" id="Quotes">
+				<svg width="1600" height="400" id="OOPQuotesAnnotationViz"></svg>
+			</div>
+		</div>
+	</div>	
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">

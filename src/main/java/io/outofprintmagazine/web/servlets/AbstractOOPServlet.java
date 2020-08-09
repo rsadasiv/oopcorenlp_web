@@ -40,6 +40,9 @@ import org.apache.http.util.EntityUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.outofprintmagazine.web.storage.FileStorage;
+import io.outofprintmagazine.web.storage.IStorage;
+
 
 public abstract class AbstractOOPServlet extends HttpServlet {
     
@@ -49,128 +52,19 @@ public abstract class AbstractOOPServlet extends HttpServlet {
         super();
     }
     
+    private IStorage storage = new FileStorage();
+    
+    protected IStorage getStorage() {
+    	return storage;
+    }
+    
     private ObjectMapper mapper = new ObjectMapper();
     
     protected ObjectMapper getMapper() {
     	return mapper;
     }
 
-	protected String getBaseUrl() {
-		return "http://localhost:8080/oopcorenlp_web/Corpora";
-	}
-    
-    protected String getCorpusDocumentTxtString(String corpus, String document) throws IOException {
-    	return getCorpusDocumentString(getBaseUrl()+"/"+corpus+"/TXT_"+document+".txt");
-    }
-    
-    protected String getCorpusDocumentOOPString(String corpus, String document) throws IOException {
-    	return getCorpusDocumentString(getBaseUrl()+"/"+corpus+"/OOP_"+document+".json");
-    }
-    
-    protected JsonNode getCorpusDocumentOOPJson(String corpus, String document) throws IOException {
-    	return getCorpusDocumentJson(getBaseUrl()+"/"+corpus+"/OOP_"+document+".json");
-    }
-    
-    protected String getCorpusDocumentAggregatesString(String corpus, String document) throws IOException {
-    	return getCorpusDocumentString(getBaseUrl()+"/"+corpus+"/AGGREGATES_"+document+".json");
-    }
-    
-    protected JsonNode getCorpusDocumentAggregatesJson(String corpus, String document) throws IOException {
-    	return getCorpusDocumentJson(getBaseUrl()+"/"+corpus+"/AGGREGATES_"+document+".json");
-    }
-    
-    protected String getCorpusDocumentString(String url) throws IOException {
-    	String responseBody = null;
-        CloseableHttpClient httpclient = HttpClients.custom()
-                .setServiceUnavailableRetryStrategy(
-                		new ServiceUnavailableRetryStrategy() {
-                			@Override
-                			public boolean retryRequest(
-                					final HttpResponse response, final int executionCount, final HttpContext context) {
-                					int statusCode = response.getStatusLine().getStatusCode();
-                					return (statusCode == 503 || statusCode == 500) && executionCount < 5;
-                			}
-
-                			@Override
-                			public long getRetryInterval() {
-                				return 5;
-                			}
-                		})
-                .setRedirectStrategy(new LaxRedirectStrategy())
-                .setDefaultRequestConfig(RequestConfig.custom()
-                        .setCookieSpec(CookieSpecs.STANDARD).build())
-                .build();
-        try {
-
-            HttpGet http = new HttpGet(url);
-            ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
-
-                @Override
-                public String handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
-                    int status = response.getStatusLine().getStatusCode();
-                    if (status >= 200 && status < 300) {
-                        HttpEntity entity = response.getEntity();
-                        return entity != null ? EntityUtils.toString(entity) : null;
-                    } 
-                    else {
-                        throw new ClientProtocolException("Unexpected response status: " + status);
-                    }
-                }
-            };
-            responseBody = httpclient.execute(http, responseHandler);
-
-        } finally {
-            httpclient.close();
-        }
-        return responseBody;
-    }
-    
-    protected JsonNode getCorpusDocumentJson(String url) throws IOException {
-    	JsonNode responseBody = null;
-        CloseableHttpClient httpclient = HttpClients.custom()
-                .setServiceUnavailableRetryStrategy(
-                		new ServiceUnavailableRetryStrategy() {
-                			@Override
-                			public boolean retryRequest(
-                					final HttpResponse response, final int executionCount, final HttpContext context) {
-                					int statusCode = response.getStatusLine().getStatusCode();
-                					return (statusCode == 503 || statusCode == 500) && executionCount < 5;
-                			}
-
-                			@Override
-                			public long getRetryInterval() {
-                				return 5;
-                			}
-                		})
-                .setRedirectStrategy(new LaxRedirectStrategy())
-                .setDefaultRequestConfig(RequestConfig.custom()
-                        .setCookieSpec(CookieSpecs.STANDARD).build())
-                .build();
-        try {
-
-            HttpGet http = new HttpGet(url);
-            ResponseHandler<JsonNode> responseHandler = new ResponseHandler<JsonNode>() {
-
-                @Override
-                public JsonNode handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
-                    int status = response.getStatusLine().getStatusCode();
-                    if (status >= 200 && status < 300) {
-                        HttpEntity entity = response.getEntity();
-                        return entity != null ? getMapper().readTree(entity.getContent()) : null;
-                    } 
-                    else {
-                        throw new ClientProtocolException("Unexpected response status: " + status);
-                    }
-                }
-            };
-            responseBody = httpclient.execute(http, responseHandler);
-
-        } finally {
-            httpclient.close();
-        }
-        return responseBody;
-    }
-    
+	
     protected String plainTextToHtml(String input) throws IOException {
 	    StringBuilder contentBuilder = new StringBuilder();
 	    String sCurrentLine;
@@ -197,14 +91,14 @@ public abstract class AbstractOOPServlet extends HttpServlet {
     }
     
     public void setMetadataAttributes(HttpServletRequest request, String corpus, String document) throws IOException {
-        JsonNode stats = getCorpusDocumentOOPJson(corpus, document);
+        JsonNode stats = getStorage().getCorpusDocumentOOPJson(corpus, document);
         request.setAttribute("Author", stats.get("metadata").get("AuthorAnnotation").asText());
         request.setAttribute("Date", stats.get("metadata").get("DocDateAnnotation").asText());
         request.setAttribute("Title", stats.get("metadata").get("DocTitleAnnotation").asText());    	
     }
     
     public void setStatsAttribute(HttpServletRequest request, String corpus, String document) throws IOException {
-		request.setAttribute("Stats", getCorpusDocumentOOPJson(corpus, document));
+		request.setAttribute("Stats", getStorage().getCorpusDocumentOOPJson(corpus, document));
     }
 
 }

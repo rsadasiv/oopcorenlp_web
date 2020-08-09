@@ -28,33 +28,26 @@
 <jsp:include page="include/meta.jsp" />
 <jsp:include page="include/bootstrap.jsp" />
 <jsp:include page="include/d3v3.jsp" />
-
+<script src="js/oopcorenlp.js"></script>
 <script src="js/d3.layout.cloud.js"></script>
 <script src="js/d3.wordcloud.js"></script>
-<script src="js/oopcorenlp_d3_viewer.js"></script>
-
-<script>
-	var docId = "<%=request.getParameter("Document")%>";
-	var corpus = "<%=request.getParameter("Corpus")%>";
-	var actor = "<%=request.getParameter("Actor")==null||request.getParameter("Actor").equals("")?"":request.getParameter("Actor")%>";
-</script>
+<script src="js/OOPActorsViewer.js"></script>
 
 <script>
 $(document).ready(function() {
-	setProperties();
-
+	getProperties()["docId"] = "<%=request.getParameter("Document")%>";
+	getProperties()["corpus"] = "<%=request.getParameter("Corpus")%>";
+	let actor = "<%=request.getParameter("Actor")==null||request.getParameter("Actor").equals("")?"":request.getParameter("Actor")%>";
 	if (actor != "") {
-		makeActorCloud(actor, "OOPNounsAnnotation", "#nounsViz", "#nounsTable");
-		makeActorCloud(actor, "OOPNounGroupsAnnotation", "#nounGroupsViz", "#nounGroupsTable");
-		makeActorCloud(actor, "OOPVerbsAnnotation", "#verbsViz", "#verbsTable");
-		makeActorCloud(actor, "OOPVerbGroupsAnnotation", "#verbGroupsViz", "#verbGroupsTable");		
-		makeActorCloud(actor, "OOPAdjectivesAnnotation", "#adjectivesViz", "#adjectivesTable");
-		makeActorCloud(actor, "OOPAdverbsAnnotation", "#adverbsViz", "#adverbGroupsTable");
+		makeActorCloud(actor, "OOPNounsAnnotation", "#nounsViz");
+		makeActorCloud(actor, "OOPVerbsAnnotation", "#verbsViz");	
+		makeActorCloud(actor, "OOPAdjectivesAnnotation", "#adjectivesViz");
+		makeActorCloud(actor, "OOPAdverbsAnnotation", "#adverbsViz");
 	}
 	
 	$('#actors').change(
 			function() {
-		    	window.location.href = location.protocol + '//' + location.host + location.pathname + "?Corpus="+corpus+"&Document="+docId+"&Actor=" + $('#actors option:selected').val();
+		    	window.location.href = location.protocol + '//' + location.host + location.pathname + "?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Actor=" + $('#actors option:selected').val();
 		    }
 	);
 });
@@ -70,15 +63,9 @@ JsonNode selectedActor = (JsonNode)request.getAttribute("SelectedActor");
 	<jsp:include page="include/logo.jsp" />
 	
 	<div class="container">	
-		<div class="row">
-			<div class="col-md-4"></div>
-			<div class="col-md-4 text-center">
-					<h1 class="text-capitalize"><%=request.getAttribute("Title").toString().toLowerCase()%></h1>
-					<h3 class="text-capitalize">by <%=request.getAttribute("Author").toString().toLowerCase()%></h3>
-					<h5 class="text-capitalize"><%=request.getAttribute("Date").toString().toLowerCase()%></h5>
-			</div>
-			<div class="col-md-4"></div>
-		</div>
+		<jsp:include page="include/divRowDocumentMetadata.jsp" />
+
+		<jsp:include page="include/spacerRow.jsp" />
 		<div class="row">
 			<div class="col-md-4"></div>
 			<div class="col-md-4" id="actorPicker">
@@ -217,58 +204,28 @@ if (selectedActor.get("canonicalName") != null) {
 		
 		<div class="row bg-light">
 			<div class="col-md-6 text-center"><label>Nouns</label></div>
-			<div class="col-md-6 text-center"><label>Noun Groups</label></div>
+			<div class="col-md-6 text-center"><label>Adjectives</label></div>
 		</div>
 		<div class="row">&nbsp;</div>
 
 		<div class="row">
 			<div class="col-md-6 text-center" id="nounsViz"></div>
-			<div class="col-md-6 text-center" id="nounGroupsViz"></div>
+			<div class="col-md-6 text-center" id="adjectivesViz"></div>
 		</div>				
-
-		<div class="row">
-			<div class="col-md-6 text-center" id="nounsTable"></div>
-			<div class="col-md-6 text-center" id="nounGroupsTable"></div>			
-		</div>
 		
 		<div class="row">&nbsp;</div>
 		
 		<div class="row bg-light">
 			<div class="col-md-6 text-center"><label>Verbs</label></div>
-			<div class="col-md-6 text-center"><label>Verb Groups</label></div>
-		</div>
-
-		<div class="row">&nbsp;</div>
-
-		<div class="row">
-			<div class="col-md-6 text-center" id="verbsViz"></div>
-			<div class="col-md-6 text-center" id="verbGroupsViz"></div>
-		</div>				
-
-		<div class="row">
-			<div class="col-md-6 text-center" id="verbsTable"></div>
-			<div class="col-md-6 text-center" id="verbGroupsTable"></div>			
-		</div>		
-
-		<div class="row">&nbsp;</div>
-		
-		<div class="row bg-light">
-			<div class="col-md-6 text-center"><label>Adjectives</label></div>
 			<div class="col-md-6 text-center"><label>Adverbs</label></div>
 		</div>
 
 		<div class="row">&nbsp;</div>
 
 		<div class="row">
-			<div class="col-md-6 text-center" id="adjectivesViz"></div>
+			<div class="col-md-6 text-center" id="verbsViz"></div>
 			<div class="col-md-6 text-center" id="adverbsViz"></div>
 		</div>				
-
-		<div class="row">
-			<div class="col-md-6 text-center" id="adjectivesTable"></div>
-			<div class="col-md-6 text-center" id="adverbsTable"></div>			
-		</div>		
-
 		<div class="row">&nbsp;</div>
 <%
 }

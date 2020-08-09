@@ -21,23 +21,28 @@
 <jsp:include page="include/icon.jsp" />
 <jsp:include page="include/meta.jsp" />
 <jsp:include page="include/bootstrap.jsp" />
-<jsp:include page="include/d3v3.jsp" />
 
+<jsp:include page="include/d3v3.jsp" />
 <script src="js/d3.layout.cloud.js"></script>
 <script src="js/d3.wordcloud.js"></script>
-<script src="js/oopcorenlp_d3_viewer.js"></script>
-<script>
-var docId = "<%=request.getParameter("Document")%>";
-var corpus = "<%=request.getParameter("Corpus")%>";
-var annotation = "<%=request.getParameter("Annotation")==null||request.getParameter("Annotation").equals("")?"OOPNounsAnnotation":request.getParameter("Annotation")%>";
 
+<script src="js/oopcorenlp.js"></script>
+<script src="js/OOPCloudViewer.js"></script>
+
+<script>
 $(document).ready(function() {
-	setProperties();
-	drawDocumentAnnotators(annotation);
+	getProperties()["docId"] = "<%=request.getParameter("Document")%>";
+	getProperties()["corpus"] = "<%=request.getParameter("Corpus")%>";
+	
+	let annotation = "<%=request.getParameter("Annotation")==null||request.getParameter("Annotation").equals("")?"OOPNounsAnnotation":request.getParameter("Annotation")%>";
+	$("#annotators").val(annotation);
+	
 	makeCloud(annotation, "#cloudViz");
+	makeTable(annotation, "#tableViz");
+	
 	$('#annotators').change(
 			function() {
-		    	window.location.href = location.protocol + '//' + location.host + location.pathname + "?Corpus="+corpus+"&Document="+docId+"&Annotation=" + $('#annotators option:selected').val();
+		    	window.location.href = location.protocol + '//' + location.host + location.pathname + "?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation=" + $('#annotators option:selected').val();
 		    }
 	);
 });
@@ -48,11 +53,12 @@ $(document).ready(function() {
 <body>
 	<jsp:include page="include/logo.jsp" />
 	<div class="container">	
-		<jsp:include page="include/documentMetadata.jsp" />
+		<jsp:include page="include/divRowDocumentMetadata.jsp" />
 		<div class="row">
 			<div class="col-md-4"></div>
 			<div class="col-md-4" id="annotatorPicker">
 				<select id="annotators"	class="form-control" title="Select OOPCoreNLP annotator">
+					<jsp:include page="include/optionAnnotators.jsp" />
 				</select>
 			</div>
 			<div class="col-md-4 form-check">

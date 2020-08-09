@@ -16,7 +16,6 @@
  ******************************************************************************/
 package io.outofprintmagazine.web.servlets;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -25,15 +24,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 /**
  * Servlet implementation class ListCorpusDocuments
  */
 @WebServlet("/ListCorpusDocuments")
-public class ListCorpusDocuments extends HttpServlet {
+public class ListCorpusDocuments extends AbstractOOPServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -47,18 +42,9 @@ public class ListCorpusDocuments extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String pCorpus = request.getParameter("Corpus");
-		File[] documents = new File(request.getSession().getServletContext().getRealPath("/Corpora/"+pCorpus+"/")).listFiles(File::isFile);
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode json = mapper.createObjectNode();
-		ArrayNode corporaNode = json.putArray("Documents");
-		for (int i=0;i<documents.length;i++) {
-			if (documents[i].getName().substring(0, documents[i].getName().lastIndexOf(".")).startsWith("OOP_")) {
-				corporaNode.add(documents[i].getName().substring(4, documents[i].getName().lastIndexOf(".")));
-			}
-		}
+		String corpus = request.getParameter("Corpus");
 		response.setContentType("application/json");
-		response.getWriter().write(mapper.writeValueAsString(json));
+		response.getWriter().write(getMapper().writeValueAsString(getStorage().listCorpusDocuments(corpus)));
 		response.flushBuffer();
 	}
 }

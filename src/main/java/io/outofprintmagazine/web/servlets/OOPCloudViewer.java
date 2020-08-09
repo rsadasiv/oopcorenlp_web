@@ -17,12 +17,19 @@
 package io.outofprintmagazine.web.servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 
 @WebServlet("/OOPCloudViewer")
@@ -36,6 +43,23 @@ public class OOPCloudViewer extends AbstractOOPServlet {
         super();
     }
     
+    private void setDocumentAnnotatorsAttribute(HttpServletRequest request, String corpus, String document) throws IOException {
+    	JsonNode stats = (JsonNode) request.getAttribute("Stats");
+    	if (stats == null) {
+    		setStatsAttribute(request, corpus, document);
+    		stats = (JsonNode) request.getAttribute("Stats");
+    	}
+    	Iterator<String> statsIter = stats.fieldNames();
+    	List<String> documentAnnotators = new ArrayList<String>();
+    	while (statsIter.hasNext()) {
+    		String annotationName = statsIter.next();
+    		if (!annotationName.startsWith("metadata") && !annotationName.startsWith("sentences") && !annotationName.startsWith("corefs") && !annotationName.startsWith("quotes")) {
+    			documentAnnotators.add(annotationName);
+    		}
+    	}
+    	Collections.sort(documentAnnotators);
+    	request.setAttribute("Annotators", documentAnnotators);
+    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -44,6 +68,8 @@ public class OOPCloudViewer extends AbstractOOPServlet {
 		String corpus = request.getParameter("Corpus");
 		String document = request.getParameter("Document");
         setMetadataAttributes(request, corpus, document);
+        setStatsAttribute(request, corpus, document);
+        setDocumentAnnotatorsAttribute(request, corpus, document);
         request.getSession().getServletContext().getRequestDispatcher("/jsp/OOPCloudViewer.jsp").forward(request, response);
 	}
 }

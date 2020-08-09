@@ -44,7 +44,7 @@ public class OOPPullQuotesViewer extends AbstractOOPServlet {
     }
     
     protected void setPullQuotes(HttpServletRequest request, String corpus, String document) throws IOException {
-    	JsonNode oop = getCorpusDocumentOOPJson(corpus, document);
+    	JsonNode oop = getStorage().getCorpusDocumentOOPJson(corpus, document);
      	List<String> pullQuotes = new ArrayList<String>();
      	//first sentence
      	String firstSentence = 

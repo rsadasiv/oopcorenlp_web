@@ -31,7 +31,7 @@
 <body>
 	<jsp:include page="include/logo.jsp" />
 	<div class="container">
-		<jsp:include page="include/documentMetadata.jsp" />
+		<jsp:include page="include/divRowDocumentMetadata.jsp" />
 	</div>
 		<jsp:include page="include/spacerRow.jsp" />
 	<div class="container-fluid">

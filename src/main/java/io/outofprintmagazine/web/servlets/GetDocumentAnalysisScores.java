@@ -46,7 +46,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
     }
     
     protected JsonNode getDocumentScores(String corpus, String document) throws IOException {
-        JsonNode stats = getCorpusDocumentOOPJson(corpus, document);
+        JsonNode stats = getStorage().getCorpusDocumentOOPJson(corpus, document);
         ArrayNode retval = getMapper().createArrayNode();
         Iterator<String> statsIterator = stats.fieldNames();
         while (statsIterator.hasNext()) {
@@ -58,7 +58,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
     }
     
     protected JsonNode getDocumentAnnotationScores(String corpus, String document, String annotation) throws IOException {
-        JsonNode scores = getCorpusDocumentOOPJson(corpus, document);
+        JsonNode scores = getStorage().getCorpusDocumentOOPJson(corpus, document);
         ObjectNode retval = getMapper().createObjectNode();
         ArrayNode stats = retval.putArray(annotation);
 		if (scores.hasNonNull(annotation)) {
@@ -71,7 +71,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
     }
     
     protected JsonNode getSentenceScores(String corpus, String document, int sentenceId) throws IOException {
-        JsonNode stats = getCorpusDocumentOOPJson(corpus, document);
+        JsonNode stats = getStorage().getCorpusDocumentOOPJson(corpus, document);
         ArrayNode retval = getMapper().createArrayNode();
         JsonNode sentenceStats = stats.get("sentences").get(sentenceId);
 
@@ -85,7 +85,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
     }
     
     protected JsonNode getSentencesAnnotationScores(String corpus, String document, String annotation) throws IOException {
-        JsonNode scores = getCorpusDocumentOOPJson(corpus, document);
+        JsonNode scores = getStorage().getCorpusDocumentOOPJson(corpus, document);
         ObjectNode retval = getMapper().createObjectNode();
         ArrayNode stats = retval.putArray(annotation);
         Iterator<JsonNode> sentenceIterator = scores.get("sentences").elements();
@@ -121,7 +121,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
     }
     
     protected JsonNode getSentencesAnnotationSubannotationScores(String corpus, String document, String annotation, String subannotation) throws IOException {
-        JsonNode scores = getCorpusDocumentOOPJson(corpus, document);
+        JsonNode scores = getStorage().getCorpusDocumentOOPJson(corpus, document);
         ObjectNode retval = getMapper().createObjectNode();
         ArrayNode stats = retval.putArray(annotation);
         Iterator<JsonNode> sentenceIterator = scores.get("sentences").elements();
@@ -159,7 +159,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
     }
     
     protected JsonNode getTokenScores(String corpus, String document, int tokenId) throws IOException {
-        JsonNode stats = getCorpusDocumentOOPJson(corpus, document);
+        JsonNode stats = getStorage().getCorpusDocumentOOPJson(corpus, document);
         Iterator<JsonNode> sentenceIterator = stats.get("sentences").elements();
         int tokenIdx = 1;
         while (sentenceIterator.hasNext()) {
@@ -178,7 +178,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
     }
     
     protected JsonNode getTokensAnnotationScores(String corpus, String document, String annotation) throws IOException {
-        JsonNode scores = getCorpusDocumentOOPJson(corpus, document);
+        JsonNode scores = getStorage().getCorpusDocumentOOPJson(corpus, document);
         ObjectNode retval = getMapper().createObjectNode();
         ArrayNode stats = retval.putArray(annotation);
         Iterator<JsonNode> sentenceIterator = scores.get("sentences").elements();
@@ -218,7 +218,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
     }
     
     protected JsonNode getTokensAnnotationSubannotationScores(String corpus, String document, String annotation, String subannotation) throws IOException {
-        JsonNode scores = getCorpusDocumentOOPJson(corpus, document);
+        JsonNode scores = getStorage().getCorpusDocumentOOPJson(corpus, document);
         ObjectNode retval = getMapper().createObjectNode();
         ArrayNode stats = retval.putArray(annotation);
         Iterator<JsonNode> sentenceIterator = scores.get("sentences").elements();
@@ -229,7 +229,15 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
 
 	    		if (token.hasNonNull(annotation)) {
 	    			if (token.get(annotation).isArray()) {
-	   					stats.add(token.get(annotation).size());
+	    				BigDecimal sz = new BigDecimal(0);
+	    				Iterator<JsonNode> valuesIter = token.get(annotation).elements();
+	    				while (valuesIter.hasNext()) {
+	    					JsonNode val = valuesIter.next();
+	    					if (val.get("name").asText().equals(subannotation)) {
+	    						sz = sz.add(new BigDecimal(val.get("value").asDouble(0.0)));
+	    					}
+	    				}
+	    				stats.add(sz);
 	    			}
 	    			else if (token.get(annotation).isObject()) {
 						BigDecimal sz = new BigDecimal(0);
@@ -260,7 +268,7 @@ public class GetDocumentAnalysisScores extends AbstractOOPServlet {
     }
     
     protected JsonNode getSyllablesAnnotationScores(String corpus, String document, String annotation) throws IOException {
-        JsonNode scores = getCorpusDocumentOOPJson(corpus, document);
+        JsonNode scores = getStorage().getCorpusDocumentOOPJson(corpus, document);
         ObjectNode retval = getMapper().createObjectNode();
         ArrayNode stats = retval.putArray(annotation);
         Iterator<JsonNode> sentenceIterator = scores.get("sentences").elements();

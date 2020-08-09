@@ -29,7 +29,7 @@
 <!-- CoreNLP -->
 <link rel="stylesheet" type="text/css" href="css/brat/corenlp-brat.css" />
 
-<script src="js/corenlp_viewer.js"></script>
+<script src="js/corenlp.js"></script>
 
 <title>Stanford Brat Viewer</title>
 <script>
@@ -73,7 +73,7 @@
 <body>
 	<jsp:include page="include/logo.jsp" />
 	<div class="container">
-		<jsp:include page="include/documentMetadata.jsp" />
+		<jsp:include page="include/divRowDocumentMetadata.jsp" />/>
 		<div class="row">
 			<div class="col-md-4"></div>
 			<div class="col-md-4" id="annotatorPicker">
