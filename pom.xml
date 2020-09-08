@@ -108,6 +108,11 @@
 	                        <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/9.0.29/tomcat-9.0.29.zip</url>
 	                    </zipUrlInstaller>
 	                </container>
+	                <configuration>
+	                	<properties>
+                			<cargo.servlet.port>8080</cargo.servlet.port>
+                		</properties>
+	                </configuration>
 	                <deployables>
 	                    <deployable>
 	                        <groupId>org.codehaus.cargo</groupId>

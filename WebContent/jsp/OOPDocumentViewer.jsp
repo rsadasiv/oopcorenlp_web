@@ -120,6 +120,7 @@
 				</p>
 			</div>
 		</div>
+	</div>
 
 		<div class="row">
 			<div class="col-md-4"><p class="display-4 text-center">Annotations</p></div>
@@ -254,6 +255,6 @@
 			</div>
 			<div class="col-lg-8" id="story_text"></div>
 		</div>
-	</div>
+	
 </body>
 </html>

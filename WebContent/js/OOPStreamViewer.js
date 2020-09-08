@@ -45,7 +45,7 @@ function makeSentenceBarChart(annotationName, svgName, textDiv) {
 				function(rawData) {
 					let data = [];
 					for (let [index, val] of rawData[annotationName].entries()) {
-						console.log("val: " + val)
+						//console.log("val: " + val)
 						if (isNumber(val) || isString(val)) {
 							data.push({"name": index, "value": val});
 						}
@@ -63,7 +63,7 @@ function makeSentenceBarChart(annotationName, svgName, textDiv) {
 
 function drawBarChart(data, svgName, yLabel, onclick) {
 	//$(svgName).empty();
-	console.log(svgName);
+	console.log(data);
 	let svg = d3.select(svgName),
 	margin = {
 		top: 20,

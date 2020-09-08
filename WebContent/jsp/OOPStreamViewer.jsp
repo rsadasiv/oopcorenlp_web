@@ -43,6 +43,9 @@ $(document).ready(function() {
 
 });
 </script>
+<%
+int sentenceCount = (int)request.getAttribute("SentenceCount");
+%>
 <title>OOP Annotation Stream Viewer</title>	
 </head>
 <body>
@@ -72,12 +75,12 @@ $(document).ready(function() {
 			</div>
 		</div>
 	</div>
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-lg-12" id="sentenceViz">
-				<svg width="1600" height="400" id="sentenceAnnotationViz"></svg>
-			</div>
-		</div>				
-	</div>
+
+	<div class="row">
+		<div class="col-lg-12" id="sentenceViz">
+			<svg width="<%=sentenceCount>1600?new Integer(sentenceCount+100).toString():"1600"%>" height="400" id="sentenceAnnotationViz"></svg>
+		</div>
+	</div>				
+
 </body>
 </html>

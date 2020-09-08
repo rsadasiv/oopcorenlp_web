@@ -19,8 +19,11 @@ package io.outofprintmagazine.web.servlets;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -45,7 +48,7 @@ public class OOPPullQuotesViewer extends AbstractOOPServlet {
     
     protected void setPullQuotes(HttpServletRequest request, String corpus, String document) throws IOException {
     	JsonNode oop = getStorage().getCorpusDocumentOOPJson(corpus, document);
-     	List<String> pullQuotes = new ArrayList<String>();
+     	Map<String, List<String>> pullQuotes = new HashMap<String, List<String>>();
      	//first sentence
      	String firstSentence = 
      		oop
@@ -60,7 +63,7 @@ public class OOPPullQuotesViewer extends AbstractOOPServlet {
      		.get(oop.get("sentences").size()-1)
      		.get("text")
      		.asText();
-     	if (lastSentence.trim().contains("*")) {
+     	if (lastSentence.trim().equals("") || lastSentence.trim().contains("*")) {
      		lastSentence = 
      			oop
      			.get("sentences")
@@ -134,8 +137,8 @@ public class OOPPullQuotesViewer extends AbstractOOPServlet {
     		
      	//comparisons
      	List<String> comparisonAnnotators = Arrays.asList(
-         		"OOPLikeAnnotation",
-         		"OOPAsAnnotation"
+         		"OOPAsAnnotation",
+         		"OOPLikeAnnotation"
          );
      	List<String> comparisonSentences = new ArrayList<String>();
      	for (String annotationName : comparisonAnnotators) {
@@ -145,21 +148,21 @@ public class OOPPullQuotesViewer extends AbstractOOPServlet {
 	    }
      	
      	//quotes
+     	Pattern extraQuote = Pattern.compile("^\"\\s*\"", Pattern.MULTILINE);
      	List<String> quotes = new ArrayList<String>();
  		for (JsonNode quoteAnnotation : ((ArrayNode)oop.get("quotes"))) {
- 			quotes.add(quoteAnnotation.get("text").asText().trim());
+ 			String q = quoteAnnotation.get("text").asText().trim();
+ 			q = extraQuote.matcher(q).replaceFirst("\"");
+ 			quotes.add(q);
      	}
 	    
     	
-     	pullQuotes.add(firstSentence);
-     	pullQuotes.add(lastSentence);
-     	pullQuotes.add(firstLowestSentiment);
-     	pullQuotes.add(firstHighestSentiment);
-     	pullQuotes.add(secondLowestSentiment);
-     	pullQuotes.add(secondHighestSentiment);
-     	pullQuotes.addAll(whaSentences);
-     	pullQuotes.addAll(comparisonSentences);
-    	pullQuotes.addAll(quotes);
+     	pullQuotes.put("FirstLast", Arrays.asList(firstSentence, lastSentence));
+     	pullQuotes.put("Best", Arrays.asList(firstHighestSentiment, secondHighestSentiment));
+     	pullQuotes.put("Worst", Arrays.asList(firstLowestSentiment, secondLowestSentiment));
+     	pullQuotes.put("Lede", whaSentences);
+     	pullQuotes.put("InMediasRes", comparisonSentences);
+    	pullQuotes.put("Dialog", quotes);
      	request.setAttribute("PullQuotes", pullQuotes);	
     }
     

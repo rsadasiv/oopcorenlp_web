@@ -101,14 +101,11 @@ function makeTokenScoreBarCharts(annotationName, svgName) {
 			)
 		).done(
 				function(data) {
-					//need to sort this list
-					//console.log(data[annotationName]);
-					let list = Object.keys(data[annotationName]);
-					list.sort((a, b) => (parseFloat(data[annotationName][a]) < parseFloat(data[annotationName][b])) ? 1 : -1);
-					//console.log(list);
+					let list = JSON.parse(JSON.stringify(data[annotationName]));;
+					list.sort((a, b) => (parseFloat(a.value) < parseFloat(b.value)) ? 1 : -1);
 					let idx = 2;
 					list.slice(0,5).forEach(function(key, index) {
-						makeTokenScoreBarChart(annotationName, key, svgName + "_" + idx);
+						makeTokenScoreBarChart(annotationName, key.name, svgName + "_" + idx);
 						idx++;
 					});
 				}

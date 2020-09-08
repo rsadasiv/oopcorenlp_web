@@ -39,7 +39,7 @@ function isArray (value) {
 }
 
 function getBaseUrl() {
-	return "GetDocumentAnalysisScores?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Scope=Document"
+	return "GetDocument?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"];
 	//return "Corpora/"+getProperties()["corpus"]+"/OOP_"+getProperties()["docId"]+".json";
 }
 

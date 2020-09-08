@@ -65,6 +65,15 @@ public class OOPStreamViewer extends AbstractOOPServlet {
     	request.setAttribute("Annotators", sentenceAnnotators);
     }
     
+    private void setSentenceCountAttribute(HttpServletRequest request, String corpus, String document) throws IOException {
+    	JsonNode stats = (JsonNode) request.getAttribute("Stats");
+    	if (stats == null) {
+    		setStatsAttribute(request, corpus, document);
+    		stats = (JsonNode) request.getAttribute("Stats");
+    	}
+    	request.setAttribute("SentenceCount", stats.get("OOPSentenceCountAnnotation").asInt());
+    }
+    
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -75,6 +84,7 @@ public class OOPStreamViewer extends AbstractOOPServlet {
         setMetadataAttributes(request, corpus, document);
         setStatsAttribute(request, corpus, document);
         setSentenceAnnotatorsAttribute(request, corpus, document);
+        setSentenceCountAttribute(request, corpus, document);
         request.getSession().getServletContext().getRequestDispatcher("/jsp/OOPStreamViewer.jsp").forward(request, response);
 	}
 }

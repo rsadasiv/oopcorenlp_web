@@ -73,7 +73,7 @@
 <body>
 	<jsp:include page="include/logo.jsp" />
 	<div class="container">
-		<jsp:include page="include/divRowDocumentMetadata.jsp" />/>
+		<jsp:include page="include/divRowDocumentMetadata.jsp" />
 		<div class="row">
 			<div class="col-md-4"></div>
 			<div class="col-md-4" id="annotatorPicker">

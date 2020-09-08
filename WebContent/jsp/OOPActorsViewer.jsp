@@ -18,6 +18,7 @@
 <%@ page import="java.util.Iterator" %>
 <%@ page import="java.math.BigDecimal" %>
 <%@ page import="java.math.RoundingMode" %>
+<%@ page import="java.util.regex.Pattern" %>
 <%@ page import="com.fasterxml.jackson.databind.JsonNode" %>
 <%@ page import="com.fasterxml.jackson.databind.node.ArrayNode" %>
 <%@ page import="io.outofprintmagazine.web.util.JsonSort" %>
@@ -99,16 +100,16 @@ if (selectedActor.get("canonicalName") != null) {
 %>
 		<div class="row bg-light">
 			<div class="col">
-				<label for="canonicalName">Canonical Name:</label> <span id="canonicalName"><%=selectedActor.get("canonicalName").asText("")%></span>
+				<label for="canonicalName" class="h5">Canonical Name:</label> <span id="canonicalName"><%=selectedActor.get("canonicalName").asText("")%></span>
 			</div>
 			<div class="col">
-				<label for="importance">Importance:</label> <span id="importance"><%=selectedActor.get("importance").asText("")%></span>
+				<label for="importance" class="h5">Importance:</label> <span id="importance"><%=selectedActor.get("importance").asText("")%></span>
 			</div>
 			<div class="col">
-				<label for="firstAppearance">First Appearance:</label> <span id="firstAppearance"><%=selectedActor.get("firstAppearance").asText("")%></span>
+				<label for="firstAppearance" class="h5">First Appearance:</label> <span id="firstAppearance"><%=selectedActor.get("firstAppearance").asText("")%></span>
 			</div>
 			<div class="col">
-				<label for="lastAppearance">Last Appearance:</label> <span id="lastAppearance"><%=selectedActor.get("lastAppearance").asText("")%></span>
+				<label for="lastAppearance" class="h5">Last Appearance:</label> <span id="lastAppearance"><%=selectedActor.get("lastAppearance").asText("")%></span>
 			</div>							
 		</div>
 
@@ -116,16 +117,16 @@ if (selectedActor.get("canonicalName") != null) {
 		
 		<div class="row bg-light">
 			<div class="col">
-				<label for="coreNlpGender">CoreNlp Gender:</label> <span id="canonicalName"><%=selectedActor.get("coreNlpGender").asText("NA")%></span>
+				<label for="coreNlpGender" class="h5">CoreNlp Gender:</label> <span id="canonicalName"><%=selectedActor.get("coreNlpGender").asText("NA")%></span>
 			</div>
 			<div class="col">
-				<label for="oopgender">OOP Gender:</label> <span id="oopgender"><%=selectedActor.get("oopgender").asText("NA")%></span>
+				<label for="oopgender" class="h5">OOP Gender:</label> <span id="oopgender"><%=selectedActor.get("oopgender").asText("NA")%></span>
 			</div>
 			<div class="col">
-				<label for="coreNlpSentimentAvg">CoreNlp Sentiment:</label> <span id="coreNlpSentimentAvg"><%=String.format("%.0f", selectedActor.get("coreNlpSentimentAvg").asDouble(0)*100)%></span>
+				<label for="coreNlpSentimentAvg" class="h5">CoreNlp Sentiment:</label> <span id="coreNlpSentimentAvg"><%=String.format("%.0f", selectedActor.get("coreNlpSentimentAvg").asDouble(0)*100)%></span>
 			</div>
 			<div class="col">
-				<label for="vaderSentimentAvg">Vader Sentiment:</label> <span id="vaderSentimentAvg"><%=String.format("%.0f", selectedActor.get("vaderSentimentAvg").asDouble(0)*100)%></span>
+				<label for="vaderSentimentAvg" class="h5">Vader Sentiment:</label> <span id="vaderSentimentAvg"><%=String.format("%.0f", selectedActor.get("vaderSentimentAvg").asDouble(0)*100)%></span>
 			</div>							
 		</div>
 
@@ -133,19 +134,19 @@ if (selectedActor.get("canonicalName") != null) {
 	
 		<div class="row bg-light">
 			<div class="col">
-				<label for="introvert">Introvert:</label>
+				<label for="introvert" class="h5">Introvert:</label>
 					<span id="introvert"><%=request.getAttribute("introvert") %></span>
 			</div>
 			<div class="col">
-				<label for="intuitive">Intuitive:</label> 				
+				<label for="intuitive" class="h5">Intuitive:</label> 				
 				<span id="intuitive"><%=request.getAttribute("intuitive") %></span>
 			</div>
 			<div class="col">
-				<label for="thinking">Thinking:</label>			
+				<label for="thinking" class="h5">Thinking:</label>			
 				<span id="thinking"><%=request.getAttribute("thinking") %></span>
 			</div>
 			<div class="col">
-				<label for="judging">Judging:</label>		 
+				<label for="judging" class="h5">Judging:</label>		 
 				<span id="judging"><%=request.getAttribute("judging") %></span>
 			</div>							
 		</div>	
@@ -154,48 +155,67 @@ if (selectedActor.get("canonicalName") != null) {
 		
 		<div class="row bg-light">
 			<div class="col">
-				<label for="extrovert">Extrovert:</label> 
+				<label for="extrovert" class="h5">Extrovert:</label> 
 				<span id="extrovert"><%=request.getAttribute("extrovert") %></span>
 			</div>
 			<div class="col">
-				<label for="sensing">Sensing:</label> 
+				<label for="sensing" class="h5">Sensing:</label> 
 				<span id="sensing"><%=request.getAttribute("sensing") %></span>
 			</div>
 			<div class="col">
-				<label for="feeling">Feeling:</label> 
+				<label for="feeling" class="h5">Feeling:</label> 
 				<span id="feeling"><%=request.getAttribute("feeling") %></span>
 			</div>
 			<div class="col">
-				<label for="perceiving">Perceiving:</label> 
+				<label for="perceiving" class="h5">Perceiving:</label> 
 				<span id="perceiving"><%=request.getAttribute("perceiving") %></span>
 			</div>							
 		</div>
-		
+		<% 
+		if (((ArrayNode)selectedActor.get("wikipediaGlosses")).size() > 0) {
+			%>
 		<div class="row">&nbsp;</div>
-		<%
-		Iterator<JsonNode> glossesIter = ((ArrayNode)selectedActor.get("wikipediaGlosses")).iterator();
-		for (int i=0;glossesIter.hasNext();i++) {
-			JsonNode gloss = glossesIter.next();
-		%>
 		<div class="row bg-light">
 			<div class="col">
-				<label for="wikipedia_<%=i%>">Wikipedia:</label> <span id="wikipedia_<%=i%>"><%=gloss.asText("NA")%></span>
+				<h5>Wikipedia</h5>	
+			<%
+
+			Iterator<JsonNode> glossesIter = ((ArrayNode)selectedActor.get("wikipediaGlosses")).iterator();
+			for (int i=0;glossesIter.hasNext();i++) {
+				JsonNode gloss = glossesIter.next();
+			%>
+				<p><%=gloss.asText("NA")%></p>
+			<%
+			}
+			%>
 			</div>
-		</div>
+		</div>			
 		<%
 		}
-		%>
-		<div class="row">&nbsp;</div>		
-		<%
-		Iterator<JsonNode> quotesIter = ((ArrayNode)selectedActor.get("quotes")).iterator();
-		for (int i=0;quotesIter.hasNext();i++) {
-			JsonNode quote = quotesIter.next();
-		%>
+
+		Pattern extraQuote = Pattern.compile("^\"\\s*\"", Pattern.MULTILINE);
+		if (((ArrayNode)selectedActor.get("quotes")).size() > 0) {
+			%>
+		<div class="row">&nbsp;</div>
 		<div class="row bg-light">
 			<div class="col">
-				<span><%=quote.asText("")%></span>
+				<h5>Quotes</h5>	
+			<%
+			Iterator<JsonNode> quotesIter = ((ArrayNode)selectedActor.get("quotes")).iterator();
+			for (int i=0;quotesIter.hasNext();i++) {
+				JsonNode quote = quotesIter.next();
+	 			String q = quote.asText();
+	 			if (q!=null) {
+	 				q = extraQuote.matcher(q).replaceFirst("\"");
+			%>
+					<p><%=q.trim()%></p>
+
+			<%
+	 			}
+			}
+			%>
 			</div>
-		</div>
+		</div>			
 		<%
 		}
 		%>
@@ -203,8 +223,8 @@ if (selectedActor.get("canonicalName") != null) {
 
 		
 		<div class="row bg-light">
-			<div class="col-md-6 text-center"><label>Nouns</label></div>
-			<div class="col-md-6 text-center"><label>Adjectives</label></div>
+			<div class="col-md-6 text-center"><label class="h5">Nouns</label></div>
+			<div class="col-md-6 text-center"><label class="h5">Adjectives</label></div>
 		</div>
 		<div class="row">&nbsp;</div>
 
@@ -216,8 +236,8 @@ if (selectedActor.get("canonicalName") != null) {
 		<div class="row">&nbsp;</div>
 		
 		<div class="row bg-light">
-			<div class="col-md-6 text-center"><label>Verbs</label></div>
-			<div class="col-md-6 text-center"><label>Adverbs</label></div>
+			<div class="col-md-6 text-center"><label class="h5">Verbs</label></div>
+			<div class="col-md-6 text-center"><label class="h5">Adverbs</label></div>
 		</div>
 
 		<div class="row">&nbsp;</div>

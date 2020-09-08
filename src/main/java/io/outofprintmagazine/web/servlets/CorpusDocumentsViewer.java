@@ -54,14 +54,19 @@ public class CorpusDocumentsViewer extends HttpServlet {
 	            BufferedReader br = new BufferedReader(new FileReader(documents[i]));
 	            ObjectMapper objectMapper = new ObjectMapper();
 	            JsonNode stats = objectMapper.readTree(br);
-            	documentNode.put("Author", stats.findValue("AuthorAnnotation").asText());
+	            try {
+            	documentNode.put("Author", stats.findValue("AuthorAnnotation").asText("Anonymous"));
             	documentNode.put("Date", stats.findValue("DocDateAnnotation").asText());
             	documentNode.put("Title", stats.findValue("DocTitleAnnotation").asText());
+
             	if (stats.findValue("OOPThumbnailAnnotation")!= null) {
             		documentNode.put("Thumbnail", stats.findValue("OOPThumbnailAnnotation").asText());
             	}
             	corporaNode.add(documentNode);
-
+	            }
+	            catch (Throwable t) {
+	            	t.printStackTrace();
+	            }
 				br.close();
 			}
 		}
