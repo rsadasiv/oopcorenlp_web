@@ -43,7 +43,7 @@ public class ListCorpusDocuments extends AbstractOOPServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String corpus = request.getParameter("Corpus");
-		response.setContentType("application/json");
+		response.setContentType("application/json; charset=utf-8");
 		response.getWriter().write(getMapper().writeValueAsString(getStorage().listCorpusDocuments(corpus)));
 		response.flushBuffer();
 	}

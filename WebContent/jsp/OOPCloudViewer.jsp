@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************** -->
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ page import="com.fasterxml.jackson.databind.node.ObjectNode" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -29,6 +30,12 @@
 <script src="js/oopcorenlp.js"></script>
 <script src="js/OOPCloudViewer.js"></script>
 
+<%
+ObjectNode stats = (ObjectNode) request.getAttribute("Stats");
+ObjectNode annotationDescriptions = (ObjectNode) request.getAttribute("AnnotationDescriptions");
+String selectedAnnotation = request.getParameter("Annotation")==null||request.getParameter("Annotation").equals("")?"OOPNounsAnnotation":request.getParameter("Annotation");
+%>
+
 <script>
 $(document).ready(function() {
 	getProperties()["docId"] = "<%=request.getParameter("Document")%>";
@@ -38,7 +45,6 @@ $(document).ready(function() {
 	$("#annotators").val(annotation);
 	
 	makeCloud(annotation, "#cloudViz");
-	makeTable(annotation, "#tableViz");
 	
 	$('#annotators').change(
 			function() {
@@ -51,12 +57,12 @@ $(document).ready(function() {
 <title>OOP Cloud Viewer</title>
 </head>
 <body>
-	<jsp:include page="include/logo.jsp" />
+	<jsp:include page="include/nav.jsp" />
 	<div class="container">	
-		<jsp:include page="include/divRowDocumentMetadata.jsp" />
+		<jsp:include page="include/spacerRow.jsp" />
 		<div class="row">
 			<div class="col-md-4"></div>
-			<div class="col-md-4" id="annotatorPicker">
+			<div class="col-md-4 justify-content-center" id="annotatorPicker">
 				<select id="annotators"	class="form-control" title="Select OOPCoreNLP annotator">
 					<jsp:include page="include/optionAnnotators.jsp" />
 				</select>
@@ -69,23 +75,27 @@ $(document).ready(function() {
 	
 	<jsp:include page="include/spacerRow.jsp" />
 	
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-md-2"></div>
-			<div class="col-lg-8 text-center" id="cloudViz">
-
-			</div>
-			<div class="col-md-2"></div>
-		</div>				
-	</div>
-		<div class="container-fluid">
+	<div class="container">
 		<div class="row">
 			<div class="col-md-4"></div>
-			<div class="col-md-4" id="tableViz">
-
+			<div class="col-md-4 justify-content-center">
+				<p><%=selectedAnnotation %></p>
+				<p><%=annotationDescriptions.get(selectedAnnotation).asText() %></p>
+				<p>
+					<a target="_blank" href="GetDocumentAnalysisScores?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&Scope=DocumentAnnotation&Annotation=<%=selectedAnnotation%>&Format=D3Cloud">
+						Data
+					</a>
+				</p>
 			</div>
 			<div class="col-md-4"></div>
-		</div>				
+		</div>
+		<div class="row">
+			<div class="col">
+				<svg width="1000" height="600" id="cloudViz"></svg>
+			</div>
+		</div>
 	</div>
+	
+	<jsp:include page="include/footer.jsp" />
 </body>
 </html>

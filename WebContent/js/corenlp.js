@@ -25,6 +25,17 @@ var webFontURLs = [
     bratLocation + '/static/fonts/Liberation_Sans-Regular.ttf'
 ];
 
+var properties = {};
+
+function getProperties() {
+	return properties;
+}
+
+function setProperties() {
+	properties.docId = docId;
+	properties.corpus = corpus;
+}
+
 function posEntityTypes(data) {
 	let entityTypesSet = {};
 	let entityTypes = [];
@@ -82,12 +93,17 @@ function posEntities(data) {
 	return {text: currentText, entities: currentEntities};
 }
 
+function getBaseUrl() {
+	return "GetDocumentScores?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Scores=STANFORD";
+	//return "Corpora/"+getProperties()["corpus"]+"/OOP_"+getProperties()["docId"]+".json";
+}
+
 function displayPos(divId) {
 	$.when( 
 		$.ajax(
 			{
 				dataType: "json",
-				url: "Corpora/"+corpus+"/STANFORD_"+docId+".json"
+				url: getBaseUrl()
 			}
 		)
 	).done(
@@ -160,7 +176,7 @@ function displaySentiment(divId) {
 		$.ajax(
 			{
 				dataType: "json",
-				url: "Corpora/"+corpus+"/STANFORD_"+docId+".json"
+				url: getBaseUrl()
 			}
 		)
 	).done(
@@ -231,7 +247,7 @@ function displayNer(divId) {
 		$.ajax(
 			{
 				dataType: "json",
-				url: "Corpora/"+corpus+"/STANFORD_"+docId+".json"
+				url: getBaseUrl()
 			}
 		)
 	).done(
@@ -302,7 +318,7 @@ function displayNerPerson(divId) {
 		$.ajax(
 			{
 				dataType: "json",
-				url: "Corpora/"+corpus+"/STANFORD_"+docId+".json"
+				url: getBaseUrl()
 			}
 		)
 	).done(
@@ -349,7 +365,7 @@ function displayParse(divId) {
 		$.ajax(
 			{
 				dataType: "json",
-				url: "Corpora/"+corpus+"/STANFORD_"+docId+".json"
+				url: getBaseUrl()
 			}
 		)
 	).done(
@@ -443,7 +459,7 @@ function displayCoref(divId) {
 		$.ajax(
 			{
 				dataType: "json",
-				url: "Corpora/"+corpus+"/STANFORD_"+docId+".json"
+				url: getBaseUrl()
 			}
 		)
 	).done(
@@ -522,7 +538,7 @@ function displayDep(divId) {
 		$.ajax(
 			{
 				dataType: "json",
-				url: "Corpora/"+corpus+"/STANFORD_"+docId+".json"
+				url: getBaseUrl()
 			}
 		)
 	).done(

@@ -18,7 +18,6 @@ package io.outofprintmagazine.web.servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -70,6 +69,7 @@ public class OOPCloudViewer extends AbstractOOPServlet {
         setMetadataAttributes(request, corpus, document);
         setStatsAttribute(request, corpus, document);
         setDocumentAnnotatorsAttribute(request, corpus, document);
+        setAnnotationDescriptionsAttribute(request, corpus, document);
         request.getSession().getServletContext().getRequestDispatcher("/jsp/OOPCloudViewer.jsp").forward(request, response);
 	}
 }

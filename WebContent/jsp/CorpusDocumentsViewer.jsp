@@ -50,23 +50,23 @@ ArrayNode corporaNode = (ArrayNode) json.get("Documents");
 Iterator<JsonNode> corporaDocumentIter = corporaNode.elements();
 while (corporaDocumentIter.hasNext()) {
 	JsonNode d = corporaDocumentIter.next();
-	String corpusDocumentId = d.get("DocID").asText();
+	String corpusDocumentId = d.get("DocIDAnnotation").asText();
 %>
    	<tr>
    		<td scope="row">
    			<%
-   				if (d.has("Thumbnail")) {
+   				if (d.has("OOPThumbnailAnnotation")) {
    					%>
-   					<img src="<%=d.get("Thumbnail") %>" />
+   					<img src="<%=d.get("OOPThumbnailAnnotation") %>" />
    					<% 
    				}
    			%>
    		</td>
    		<th scope="row">
    			<p>DocID: <%= corpusDocumentId %></p>
-   			<p>Title: <%= d.get("Title").asText()%></p>
-   			<p>Author: <%= d.get("Author").asText()%></p>
-   			<p>Date: <%= d.get("Date").asText()%></p> 
+   			<p>Title: <%= d.get("DocTitleAnnotation").asText()%></p>
+   			<p>Author: <%= d.get("AuthorAnnotation").asText()%></p>
+   			<p>Date: <%= d.get("DocDateAnnotation").asText()%></p> 
  			<p><a href="Corpora/<%= corpus %>/PIPELINE_<%= corpusDocumentId %>.json">Pipeline info</a></p>  			
    		</th>
    		<td>

@@ -39,8 +39,12 @@ function isArray (value) {
 }
 
 function getBaseUrl() {
-	return "GetDocument?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"];
+	return "GetDocumentScores?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Scores=OOP";
 	//return "Corpora/"+getProperties()["corpus"]+"/OOP_"+getProperties()["docId"]+".json";
+}
+
+function getDocumentAnnotationsUrl(annotationName) {
+	return "GetDocumentAnalysisScores?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Scope=DocumentAnnotation&Annotation="+annotationName
 }
 
 function getSentenceAnnotationsUrl(annotationName) {

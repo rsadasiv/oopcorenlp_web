@@ -40,12 +40,9 @@ Map<String, List<String>> pullQuotes = (Map<String, List<String>>)request.getAtt
 <title>OOP Pull Quotes</title>
 </head>
 <body>
-	<jsp:include page="include/logo.jsp" />
-	<div class="container">
-		<jsp:include page="include/divRowDocumentMetadata.jsp" />
-	</div>
+	<jsp:include page="include/nav.jsp" />
+	<div class="container">	
 		<jsp:include page="include/spacerRow.jsp" />
-	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-2"></div>
 			<div id="carouselExampleIndicators" class="carousel slide col-md-8 text-center bg-dark" data-ride="carousel">
@@ -209,6 +206,7 @@ Map<String, List<String>> pullQuotes = (Map<String, List<String>>)request.getAtt
 				</div>
 			</div>					
 		</div>
-	</div>	
+	</div>
+	<jsp:include page="include/footer.jsp" />
 </body>
 </html>

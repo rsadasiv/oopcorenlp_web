@@ -176,7 +176,7 @@ function setProperties() {
 	//properties.textDir = "Text";
 	//properties.annotationDir = "Annotations";
 	properties.docId = docId;
-	//properties.corpus = corpus;
+	properties.corpus = corpus;
 	//getAllAnnotations();
 }
 
@@ -185,17 +185,17 @@ function getProperties() {
 }
 
 function getAllAnnotations() {
-	let url = "ListDocumentAnalyses?Corpus="+ properties.corpus+"&Document="+ properties.docId;
+	//let url = "ListDocumentAnalyses?Corpus="+ properties.corpus+"&Document="+ properties.docId;
 	$.when(
 			$.ajax(
 				{
 					dataType: "json",
-					url: url
+					url: "GetDocumentScores?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Scores=PIPELINE"
 				}
 			)
 		).done(
 				function(data) {
-					for (const analysis of data) {
+					for (const analysis of data["annotations"]) {
 						for (const analysisName of Object.keys(analysis)) {
 							allAnnotations.push(analysisName);
 						}
@@ -209,7 +209,7 @@ function getAnnotation(properties, cb) {
 
 	$.ajax({
 		dataType: "json",
-		url: "Corpora/"+corpus+"/OOP_"+docId+".json",
+		url: "GetDocumentScores?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Scores=OOP",
         async: true,
         success: cb
     });

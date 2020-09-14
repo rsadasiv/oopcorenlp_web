@@ -42,10 +42,8 @@
 <title>OOP Editor Viewer</title>
 </head>
 <body>
-	<jsp:include page="include/logo.jsp" />
+	<jsp:include page="include/nav.jsp" />
 	<div class="container">	
-		<jsp:include page="include/divRowDocumentMetadata.jsp" />
-
 		<jsp:include page="include/spacerRow.jsp" />
 		<div class="row">
 	    	<div class="col-md-2"></div>
@@ -53,5 +51,6 @@
 	    	<div class="col-md-2"></div>
 		</div>
 	</div>
+	<jsp:include page="include/footer.jsp" />
 </body>
 </html>

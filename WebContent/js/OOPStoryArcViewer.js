@@ -16,137 +16,38 @@
  ******************************************************************************/
 'use strict';
 
-function createSentenceTextInDivCb(div) {
-	return function(sentenceIdx) {
-		$.when(
-				$.ajax(
-					{
-						dataType: "json",
-						url: getBaseUrl()
-					}
-				)
-			).done(
-					function(raw_data) {
-						 $(div).html(raw_data.sentences[sentenceIdx].text);
-					}
-			);
-	}
-}
-
-function makeSentenceBarChart(annotationName, svgName, textDiv) {
+function makeSentenceBarChart(annotationName, svgName, window) {
 	$.when( 
 			$.ajax(
 				{
 					dataType: "json",
-					url: getSentenceAnnotationsUrl(annotationName)
+					url: getSentenceAnnotationsUrl(annotationName)+"&Format=D3&Rolling="+window
 				}
 			)
 		).done(
 				function(rawData) {
-					let data = [];
-					for (let [index, val] of rawData[annotationName].entries()) {
-						//console.log("val: " + val)
-						if (isNumber(val) || isString(val)) {
-							data.push({"name": index, "value": val});
-						}
-						else {
-							console.log("datatype missing?")
-							data.push({"name": index, "value": 0});
-						}
-					}
-					drawBarChart(JSON.parse(JSON.stringify(data)), svgName, getAnnotationDisplayName(annotationName), createSentenceTextInDivCb(textDiv));
+					drawBarChart(rawData, svgName, annotationName);
 				});
 		
 }
 
-function makeSentenceScoreBarChart(annotationName, scoreName, svgName, textDiv) {
+function makeSentenceScoreBarChart(annotationName, scoreName, svgName, window) {
 	$.when( 
 			$.ajax(
 				{
 					dataType: "json",
-					url: getSentenceAnnotationsScoresUrl(annotationName, scoreName)
+					url: getSentenceAnnotationsScoresUrl(annotationName, scoreName)+"&Format=D3&Rolling="+window
 				}
 			)
 		).done(
 				function(rawData) {
-					let data = [];
-					for (let [index, val] of rawData[annotationName].entries()) {
-						console.log("val: " + val)
-						if (isNumber(val) || isString(val)) {
-							data.push({"name": index, "value": val});
-						}
-						else {
-							console.log("datatype missing?")
-							data.push({"name": index, "value": 0});
-						}
-					}
-					drawBarChart(JSON.parse(JSON.stringify(data)), svgName, scoreName, createSentenceTextInDivCb(textDiv));
+					drawBarChart(rawData, svgName, annotationName);
 				});
 		
 }
 
 
-//function drawBarChart(data, svgName, yLabel, onclick) {
-//	let svg = d3.select(svgName),
-//	margin = {
-//		top: 20,
-//		right: 20,
-//		bottom: 30,
-//		left: 50
-//	},
-//	width = +svg.attr("width") - margin.left - margin.right,
-//	height = +svg.attr("height") - margin.top - margin.bottom,
-//	g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-//
-//	let x = d3.scaleBand()
-//		.rangeRound([0, width])
-//		.padding(0.1).align(0);
-//
-//	let y = d3.scaleLinear()
-//		.rangeRound([height, 0]);
-//	
-//	
-//	x.domain(data.map(function (d) {
-//		return d.name;
-//	}));
-//	y.domain([0, d3.max(data, function (d) {
-//				return d.value;
-//	})]);
-//		
-//	g.append("g")
-//	.attr("transform", "translate(0," + height + ")")
-//	.call(d3.axisBottom(x).tickValues([]));
-//
-//	g.append("g")
-//	.call(d3.axisLeft(y))
-//	.append("text")
-//	.attr("fill", "#000")
-//	.attr("transform", "rotate(-90)")
-//	.attr("y", 6)
-//	.attr("dy", "0.71em")
-//	.attr("text-anchor", "end")
-//	.text(yLabel);
-//
-//	g.append("path")
-//    .datum(data)
-//    .attr("fill", "none")
-//    .attr("stroke", "steelblue")
-//    .attr("stroke-width", 1.5)
-//    .attr("d", d3.line()
-//      .x(function(d) { return x(d.name) })
-//      .y(function(d) { return y(d.value) })
-//      )
-//	.on("click", function(d, i) {
-//		d3.select(svgName).selectAll(".bar").style("fill", "steelblue");
-//        d3.select(this).style("fill", "black");
-//        onclick(i);
-//	});
-//	
-//}
-
-function drawBarChart(data, svgName, yLabel, onclick) {
-	//$(svgName).empty();
-	console.log(svgName);
+function drawBarChart(data, svgName, valueName) {
 	let svg = d3.select(svgName),
 	margin = {
 		top: 20,
@@ -156,21 +57,18 @@ function drawBarChart(data, svgName, yLabel, onclick) {
 	},
 	width = +svg.attr("width") - margin.left - margin.right,
 	height = +svg.attr("height") - margin.top - margin.bottom,
-	g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-	let x = d3.scaleBand()
+	g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")"),
+	x = d3.scaleBand()
 		.rangeRound([0, width])
-		.padding(0.1).align(0);
-
-	let y = d3.scaleLinear()
+		.padding(0.1).align(0),
+	y = d3.scaleLinear()
 		.rangeRound([height, 0]);
 	
-	
 	x.domain(data.map(function (d) {
-		return d.name;
+		return d.id;
 	}));
 	y.domain([0, d3.max(data, function (d) {
-				return d.value;
+				return d[valueName];
 	})]);
 		
 	g.append("g")
@@ -184,32 +82,25 @@ function drawBarChart(data, svgName, yLabel, onclick) {
 	.attr("transform", "rotate(-90)")
 	.attr("y", 6)
 	.attr("dy", "0.71em")
-	.attr("text-anchor", "end")
-	.text(yLabel);
+	.attr("text-anchor", "end");
 
 	g.selectAll(".bar")
 	.data(data)
 	.enter().append("rect")
 	.attr("class", "bar")
 	.attr("x", function (d) {
-		return x(d.name);
+		return x(d.id);
 	})
 	.attr("y", function (d) {
-		return y(d.value);
+		return y(d[valueName]);
 	})
 	.attr("width", x.bandwidth())
 	.attr("height", function (d) {
-		if ((height - y(d.value)) < 0) {
+		if ((height - y(d[valueName])) < 0) {
 			return 0;
 		}
 		else {
-			return height - y(d.value);
+			return height - y(d[valueName]);
 		}
-	})
-	.on("click", function(d, i) {
-		d3.select(svgName).selectAll(".bar").style("fill", "steelblue");
-        d3.select(this).style("fill", "black");
-        onclick(i);
 	});
-
 }

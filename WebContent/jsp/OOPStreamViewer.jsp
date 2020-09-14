@@ -49,11 +49,9 @@ int sentenceCount = (int)request.getAttribute("SentenceCount");
 <title>OOP Annotation Stream Viewer</title>	
 </head>
 <body>
-	<jsp:include page="include/logo.jsp" />
+	<jsp:include page="include/nav.jsp" />
 	<div class="container">	
-		<jsp:include page="include/divRowDocumentMetadata.jsp" />
-	</div>
-	<div class="container-fluid">
+		<jsp:include page="include/spacerRow.jsp" />
 		<div class="row">
 			<div class="col-md-4"></div>
 			<div class="col-md-4" id="annotatorPicker">
@@ -81,6 +79,6 @@ int sentenceCount = (int)request.getAttribute("SentenceCount");
 			<svg width="<%=sentenceCount>1600?new Integer(sentenceCount+100).toString():"1600"%>" height="400" id="sentenceAnnotationViz"></svg>
 		</div>
 	</div>				
-
+	<jsp:include page="include/footer.jsp" />
 </body>
 </html>

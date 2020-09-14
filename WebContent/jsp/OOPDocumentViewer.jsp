@@ -56,7 +56,7 @@
 	</script>
 	<script>
 		var docId = "<%=request.getParameter("Document")%>";
-		var corpus = "<%=request.getParameter("Corpus")%>";
+		var corpus = "<%=request.getParameter("Corpus")%>";	
 	</script>
 	<script src="js/OOPDocumentViewer.js">
 		
@@ -107,10 +107,8 @@
 	</style>
 </head>
 <body>
-	<jsp:include page="include/logo.jsp" />
+	<jsp:include page="include/nav.jsp" />
 	<div class="container">	
-		<jsp:include page="include/divRowDocumentMetadata.jsp" />
-
 		<jsp:include page="include/spacerRow.jsp" />
 		<div class="row">
 			<div class="col-md-4"></div>
@@ -255,6 +253,6 @@
 			</div>
 			<div class="col-lg-8" id="story_text"></div>
 		</div>
-	
+<jsp:include page="include/footer.jsp" />
 </body>
 </html>

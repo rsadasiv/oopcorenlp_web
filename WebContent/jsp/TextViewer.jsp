@@ -22,45 +22,24 @@
 <jsp:include page="include/meta.jsp" />
 <jsp:include page="include/bootstrap.jsp" />
 <link href="css/medium/basic.css" rel="stylesheet" type="text/css" />
-<title>TextMediumViewer</title>
+<title>TextViewer</title>
+<style>
+   pre {
+      overflow-x: auto;
+      background: #fff;
+      white-space: pre-wrap;
+      white-space: -moz-pre-wrap;
+      white-space: -pre-wrap;
+      white-space: -o-pre-wrap;
+      word-wrap: break-word;
+   }
+</style>
 </head>
 <body>
-	<jsp:include page="include/nav.jsp" />
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col">
-				<h6>
-					Estimated reading time:
-					<%=request.getAttribute("ReadingTime").toString() %>
-					minutes
-				</h6>
-				<h6>
-					Estimated listening time:
-					<%=request.getAttribute("ListeningTime").toString() %>
-					minutes
-				</h6>
-				<h6>
-					Reading level:
-					<%=request.getAttribute("ReadingLevel").toString() %>
-				</h6>
-				<h6>
-					Sentiment:
-					<%=request.getAttribute("EmotionalLevel").toString() %>
-				</h6>
-			</div>
-		</div>
-	</div>	
-
-	<div class="container">	
-		<div class="row">
-			<div class="col-md-2"></div>
-			<div class="col-md-8">
-				<p>&nbsp;</p>
-				<%= request.getAttribute("Text") %>
-			</div>
-			<div class="col-md-2"></div>
-		</div>
-	</div>
-	<jsp:include page="include/footer.jsp" />	
+<jsp:include page="include/nav.jsp" />
+<pre>
+	<%= request.getAttribute("Text") %>
+</pre>
+<jsp:include page="include/footer.jsp" />
 </body>
 </html>

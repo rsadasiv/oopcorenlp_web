@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 
 @WebServlet("/TextMediumViewer")
 public class TextMediumViewer extends AbstractOOPServlet {
@@ -36,6 +38,37 @@ public class TextMediumViewer extends AbstractOOPServlet {
         super();
     }
     
+    public void setReadingStats(HttpServletRequest request, String corpus, String document) throws IOException {
+    	JsonNode oop = getStorage().getCorpusDocumentOOPJson(corpus, document);
+		request.setAttribute(
+				"ReadingTime",
+				String.format(
+					"%.0f",
+					oop.get("OOPWordCountAnnotation").asDouble()/250
+				)
+		);
+		request.setAttribute(
+				"ListeningTime",
+				String.format(
+					"%.0f",
+					oop.get("OOPSyllableCountAnnotation").asDouble()/160
+				)
+		);
+		request.setAttribute(
+				"ReadingLevel",
+				String.format(
+					"%.0f",
+					oop.get("OOPFleschKincaidAnnotation").asDouble()*100
+				)
+		);
+		request.setAttribute(
+				"EmotionalLevel",
+				String.format(
+					"%.0f",
+					oop.get("VaderSentimentAnnotation").asDouble()*100
+				)
+		);
+    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -48,7 +81,7 @@ public class TextMediumViewer extends AbstractOOPServlet {
 				"Text", 
 				plainTextToHtml(getStorage().getCorpusDocumentTxtString(corpus, document))
 		);
-
+        setReadingStats(request, corpus, document);
         request.getSession().getServletContext().getRequestDispatcher("/jsp/TextMediumViewer.jsp").forward(request, response);
 	}
 }

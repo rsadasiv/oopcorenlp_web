@@ -16,24 +16,19 @@
  ******************************************************************************/
 package io.outofprintmagazine.web.servlets;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @WebServlet("/CorpusDocumentsViewer")
-public class CorpusDocumentsViewer extends HttpServlet {
+public class CorpusDocumentsViewer extends AbstractOOPServlet {
 	private static final long serialVersionUID = 1L;
        
 
@@ -42,33 +37,15 @@ public class CorpusDocumentsViewer extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String pCorpus = request.getParameter("Corpus");
-		File[] documents = new File(request.getSession().getServletContext().getRealPath("/Corpora/"+pCorpus+"/")).listFiles(File::isFile);
+		String corpus = request.getParameter("Corpus");
+		ArrayNode documentsArray = (ArrayNode)getStorage().listCorpusDocuments(corpus).get("Documents");
+		//File[] documents = new File(request.getSession().getServletContext().getRealPath("/Corpora/"+pCorpus+"/")).listFiles(File::isFile);
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode json = mapper.createObjectNode();
 		ArrayNode corporaNode = json.putArray("Documents");
-		for (int i=0;i<documents.length;i++) {
-			if (documents[i].getName().substring(0, documents[i].getName().lastIndexOf(".")).startsWith("OOP_")) {
-				ObjectNode documentNode = mapper.createObjectNode();
-				documentNode.put("DocID", documents[i].getName().substring(4, documents[i].getName().lastIndexOf(".")));
-	            BufferedReader br = new BufferedReader(new FileReader(documents[i]));
-	            ObjectMapper objectMapper = new ObjectMapper();
-	            JsonNode stats = objectMapper.readTree(br);
-	            try {
-            	documentNode.put("Author", stats.findValue("AuthorAnnotation").asText("Anonymous"));
-            	documentNode.put("Date", stats.findValue("DocDateAnnotation").asText());
-            	documentNode.put("Title", stats.findValue("DocTitleAnnotation").asText());
-
-            	if (stats.findValue("OOPThumbnailAnnotation")!= null) {
-            		documentNode.put("Thumbnail", stats.findValue("OOPThumbnailAnnotation").asText());
-            	}
-            	corporaNode.add(documentNode);
-	            }
-	            catch (Throwable t) {
-	            	t.printStackTrace();
-	            }
-				br.close();
-			}
+		for (int i=0;i<documentsArray.size();i++) {
+			String document = documentsArray.get(i).asText();
+			corporaNode.add(getStorage().getCorpusDocumentOOPMetadata(corpus, document));
 		}
 		request.setAttribute("corpora", json);
 		request.getSession().getServletContext().getRequestDispatcher("/jsp/CorpusDocumentsViewer.jsp").forward(request, response);

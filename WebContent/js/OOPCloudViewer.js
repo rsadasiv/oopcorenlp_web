@@ -21,68 +21,30 @@ function makeCloud(annotationName, svgName) {
 			$.ajax(
 				{
 					dataType: "json",
-					url: getBaseUrl()
+					url: getDocumentAnnotationsUrl(annotationName)+"&Format=D3Cloud"
 				}
 			)
 		).done(
-				function(rawData) {
-					let data = [];
-					if (isObject(rawData[annotationName])) {
-						for (const annotation of Object.keys(rawData[annotationName])) {
-							if (isNumber(rawData[annotationName][annotation]) || isString(rawData[annotationName][annotation])) {
-								data.push({"text": annotation, "size": rawData[annotationName][annotation]});
-							}
-							else if (isArray(rawData[annotationName][annotation])) {
-								data.push({"text": annotation, "size": rawData[annotationName][annotation].length});
-							}
-							else {
-								data.push({"text": annotation, "size": 0});
-							}
-						}
-						data.sort((a, b) => (parseFloat(a.size) < parseFloat(b.size)) ? 1 : -1);
-						let tdata = $.extend(true, [], data.slice(0,50));
-						drawCloud(data.slice(0,50), svgName, getAnnotationDisplayName(annotationName));
-					}
-				});
-		
-}
-
-function makeTable(annotationName, divName) {
-	$.when( 
-			$.ajax(
-				{
-					dataType: "json",
-					url: getBaseUrl()
+				function(data) {
+					drawCloud(data.slice(0,50), svgName);
 				}
-			)
-		).done(
-				function(rawData) {
-					let data = [];
-					if (isObject(rawData[annotationName])) {
-						for (const annotation of Object.keys(rawData[annotationName])) {
-							if (isNumber(rawData[annotationName][annotation]) || isString(rawData[annotationName][annotation])) {
-								data.push({"text": annotation, "size": rawData[annotationName][annotation]});
-							}
-							else if (isArray(rawData[annotationName][annotation])) {
-								data.push({"text": annotation, "size": rawData[annotationName][annotation].length});
-							}
-							else {
-								data.push({"text": annotation, "size": 0});
-							}
-						}
-						data.sort((a, b) => (parseFloat(a.size) < parseFloat(b.size)) ? 1 : -1);
-						let tdata = $.extend(true, [], data.slice(0,50));
-						showCloudData(tdata, divName);
-					}
-				});
-		
+		);
 }
 
 
-
-function drawCloud(data, svgName, yLabel) {
+function drawCloud(data, svgName) {
+	let svg = d3.select(svgName),
+	margin = {
+		top: 20,
+		right: 20,
+		bottom: 30,
+		left: 50
+	},
+	width = +svg.attr("width") - margin.left - margin.right,
+	height = +svg.attr("height") - margin.top - margin.bottom;
+	
     d3.wordcloud()
-    .size([800, 400])
+    .size([width, height])
     .selector(svgName)
     .scale('linear')
     .spiral('rectangular')
@@ -90,23 +52,3 @@ function drawCloud(data, svgName, yLabel) {
     .start();
 }
 
-
-function showCloudData(data, divName ) {
-	$(divName).empty();	
-	let tb = $('<table>');
-	tb.attr("class", "table table-dark table-striped table-sm");
-	tb.appendTo($(divName));
-	let tbody = $('<tbody>');
-	tbody.appendTo(tb);
-	for (let datum of data) {
-		let tr = $('<tr>');
-		tr.appendTo(tbody);
-		let th = $('<th>');
-		th.appendTo(tr);
-		th.attr("scope", "row");
-		th.text(datum.text);
-		let td = $('<td>');
-		td.appendTo(tr);
-		td.text(datum.size);
-	}	
-}

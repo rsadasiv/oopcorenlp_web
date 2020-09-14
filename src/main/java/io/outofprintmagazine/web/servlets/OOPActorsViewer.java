@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
+import io.outofprintmagazine.web.util.JsonSort;
+
 
 @WebServlet("/OOPActorsViewer")
 public class OOPActorsViewer extends AbstractOOPServlet {
@@ -43,20 +45,21 @@ public class OOPActorsViewer extends AbstractOOPServlet {
     
     private void setSelectedActor(HttpServletRequest request, String corpus, String document) throws IOException {
     	String actor = request.getParameter("Actor");
-    	if (actor == null) {
-    		request.setAttribute("SelectedActor", getMapper().createObjectNode());
-    		return;
-    	}
-    	
 		JsonNode stats = (JsonNode) request.getAttribute("Stats");
 		if (stats == null) {
 			setStatsAttribute(request, corpus, document);
 			stats = (JsonNode) request.getAttribute("Stats");
 		}
 		
+		boolean firstActor = true;
 		ArrayNode actors = (ArrayNode) stats.get("OOPActorsAnnotation");
+		JsonSort.sortActors(actors);
 		for (JsonNode actorNode : actors) {
-			if (actorNode.get("canonicalName").asText().equals(actor)) {
+	    	if (actor == null && firstActor) {
+	    		request.setAttribute("SelectedActor", actorNode);
+	    		firstActor = false;
+	    	}
+	    	else if (actorNode.get("canonicalName").asText().equals(actor)) {
 				request.setAttribute("SelectedActor", actorNode);
 				return;
 			}

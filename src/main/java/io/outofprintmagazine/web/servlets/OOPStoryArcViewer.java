@@ -17,10 +17,6 @@
 package io.outofprintmagazine.web.servlets;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 
 
 @WebServlet("/OOPStoryArcViewer")
@@ -43,37 +38,7 @@ public class OOPStoryArcViewer extends AbstractOOPServlet {
         super();
     }
     
-    public void setReadingStats(HttpServletRequest request, String corpus, String document) throws IOException {
-    	JsonNode oop = getStorage().getCorpusDocumentOOPJson(corpus, document);
-		request.setAttribute(
-				"ReadingTime",
-				String.format(
-					"%.0f",
-					oop.get("OOPWordCountAnnotation").asDouble()/250
-				)
-		);
-		request.setAttribute(
-				"ListeningTime",
-				String.format(
-					"%.0f",
-					oop.get("OOPSyllableCountAnnotation").asDouble()/160
-				)
-		);
-		request.setAttribute(
-				"ReadingLevel",
-				String.format(
-					"%.0f",
-					oop.get("OOPFleschKincaidAnnotation").asDouble()*100
-				)
-		);
-		request.setAttribute(
-				"EmotionalLevel",
-				String.format(
-					"%.0f",
-					oop.get("VaderSentimentAnnotation").asDouble()*100
-				)
-		);
-    }
+
     
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -82,7 +47,8 @@ public class OOPStoryArcViewer extends AbstractOOPServlet {
 		String corpus = request.getParameter("Corpus");
 		String document = request.getParameter("Document");
         setMetadataAttributes(request, corpus, document);
-        setReadingStats(request, corpus, document);
+        setAnnotationDescriptionsAttribute(request, corpus, document);
+        setStatsAttribute(request, corpus, document);
         request.getSession().getServletContext().getRequestDispatcher("/jsp/OOPStoryArcViewer.jsp").forward(request, response);
 	}
 }

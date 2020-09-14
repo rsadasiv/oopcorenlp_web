@@ -42,7 +42,7 @@ public class ListCorpora extends AbstractOOPServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("application/json");
+		response.setContentType("application/json; charset=utf-8");
 		response.getWriter().write(getMapper().writeValueAsString(getStorage().listCorpora()));
 		response.flushBuffer();
 	}

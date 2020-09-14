@@ -19,7 +19,11 @@ package io.outofprintmagazine.web.servlets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Iterator;
+import java.util.Properties;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
@@ -36,9 +40,13 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.outofprintmagazine.web.storage.FileStorage;
 import io.outofprintmagazine.web.storage.IStorage;
@@ -48,11 +56,35 @@ public abstract class AbstractOOPServlet extends HttpServlet {
     
 	private static final long serialVersionUID = 1L;
 	
+	private static final Logger logger = LogManager.getLogger(AbstractOOPServlet.class);
+	
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
+		return logger;
+	}
+	
     public AbstractOOPServlet() {
         super();
     }
     
-    private IStorage storage = new FileStorage();
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+    	super.init(config);
+    	Properties properties = new Properties();
+    	properties.put(
+    			"fileCorpus_Path", 
+    			config.getServletContext().getRealPath("/Corpora")
+    	);
+    	try {
+			storage = FileStorage.getInstance(properties);
+		} 
+    	catch (IOException e) {
+    		getLogger().error(e);
+			throw new ServletException(e);
+		}
+    }
+    
+    private IStorage storage = null;
     
     protected IStorage getStorage() {
     	return storage;
@@ -91,14 +123,39 @@ public abstract class AbstractOOPServlet extends HttpServlet {
     }
     
     public void setMetadataAttributes(HttpServletRequest request, String corpus, String document) throws IOException {
-        JsonNode stats = getStorage().getCorpusDocumentOOPJson(corpus, document);
-        request.setAttribute("Author", stats.get("metadata").get("AuthorAnnotation").asText());
-        request.setAttribute("Date", stats.get("metadata").get("DocDateAnnotation").asText());
-        request.setAttribute("Title", stats.get("metadata").get("DocTitleAnnotation").asText());    	
+        JsonNode stats = getStorage().getCorpusDocumentOOPMetadata(corpus, document);
+        request.setAttribute("DocumentMetadata", stats);
+        request.setAttribute("Author", stats.get("AuthorAnnotation").asText());
+        request.setAttribute("Date", stats.get("DocDateAnnotation").asText());
+        request.setAttribute("Title", stats.get("DocTitleAnnotation").asText());    	
     }
     
     public void setStatsAttribute(HttpServletRequest request, String corpus, String document) throws IOException {
 		request.setAttribute("Stats", getStorage().getCorpusDocumentOOPJson(corpus, document));
+    }
+    
+    protected ObjectNode getAnnotationDescription(String corpus, String document, String annotation) throws IOException {
+		ObjectNode retval = getMapper().createObjectNode();
+		JsonNode pipeline = getStorage().getCorpusDocumentPipelineJson(corpus, document);
+		ArrayNode annotations = (ArrayNode) pipeline.get("annotations");
+		Iterator<JsonNode> annotationsIter = annotations.elements();
+		while (annotationsIter.hasNext()) {
+			JsonNode annotationNode = annotationsIter.next();
+			Iterator<String> keyIter = annotationNode.fieldNames();
+			while (keyIter.hasNext()) {
+				String keyName = keyIter.next();
+				if (annotation == null || annotation.equals(keyName)) {
+					retval.put(keyName, annotationNode.get(keyName).asText());
+					break;
+				}
+				
+			}
+		}
+		return retval;
+    }
+    
+    public void setAnnotationDescriptionsAttribute(HttpServletRequest request, String corpus, String document) throws IOException {
+    	request.setAttribute("AnnotationDescriptions", getAnnotationDescription(corpus, document, null));
     }
 
 }

@@ -31,8 +31,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
 @WebServlet("/OOPPullQuotesViewer")
@@ -131,21 +134,27 @@ public class OOPPullQuotesViewer extends AbstractOOPServlet {
      	List<String> whaSentences = new ArrayList<String>();
      	for (String annotationName : whaAnnotators) {
      		for (JsonNode phraseAnnotation : ((ArrayNode)oop.get(annotationName))) {
-     			whaSentences.add(phraseAnnotation.get("name").asText().trim()+"?");
+     			whaSentences.add(StringUtils.capitalize(phraseAnnotation.get("name").asText().trim()+"?"));
 	     	}
 	    }
     		
      	//comparisons
-     	List<String> comparisonAnnotators = Arrays.asList(
-         		"OOPAsAnnotation",
-         		"OOPLikeAnnotation"
-         );
      	List<String> comparisonSentences = new ArrayList<String>();
-     	for (String annotationName : comparisonAnnotators) {
-     		for (JsonNode phraseAnnotation : ((ArrayNode)oop.get(annotationName))) {
-     			comparisonSentences.add(phraseAnnotation.get("name").asText().trim());
-	     	}
-	    }
+     	
+     	List<String> asSentences = new ArrayList<String>();
+ 		for (JsonNode phraseAnnotation : ((ArrayNode)oop.get("OOPAsAnnotation"))) {
+ 			asSentences.add(StringUtils.capitalize(phraseAnnotation.get("name").asText().trim()));
+     	}
+     	asSentences.sort((s1, s2) -> s2.length() - s1.length());
+     	comparisonSentences.addAll(asSentences);
+     	
+     	List<String> likeSentences = new ArrayList<String>();
+ 		for (JsonNode phraseAnnotation : ((ArrayNode)oop.get("OOPLikeAnnotation"))) {
+ 			likeSentences.add(StringUtils.capitalize(phraseAnnotation.get("name").asText().trim()));
+     	}
+     	likeSentences.sort((s1, s2) -> s2.length() - s1.length());
+     	comparisonSentences.addAll(likeSentences);
+     	
      	
      	//quotes
      	Pattern extraQuote = Pattern.compile("^\"\\s*\"", Pattern.MULTILINE);
@@ -155,7 +164,6 @@ public class OOPPullQuotesViewer extends AbstractOOPServlet {
  			q = extraQuote.matcher(q).replaceFirst("\"");
  			quotes.add(q);
      	}
-	    
     	
      	pullQuotes.put("FirstLast", Arrays.asList(firstSentence, lastSentence));
      	pullQuotes.put("Best", Arrays.asList(firstHighestSentiment, secondHighestSentiment));
