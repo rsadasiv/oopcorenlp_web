@@ -5,12 +5,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -39,7 +38,7 @@ public class FileStorage implements IStorage {
     }
 	
 	private static Map<Properties, FileStorage> instances = new HashMap<Properties, FileStorage>();
-	private Map<String, Map<String, JsonNode>> corpusDocumentMetadata = new HashMap<String, Map<String, JsonNode>>();
+	private Map<String, Map<String, ObjectNode>> corpusDocumentMetadata = new HashMap<String, Map<String, ObjectNode>>();
 
 	private FileStorage() {
 		super();
@@ -89,20 +88,20 @@ public class FileStorage implements IStorage {
 		File[] directories = new File(properties.getProperty("fileCorpus_Path")).listFiles(File::isDirectory);
 		for (int i=0;i<directories.length;i++) {
 			String corpus = directories[i].getName();
-			Map<String, JsonNode> documentMetadata = new HashMap<String, JsonNode>();
+			Map<String, ObjectNode> documentMetadata = new HashMap<String, ObjectNode>();
 			corpusDocumentMetadata.put(corpus, documentMetadata);
 			initCorpusDocumentMetadata(corpus, documentMetadata);
 		}
 	}
 	
-	private void initCorpusDocumentMetadata(String corpus, Map<String, JsonNode> documentMetadata) throws IOException  {
+	private void initCorpusDocumentMetadata(String corpus, Map<String, ObjectNode> documentMetadata) throws IOException  {
 		File[] documents = new File(getCorpusPath(corpus)).listFiles(File::isFile);
 		for (int i=0;i<documents.length;i++) {
 			if (documents[i].getName().substring(0, documents[i].getName().lastIndexOf(".")).startsWith("OOP_")) {
 				String document = documents[i].getName().substring(4, documents[i].getName().lastIndexOf("."));
 				documentMetadata.put(
 						document,
-						getCorpusDocumentJson(
+						(ObjectNode) getCorpusDocumentJson(
 								corpus,
 								"OOP_" + document + ".json"
 						).get("metadata").deepCopy()
@@ -135,40 +134,29 @@ public class FileStorage implements IStorage {
 	}
 	
 	@Override
-	public JsonNode listCorpora() throws IOException {
-		List<String> sortedCorpora = new ArrayList<String>();
+	public ArrayNode listCorpora() throws IOException {
+		ArrayNode retval = getMapper().createArrayNode();
+		SortedSet<String> sortedCorpora = new TreeSet<String>();
 		sortedCorpora.addAll(corpusDocumentMetadata.keySet());
-		Collections.sort(sortedCorpora);
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode json = mapper.createObjectNode();
-		ArrayNode corporaNode = json.putArray("Corpora");
+
 		for (String corpus : sortedCorpora) {
-			corporaNode.add(corpus);
+			retval.add(corpus);
 		}
-		return json;
+		return retval;
 	}
 	
 	@Override
-	public JsonNode listCorpusDocuments(String corpus) throws IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode json = mapper.createObjectNode();
-		ArrayNode corporaNode = json.putArray("Documents");
-		Map<String, JsonNode> documentMetadata = corpusDocumentMetadata.get(corpus);
-		List<String> sortedDocuments = new ArrayList<String>();
+	public ArrayNode listCorpusDocuments(String corpus) throws IOException {
+		ArrayNode retval = getMapper().createArrayNode();
+		Map<String, ObjectNode> documentMetadata = corpusDocumentMetadata.get(corpus);
+		SortedSet<String> sortedDocuments = new TreeSet<String>();
 		sortedDocuments.addAll(documentMetadata.keySet());
-		Collections.sort(sortedDocuments);
+
 		for (String document : sortedDocuments) {
-			corporaNode.add(document);
+			retval.add(document);
 		}		
-		return json;
+		return retval;
 	}
-	
-	@Override
-    public JsonNode getCorpusDocumentOOPMetadata(String corpus, String document) throws IOException {
-		return corpusDocumentMetadata.get(corpus).get(document);
-	}
-	
-	
 
 	@Override
     public String getCorpusDocumentTxtString(String corpus, String document) throws IOException {
@@ -215,5 +203,10 @@ public class FileStorage implements IStorage {
 	public JsonNode getCorpusDocumentStanfordJson(String corpus, String document) throws IOException {
     	return getCorpusDocumentJson(corpus, "/STANFORD_"+document+".json");
 	}
-
+	
+	@Override
+    public ObjectNode getCorpusDocumentOOPMetadata(String corpus, String document) throws IOException {
+		return corpusDocumentMetadata.get(corpus).get(document);
+	}
+	
 }

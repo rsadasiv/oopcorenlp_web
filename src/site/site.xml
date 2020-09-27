@@ -30,7 +30,9 @@
 	      	<item name="Testing" href="developers-testing.html" />
 	      	<item name="Deployment" href="developers-deployment.html" />
 	      	<item name="Project Documentation" href="developers-documentation.html" />
-	      	<item name="Source Code" href="developers-code.html" />	      	
+	      	<item name="Source Code" href="developers-code.html" />
+	      	<item name="Swagger Docs - api endpoint" href="swagger/api.json" target="_blank" />
+	      	<item name="Swagger Docs - browse endpoint" href="swagger/browse.json" target="_blank" />      	
 	      </item>      	    	
 	    </menu>	
 		<menu ref="reports" />

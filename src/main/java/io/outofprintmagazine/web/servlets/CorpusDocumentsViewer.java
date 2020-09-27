@@ -38,7 +38,7 @@ public class CorpusDocumentsViewer extends AbstractOOPServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String corpus = request.getParameter("Corpus");
-		ArrayNode documentsArray = (ArrayNode)getStorage().listCorpusDocuments(corpus).get("Documents");
+		ArrayNode documentsArray = (ArrayNode)getStorage().listCorpusDocuments(corpus);
 		//File[] documents = new File(request.getSession().getServletContext().getRealPath("/Corpora/"+pCorpus+"/")).listFiles(File::isFile);
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode json = mapper.createObjectNode();

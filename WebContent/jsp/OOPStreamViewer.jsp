@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************** -->
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ page import="com.fasterxml.jackson.databind.node.ObjectNode" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -25,6 +26,13 @@
 <script src="js/oopcorenlp.js"></script>
 <script src="js/OOPStreamViewer.js"></script>
 
+<%
+ObjectNode stats = (ObjectNode) request.getAttribute("Stats");
+ObjectNode annotationDescriptions = (ObjectNode) request.getAttribute("AnnotationDescriptions");
+String selectedAnnotation = request.getParameter("Annotation")==null||request.getParameter("Annotation").equals("")?"VaderSentimentAnnotation":request.getParameter("Annotation");
+int sentenceCount = (int)request.getAttribute("SentenceCount");
+%>
+
 <script>
 $(document).ready(function() {
 	getProperties()["docId"] = "<%=request.getParameter("Document")%>";
@@ -33,7 +41,7 @@ $(document).ready(function() {
 	let annotation = "<%=request.getParameter("Annotation")==null||request.getParameter("Annotation").equals("")?"VaderSentimentAnnotation":request.getParameter("Annotation")%>";
 	$("#annotators").val(annotation);
 	
-	makeSentenceBarChart(annotation, "#sentenceAnnotationViz", "#sentenceText");
+	makeSentenceBarChart(annotation, "#sentenceAnnotationViz", 0);
 
 	$('#annotators').change(
 		function() {
@@ -43,9 +51,7 @@ $(document).ready(function() {
 
 });
 </script>
-<%
-int sentenceCount = (int)request.getAttribute("SentenceCount");
-%>
+
 <title>OOP Annotation Stream Viewer</title>	
 </head>
 <body>
@@ -64,21 +70,35 @@ int sentenceCount = (int)request.getAttribute("SentenceCount");
 		</div>
 	</div>
 	<jsp:include page="include/spacerRow.jsp" />
-	<div class="container-fluid">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4"></div>
+			<div class="col-md-4 justify-content-center">
+				<p><%=selectedAnnotation %></p>
+				<p><%=annotationDescriptions.get(selectedAnnotation).asText() %></p>
+				<p>
+					<a id="sentenceAnnotationVizDataLink" target="_blank">
+						Data
+					</a>
+				</p>
+			</div>
+			<div class="col-md-4"></div>
+		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<p class="text-center font-italic" id="sentenceText">
+				<p class="text-center font-italic" id="sentenceAnnotationVizText">
 					&nbsp;
 				</p>
 			</div>
 		</div>
 	</div>
-
-	<div class="row">
-		<div class="col-lg-12" id="sentenceViz">
-			<svg width="<%=sentenceCount>1600?new Integer(sentenceCount+100).toString():"1600"%>" height="400" id="sentenceAnnotationViz"></svg>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-12" id="sentenceViz">
+				<svg width="<%=sentenceCount>1600?new Integer(sentenceCount+100).toString():"1600"%>" height="400" id="sentenceAnnotationViz"></svg>
+			</div>
 		</div>
-	</div>				
+	</div>			
 	<jsp:include page="include/footer.jsp" />
 </body>
 </html>

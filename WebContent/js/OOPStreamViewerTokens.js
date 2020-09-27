@@ -16,79 +16,44 @@
  ******************************************************************************/
 'use strict';
 
-
-function showSentenceTextForTokenId(tokenIdx) {
-	$.when(
-			$.ajax(
-				{
-					dataType: "json",
-					url: getBaseUrl()
-				}
-			)
-		).done(
-				function(raw_data) {
-					let sortedTokenIdx = raw_data["OOPTokenCountAnnotation"]-tokenIdx;
-					let currentTokenId = 0;
-					for (const sentence of raw_data.sentences) {
-						if (tokenIdx < (currentTokenId+sentence.tokens.length)) {
-							$("#sentenceText").html(sentence.text);
-							return;
-						}
-						currentTokenId=currentTokenId+sentence.tokens.length;
+function createSentenceTextInDivCb(div, tokenCount) {
+	return function(tokenIdx) {
+		$.when(
+				$.ajax(
+					{
+						dataType: "json",
+						url: "rest/api/TokenIdxSentence?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&TokenIdx="+(tokenCount-tokenIdx)
 					}
-				}
-		);
+				)
+			).done(
+					function(data) {
+						 $(div).html("<a target=\"_blank\" href=\"" + getSentenceRef(data.SentenceIndexAnnotation) + "\">" + data.text + "</a>");
+					}
+			);
+	}
 }
 
+function invertList(data) {
+	data.reverse();
+	for (let i = 0; i < data.length; i++) {
+	    data[i].id = i;
+	}	
+	return data;
+}
 
 function makeTokenBarChart(annotationName, svgName) {
 	$.when( 
 			$.ajax(
 				{
 					dataType: "json",
-					url: getTokenAnnotationsUrl(annotationName)
+					url: "rest/api/TokensAnnotationScalar?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName
 				}
 			)
 		).done(
-				function(rawData) {
-					$.when(
-							$.ajax(
-								{
-									dataType: "json",
-									url: getBaseUrl()
-								}
-							)
-						).done(
-								function(raw_data) {
-									let tokenCount = raw_data["OOPTokenCountAnnotation"];
-									let data = [];
-									for (let [index, val] of rawData[annotationName].entries()) {
-
-										if (isNumber(val) || isString(val)) {
-											
-											data.push({"name": tokenCount-index, "value": val});
-										}
-										else if (isObject(val)) {
-											let s = 0;
-											for(let key in val){
-												if (val[key] && isNumber(val[key])) {
-													s = (s + Number(val[key]));
-												}
-											}
-											
-											data.push({"name": tokenCount-index, "value": s});
-										}
-										else {
-											
-											data.push({"name": tokenCount-index, "value": 0});
-										}
-				
-									}
-
-									drawTokensBarChart(JSON.parse(JSON.stringify(data)), svgName, getAnnotationDisplayName(annotationName), showSentenceTextForTokenId);
-								})
-				});
-		
+				function(data) {
+					drawTokensBarChart(invertList(data), svgName, getAnnotationDisplayName(annotationName), createSentenceTextInDivCb("#sentenceText", data.length));
+				}
+		);
 }
 
 function makeTokenScoreBarCharts(annotationName, svgName) {
@@ -96,15 +61,13 @@ function makeTokenScoreBarCharts(annotationName, svgName) {
 			$.ajax(
 				{
 					dataType: "json",
-					url: getBaseUrl()
+					url: "rest/api/DocumentAnnotation?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName
 				}
 			)
 		).done(
 				function(data) {
-					let list = JSON.parse(JSON.stringify(data[annotationName]));;
-					list.sort((a, b) => (parseFloat(a.value) < parseFloat(b.value)) ? 1 : -1);
 					let idx = 2;
-					list.slice(0,5).forEach(function(key, index) {
+					data.slice(0,5).forEach(function(key, index) {
 						makeTokenScoreBarChart(annotationName, key.name, svgName + "_" + idx);
 						idx++;
 					});
@@ -117,57 +80,19 @@ function makeTokenScoreBarChart(annotationName, scoreName, svgName) {
 			$.ajax(
 				{
 					dataType: "json",
-					url: getTokenAnnotationScoresUrl(annotationName, scoreName)
+					url: "rest/api/TokensAnnotationSubannotationScalar?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName+"&Subannotation="+scoreName
 				}
 			)
 		).done(
-				function(rawData) {
-					$.when(
-							$.ajax(
-								{
-									dataType: "json",
-									url: getBaseUrl()
-								}
-							)
-						).done(
-								function(raw_data) {
-									let tokenCount = raw_data["OOPTokenCountAnnotation"];
-									let data = [];
-									for (let [key, val] of rawData[annotationName].entries()) {
-
-										if (isNumber(val) || isString(val)) {
-											data.push({"name": tokenCount-key, "value": val});
-										}
-										else if (isObject(val)) {
-											let s = 0;
-											for(let key in val){
-												if (key == scoreName) {
-													if (val[key] && isNumber(val[key])) {
-														s = (s + Number(val[key]));
-													}
-												}
-											}
-											data.push({"name": tokenCount-key, "value": s});
-										}
-										else {
-											data.push({"name": tokenCount-key, "value": 0});
-										}
-									}
-
-									drawTokensBarChart(JSON.parse(JSON.stringify(data)), svgName, scoreName, showSentenceTextForTokenId);
-								})
-							});
-					
-		
+				function(data) {
+					drawTokensBarChart(invertList(data), svgName, scoreName, createSentenceTextInDivCb("#sentenceText", data.length));
+				}
+		);
 }
 
 
 
 function drawTokensBarChart(data, svgName, yLabel, onclick) {
-//    data = data.sort(function (a, b) {
-//        return d3.ascending(Number(a.value), Number(b.value));
-//    });
-//    console.log(data);
 	let svg = d3.select(svgName),
 	margin = {
 		top: 20,
@@ -177,13 +102,13 @@ function drawTokensBarChart(data, svgName, yLabel, onclick) {
 	},
 	width = +svg.attr("width") - margin.left - margin.right,
 	height = +svg.attr("height") - margin.top - margin.bottom,
-	g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")"),
 
-	let x = d3.scaleBand()
+	x = d3.scaleBand()
 		.rangeRound([0, width])
-		.padding(0.1).align(0);
+		.padding(0.1).align(0),
 
-	let y = d3.scaleLinear()
+	y = d3.scaleLinear()
 		.rangeRound([height, 0]);
 	
 	
@@ -191,7 +116,7 @@ function drawTokensBarChart(data, svgName, yLabel, onclick) {
 		return d.value;
 	}));
 	y.domain([0, d3.max(data, function (d) {
-				return d.name;
+				return d.id;
 	})]);
 
 
@@ -218,7 +143,7 @@ function drawTokensBarChart(data, svgName, yLabel, onclick) {
 		return x(d.value);
 	})
 	.attr("y", function (d) {
-		return y(d.name);
+		return y(d.id);
 	})
 	.attr("width", x.bandwidth())
 	.attr("height", function (d) {
@@ -228,7 +153,6 @@ function drawTokensBarChart(data, svgName, yLabel, onclick) {
 	.on("click", function(d, i) {
 		d3.select(svgName).selectAll(".bar").style("fill", "steelblue");
         d3.select(this).style("fill", "black");
-        //onclick(d3.select(this).attr("y"));
         onclick(i);
 	});
 

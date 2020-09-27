@@ -22,47 +22,37 @@ function createSentenceTextInDivCb(div) {
 				$.ajax(
 					{
 						dataType: "json",
-						url: getBaseUrl()
+						url: "rest/browse/Corpora/"+getProperties()["corpus"]+"/"+getProperties()["docId"]+"/OOP/sentences/"+sentenceIdx+"/text"
 					}
 				)
 			).done(
 					function(raw_data) {
-						 $(div).html(raw_data.sentences[sentenceIdx].text);
+						 $(div).html("<a target=\"_blank\" href=\"" + getSentenceRef(sentenceIdx) + "\">" + raw_data + "</a>");
 					}
 			);
 	}
 }
 
-function makeSentenceBarChart(annotationName, svgName, textDiv) {
+function makeSentenceBarChart(annotationName, svgName, window) {
+	let baseUrl = "rest/api/SentencesAnnotationScalar?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName+"&Format=D3";
 	$.when( 
 			$.ajax(
 				{
 					dataType: "json",
-					url: getSentenceAnnotationsUrl(annotationName)
+					url: baseUrl
 				}
 			)
 		).done(
 				function(rawData) {
-					let data = [];
-					for (let [index, val] of rawData[annotationName].entries()) {
-						//console.log("val: " + val)
-						if (isNumber(val) || isString(val)) {
-							data.push({"name": index, "value": val});
-						}
-						else {
-							console.log("datatype missing?")
-							data.push({"name": index, "value": 0});
-						}
-					}
-					let cb = createSentenceTextInDivCb(textDiv);
-					drawBarChart(JSON.parse(JSON.stringify(data)), svgName, getAnnotationDisplayName(annotationName), cb);
+					drawBarChart(rawData, svgName, "value", createSentenceTextInDivCb(svgName+"Text"));
+					setLink(svgName+"DataLink", baseUrl);
 				});
 		
 }
 
 
-function drawBarChart(data, svgName, yLabel, onclick) {
-	//$(svgName).empty();
+function drawBarChart(data, svgName, valueName, onclick) {
+	console.log(svgName);
 	console.log(data);
 	let svg = d3.select(svgName),
 	margin = {
@@ -84,10 +74,10 @@ function drawBarChart(data, svgName, yLabel, onclick) {
 	
 	
 	x.domain(data.map(function (d) {
-		return d.name;
+		return d.id;
 	}));
 	y.domain([0, d3.max(data, function (d) {
-				return d.value;
+				return d[valueName];
 	})]);
 		
 	g.append("g")
@@ -101,26 +91,25 @@ function drawBarChart(data, svgName, yLabel, onclick) {
 	.attr("transform", "rotate(-90)")
 	.attr("y", 6)
 	.attr("dy", "0.71em")
-	.attr("text-anchor", "end")
-	.text(yLabel);
+	.attr("text-anchor", "end");
 
 	g.selectAll(".bar")
 	.data(data)
 	.enter().append("rect")
 	.attr("class", "bar")
 	.attr("x", function (d) {
-		return x(d.name);
+		return x(d.id);
 	})
 	.attr("y", function (d) {
-		return y(d.value);
+		return y(d[valueName]);
 	})
 	.attr("width", x.bandwidth())
 	.attr("height", function (d) {
-		if ((height - y(d.value)) < 0) {
+		if ((height - y(d[valueName])) < 0) {
 			return 0;
 		}
 		else {
-			return height - y(d.value);
+			return height - y(d[valueName]);
 		}
 	})
 	.on("click", function(d, i) {

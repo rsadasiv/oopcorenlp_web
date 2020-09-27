@@ -14,37 +14,46 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine.web.servlets;
+package io.outofprintmagazine.web.rest.browse;
 
 import java.io.IOException;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Servlet implementation class ListCorpora
- */
-@WebServlet("/ListCorpora")
-public class ListCorpora extends AbstractOOPServlet {
+import io.outofprintmagazine.web.servlets.AbstractOOPCacheableServlet;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+@Path("/Corpora")
+public class Corpora extends AbstractOOPCacheableServlet {
+	
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ListCorpora() {
-        super();
-    }
+	@Context
+	private ServletConfig servletConfig;
+	@Context
+	private ServletContext servletContext;
+	@Context
+	private HttpServletRequest httpServletRequest;
+	@Context
+	private HttpServletResponse httpServletResponse;
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("application/json; charset=utf-8");
-		response.getWriter().write(getMapper().writeValueAsString(getStorage().listCorpora()));
-		response.flushBuffer();
+    @GET
+    @Produces("application/json; charset=utf-8")
+	public String goGet() throws JsonProcessingException, IOException, ServletException {
+    	if (getStorage() == null) {
+    		super.init(servletConfig);
+    	}
+    	return getMapper().writeValueAsString(
+					getStorage().listCorpora()
+		);
 	}
-
 }

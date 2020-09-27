@@ -33,8 +33,7 @@
 			<div class="col-md-4"></div>
 			<div class="col-md-4 text-center">
 			<%
-			ObjectNode json = (ObjectNode) request.getAttribute("corpora");
-			ArrayNode corporaNode = (ArrayNode) json.get("Corpora");
+			ArrayNode corporaNode = (ArrayNode)request.getAttribute("corpora");
 			Iterator<JsonNode> corporaDocumentIter = corporaNode.elements();
 			while (corporaDocumentIter.hasNext()) {
 				String corpus = corporaDocumentIter.next().asText();

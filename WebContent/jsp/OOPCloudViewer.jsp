@@ -82,7 +82,7 @@ $(document).ready(function() {
 				<p><%=selectedAnnotation %></p>
 				<p><%=annotationDescriptions.get(selectedAnnotation).asText() %></p>
 				<p>
-					<a target="_blank" href="GetDocumentAnalysisScores?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&Scope=DocumentAnnotation&Annotation=<%=selectedAnnotation%>&Format=D3Cloud">
+					<a id="cloudVizDataLink" target="_blank">
 						Data
 					</a>
 				</p>
@@ -90,7 +90,7 @@ $(document).ready(function() {
 			<div class="col-md-4"></div>
 		</div>
 		<div class="row">
-			<div class="col">
+			<div class="col-md-12 justify-content-center text-center">
 				<svg width="1000" height="600" id="cloudViz"></svg>
 			</div>
 		</div>

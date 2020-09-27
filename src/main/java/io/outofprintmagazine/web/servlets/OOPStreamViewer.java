@@ -84,6 +84,7 @@ public class OOPStreamViewer extends AbstractOOPServlet {
         setMetadataAttributes(request, corpus, document);
         setStatsAttribute(request, corpus, document);
         setSentenceAnnotatorsAttribute(request, corpus, document);
+        setAnnotationDescriptionsAttribute(request, corpus, document);
         setSentenceCountAttribute(request, corpus, document);
         request.getSession().getServletContext().getRequestDispatcher("/jsp/OOPStreamViewer.jsp").forward(request, response);
 	}

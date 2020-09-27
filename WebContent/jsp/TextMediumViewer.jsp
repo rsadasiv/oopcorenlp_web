@@ -26,30 +26,6 @@
 </head>
 <body>
 	<jsp:include page="include/nav.jsp" />
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col">
-				<h6>
-					Estimated reading time:
-					<%=request.getAttribute("ReadingTime").toString() %>
-					minutes
-				</h6>
-				<h6>
-					Estimated listening time:
-					<%=request.getAttribute("ListeningTime").toString() %>
-					minutes
-				</h6>
-				<h6>
-					Reading level:
-					<%=request.getAttribute("ReadingLevel").toString() %>
-				</h6>
-				<h6>
-					Sentiment:
-					<%=request.getAttribute("EmotionalLevel").toString() %>
-				</h6>
-			</div>
-		</div>
-	</div>	
 
 	<div class="container">	
 		<div class="row">

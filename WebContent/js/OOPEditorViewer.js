@@ -21,17 +21,13 @@ function displayEditorTextAnnotations(div) {
 			$.ajax(
 				{
 					dataType: "json",
-					url: getBaseUrl()
+					url: "rest/browse/Corpora/"+getProperties()["corpus"]+"/"+getProperties()["docId"]+"/OOP"
 				}
 			)
 		).done(
 			function(data) {
 				let paragraphIdx = -1;
-				let currentParagraphNode = null;
 				let tokenIdx = 0;
-				let leftCol = null;
-				let centerCol = null;
-				let rightCol = null;
 				let sentenceLength = [];
 				let sentenceLengthMean = 0;
 				let sentenceLengthStddev = 0;
@@ -43,58 +39,30 @@ function displayEditorTextAnnotations(div) {
 				sentenceLengthStddev = math.std(sentenceLength);
 				
 				data.sentences.forEach(function(sentence, index) {
-					if (sentence["ParagraphIndexAnnotation"] > paragraphIdx) {
-						paragraphIdx = sentence["ParagraphIndexAnnotation"];
-						currentParagraphNode = $("<p>");
-						currentParagraphNode.attr("id", "paragraph_"+paragraphIdx);
-						currentParagraphNode.attr("ref", "paragraph_"+paragraphIdx);
-						currentParagraphNode.appendTo(div);
-					}
-					let sentenceNode = {};
+					let sentenceNode = $("#sentence_"+sentence.SentenceIndexAnnotation);
 					let dataContent = getEditorAnnotationsSentence(sentence, sentenceLengthMean+(sentenceLengthStddev*2));
 					if (dataContent.length > '<div class="popover-message"></div>'.length) {
-						sentenceNode = $("<s>");
-						sentenceNode.attr("id", "token_"+tokenIdx);
-						sentenceNode.attr("ref", "token_"+tokenIdx);
+						sentenceNode.css("text-decoration", "line-through");
 						sentenceNode.attr("data-toggle", "popover");
 						sentenceNode.attr("data-placement", "top");
 						sentenceNode.attr("data-html", "true");
 						sentenceNode.attr("data-content", dataContent);
 						sentenceNode.attr("trigger", "click");
 					}
-					else {
-						sentenceNode = $("<span>");
-					}
-					sentenceNode.attr("id", "sentence_"+sentence["SentenceIndexAnnotation"]);
-					sentenceNode.attr("ref", "sentence_"+sentence["SentenceIndexAnnotation"]);
-					sentenceNode.attr("class", "sentence");
-					//sentenceNode.text(sentence.text + " ");
-					currentParagraphNode.append(sentenceNode);
 					sentence.tokens.forEach(function(token, index) {
-						tokenIdx++;
-						sentenceNode.append(token["TokensAnnotation"].before);
-						let tokenNode = {};
+						let tokenNode = $("#token_"+tokenIdx);
 						let dataContent = getEditorAnnotationsToken(token);
 						if (dataContent.length > '<div class="popover-message"></div>'.length) {
-							tokenNode = $("<s>");
-							tokenNode.attr("id", "token_"+tokenIdx);
-							tokenNode.attr("ref", "token_"+tokenIdx);
+							tokenNode.css("text-decoration", "line-through");
 							tokenNode.attr("data-toggle", "popover");
 							tokenNode.attr("data-placement", "top");
 							tokenNode.attr("data-html", "true");
 							tokenNode.attr("data-content", dataContent);
 							tokenNode.attr("trigger", "click");
 						}
-						else {
-							tokenNode = $("<span>");
-						}
-						tokenNode.attr("class", "token");
-			
-						tokenNode.text(token["TokensAnnotation"].originalText);
-						sentenceNode.append(tokenNode);
+						tokenIdx++;
 					});
 				});
-			
 				$("[data-toggle=popover]").popover();
 			});
 }

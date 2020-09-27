@@ -68,7 +68,7 @@ ObjectNode stats = (ObjectNode) request.getAttribute("Stats");
 				<p>OOPFleschKincaidAnnotation</p>
 				<p><%=annotationDescriptions.get("OOPFleschKincaidAnnotation").asText() %></p>
 				<p>
-					<a target="_blank" href="GetDocumentAnalysisScores?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&Scope=SentencesAnnotation&Annotation=OOPFleschKincaidAnnotation&Format=D3&Rolling=0">
+					<a target="_blank"id="OOPFleschKincaidAnnotationVizDataLink">
 						Data
 					</a>
 				</p>
@@ -79,7 +79,7 @@ ObjectNode stats = (ObjectNode) request.getAttribute("Stats");
 				<p>VaderSentimentAnnotation</p>
 				<p><%=annotationDescriptions.get("VaderSentimentAnnotation").asText() %></p>
 				<p>
-					<a target="_blank" href="GetDocumentAnalysisScores?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&Scope=SentencesAnnotation&Annotation=VaderSentimentAnnotation&Format=D3&Rolling=0">
+					<a target="_blank" id="VaderSentimentAnnotationVizDataLink">
 						Data
 					</a>
 				</p>
@@ -91,7 +91,7 @@ ObjectNode stats = (ObjectNode) request.getAttribute("Stats");
 				<p>OOPVerbsAnnotation</p>
 				<p><%=annotationDescriptions.get("OOPVerbsAnnotation").asText() %></p>
 				<p>
-					<a target="_blank" href="GetDocumentAnalysisScores?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&Scope=SentencesAnnotation&Annotation=OOPVerbsAnnotation&Format=D3&Rolling=0">
+					<a target="_blank" id="OOPVerbsAnnotationVizDataLink">
 						Data
 					</a>
 				</p>
@@ -102,7 +102,7 @@ ObjectNode stats = (ObjectNode) request.getAttribute("Stats");
 				<p>OOPActionlessVerbsAnnotation</p>
 				<p><%=annotationDescriptions.get("OOPActionlessVerbsAnnotation").asText() %></p>
 				<p>
-					<a target="_blank" href="GetDocumentAnalysisScores?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&Scope=SentencesAnnotation&Annotation=OOPActionlessVerbsAnnotation&Format=D3&Rolling=0">
+					<a target="_blank" id="OOPActionlessVerbsAnnotationVizDataLink">
 						Data
 					</a>
 				</p>
@@ -114,7 +114,7 @@ ObjectNode stats = (ObjectNode) request.getAttribute("Stats");
 				<p>OOPPeopleAnnotation</p>
 				<p><%=annotationDescriptions.get("OOPPeopleAnnotation").asText() %></p>
 				<p>
-					<a target="_blank" href="GetDocumentAnalysisScores?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&Scope=SentencesAnnotation&Annotation=OOPPeopleAnnotation&Format=D3&Rolling=0">
+					<a target="_blank" id="OOPPeopleAnnotationVizDataLink">
 						Data
 					</a>
 				</p>
@@ -126,7 +126,7 @@ ObjectNode stats = (ObjectNode) request.getAttribute("Stats");
 				<p>Quotation</p>
 				<p><%=annotationDescriptions.get("OOPPunctuationMarkAnnotation").asText() %></p>
 				<p>
-					<a target="_blank" href="GetDocumentAnalysisScores?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&Scope=SentencesAnnotation&Annotation=OOPPunctuationMarkAnnotation&Subannotation=Quotation&Format=D3&Rolling=0">
+					<a target="_blank" id="OOPPunctuationMarkAnnotationVizDataLink">
 						Data
 					</a>
 				</p>
@@ -138,7 +138,7 @@ ObjectNode stats = (ObjectNode) request.getAttribute("Stats");
 				<p>OOPAdjectivesAnnotation</p>
 				<p><%=annotationDescriptions.get("OOPAdjectivesAnnotation").asText() %></p>
 				<p>
-					<a target="_blank" href="GetDocumentAnalysisScores?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&Scope=SentencesAnnotation&Annotation=OOPAdjectivesAnnotation&Format=D3&Rolling=0">
+					<a target="_blank" id="OOPAdjectivesAnnotationVizDataLink">
 						Data
 					</a>
 				</p>
@@ -150,7 +150,7 @@ ObjectNode stats = (ObjectNode) request.getAttribute("Stats");
 				<p>OOPAdverbsAnnotation</p>
 				<p><%=annotationDescriptions.get("OOPAdverbsAnnotation").asText() %></p>
 				<p>
-					<a target="_blank" href="GetDocumentAnalysisScores?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&Scope=SentencesAnnotation&Annotation=OOPAdverbsAnnotation&Format=D3&Rolling=0">
+					<a target="_blank" id="OOPAdverbsAnnotationVizDataLink">
 						Data
 					</a>
 				</p>

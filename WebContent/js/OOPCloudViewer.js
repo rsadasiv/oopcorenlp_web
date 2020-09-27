@@ -17,16 +17,18 @@
 'use strict';
 
 function makeCloud(annotationName, svgName) {
+	let baseUrl = "rest/api/DocumentAnnotation?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName+"&Format=Cloud";
 	$.when( 
 			$.ajax(
 				{
 					dataType: "json",
-					url: getDocumentAnnotationsUrl(annotationName)+"&Format=D3Cloud"
+					url: baseUrl 
 				}
 			)
 		).done(
 				function(data) {
 					drawCloud(data.slice(0,50), svgName);
+					setLink(svgName+"DataLink", baseUrl);
 				}
 		);
 }

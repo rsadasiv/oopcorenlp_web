@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 
 public class OOPServlets_IT {
 	
-	public static String serverUri = "http://localhost:8080";
+	public static String serverUri = "http://localhost:8888";
 	public static String webappUri = "/oopcorenlp_web";
 	public static String corpus = "Sample";
 	public static String document = "de4c996ccd44e38f38cb673d2e5bd3c2";
@@ -68,49 +68,17 @@ public class OOPServlets_IT {
     }
     
     @Test
-    public void listCorpora_IT() throws Exception {
-    	ObjectMapper mapper = new ObjectMapper();
-		JsonNode json = mapper.readTree(getURL("ListCorpora"));
-		assertTrue(json.has("Corpora"), "no corpora node");
-		boolean foundMatch = false;
-		Iterator<JsonNode> iter = ((ArrayNode)json.get("Corpora")).elements();
-		while (iter.hasNext()) {
-			if (iter.next().asText().equals(corpus)) {
-				foundMatch = true;
-				break;
-			}
-		}
-        assertTrue(foundMatch, String.format("no corpus node: %s", corpus));
-    }
-    
-    @Test
-    public void listCorpusDocuments_IT() throws Exception {
-    	ObjectMapper mapper = new ObjectMapper();
-		JsonNode json = mapper.readTree(getURL("ListCorpusDocuments?Corpus="+corpus));
-		assertTrue(json.has("Documents"), "no corpora node");
-		boolean foundMatch = false;
-		Iterator<JsonNode> iter = ((ArrayNode)json.get("Documents")).elements();
-		while (iter.hasNext()) {
-			if (iter.next().asText().equals(document)) {
-				foundMatch = true;
-				break;
-			}
-		}
-        assertTrue(foundMatch, String.format("no document node: %s", document));
-    }
-    
-    @Test
-    public void listDocumentAnalyses_IT() throws Exception {
-    	ObjectMapper mapper = new ObjectMapper();
-		ArrayNode json = (ArrayNode) mapper.readTree(getURL("ListDocumentAnalyses?Corpus="+corpus+"&Document="+document));
-		assertTrue(json.size() > 0, String.format("no document analyses"));
-    }
-
-    @Test
     public void corporaViewer_IT() throws Exception {
     	Document doc = Jsoup.connect(getURLString("CorporaViewer")).get();
     	Elements corpusLink = doc.select("a[href=CorpusDocumentsViewer?Corpus="+corpus+"]");
 		assertTrue(corpusLink.size() > 0, String.format("no corpus link: %s", corpus));
+    }
+    
+    @Test
+    public void corpusDocumentsViewer_IT() throws Exception {
+    	Document doc = Jsoup.connect(getURLString("CorpusDocumentsViewer?Corpus="+corpus)).get();
+    	Elements corpusLink = doc.select("a[href=TextViewer?Corpus="+corpus+"&Document="+document+"]");
+		assertTrue(corpusLink.size() > 0, String.format("no corpus document link: %s %s", corpus, document));
     }
     
     @Test

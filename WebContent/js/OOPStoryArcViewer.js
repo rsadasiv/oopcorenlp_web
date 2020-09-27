@@ -17,31 +17,35 @@
 'use strict';
 
 function makeSentenceBarChart(annotationName, svgName, window) {
+	let baseUrl = "rest/api/SentencesAnnotationScalar?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName+"&Format=D3";
 	$.when( 
 			$.ajax(
 				{
 					dataType: "json",
-					url: getSentenceAnnotationsUrl(annotationName)+"&Format=D3&Rolling="+window
+					url: baseUrl
 				}
 			)
 		).done(
 				function(rawData) {
-					drawBarChart(rawData, svgName, annotationName);
+					drawBarChart(rawData, svgName, "value");
+					setLink(svgName+"DataLink", baseUrl);
 				});
 		
 }
 
 function makeSentenceScoreBarChart(annotationName, scoreName, svgName, window) {
+	let baseUrl = "rest/api/SentencesAnnotationSubannotationScalar?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName+"&Subannotation="+scoreName+"&Format=D3";
 	$.when( 
 			$.ajax(
 				{
 					dataType: "json",
-					url: getSentenceAnnotationsScoresUrl(annotationName, scoreName)+"&Format=D3&Rolling="+window
+					url: baseUrl
 				}
 			)
 		).done(
 				function(rawData) {
-					drawBarChart(rawData, svgName, annotationName);
+					drawBarChart(rawData, svgName, "value");
+					setLink(svgName+"DataLink", baseUrl);
 				});
 		
 }

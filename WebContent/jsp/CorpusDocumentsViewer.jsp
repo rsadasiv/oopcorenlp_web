@@ -67,10 +67,10 @@ while (corporaDocumentIter.hasNext()) {
    			<p>Title: <%= d.get("DocTitleAnnotation").asText()%></p>
    			<p>Author: <%= d.get("AuthorAnnotation").asText()%></p>
    			<p>Date: <%= d.get("DocDateAnnotation").asText()%></p> 
- 			<p><a href="Corpora/<%= corpus %>/PIPELINE_<%= corpusDocumentId %>.json">Pipeline info</a></p>  			
+ 			<p><a href="rest/browse/Corpora/<%=request.getParameter("Corpus")%>/<%=request.getParameter("Document")%>/PIPELINE">Pipeline info</a></p>  			
    		</th>
    		<td>
-   			<p><a href="Corpora/<%= corpus %>/TXT_<%= corpusDocumentId %>.txt">Plain Text</a></p>
+   			<p><a href="TextViewer?Corpus=<%= corpus %>&Document=<%= corpusDocumentId %>">Plain Text</a></p>
 			<p><a href="TextOutOfPrintViewer?Corpus=<%= corpus %>&Document=<%= corpusDocumentId %>">Out Of Print</a></p>
 			<p><a href="TextMediumViewer?Corpus=<%= corpus %>&Document=<%= corpusDocumentId %>">Medium</a></p>
 			<p><a href="Corpora/<%= corpus %>/POLLY_<%= corpusDocumentId %>.mp3">Audio</a></p>
@@ -89,9 +89,9 @@ while (corporaDocumentIter.hasNext()) {
 		</td>
 		<td>
 			<p><a href="OOPDocumentViewer?Corpus=<%= corpus %>&Document=<%= corpusDocumentId %>">OOPCoreNLP</a></p>
-			<p><a href="Corpora/<%= corpus %>/OOP_<%= corpusDocumentId %>.json">OOPCoreNLP json</a></p>
+			<p><a href="rest/browse/Corpora/<%=request.getParameter("Corpus")%>/<%=request.getParameter("Document")%>/OOP">OOPCoreNLP json</a></p>
 			<p><a href="StanfordBratViewer?Corpus=<%= corpus %>&Document=<%= corpusDocumentId %>">StanfordCoreNLP</a></p>
-			<p><a href="Corpora/<%= corpus %>/STANFORD_<%= corpusDocumentId %>.json">StanfordCoreNLP json</a></p>			
+			<p><a href="rest/browse/Corpora/<%=request.getParameter("Corpus")%>/<%=request.getParameter("Document")%>/STANFORD">StanfordCoreNLP json</a></p>			
 		</td>
 	</tr>
 <%

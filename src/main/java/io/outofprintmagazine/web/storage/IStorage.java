@@ -3,20 +3,20 @@ package io.outofprintmagazine.web.storage;
 import java.io.IOException;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public interface IStorage {
 		
-	public JsonNode listCorpora() throws IOException;
+	public ArrayNode listCorpora() throws IOException;
 	
-	public JsonNode listCorpusDocuments(String corpus) throws IOException;
+	public ArrayNode listCorpusDocuments(String corpus) throws IOException;
 	
     public String getCorpusDocumentTxtString(String corpus, String document) throws IOException;
 
     public String getCorpusDocumentOOPString(String corpus, String document) throws IOException;
     
     public JsonNode getCorpusDocumentOOPJson(String corpus, String document) throws IOException;
-    
-    public JsonNode getCorpusDocumentOOPMetadata(String corpus, String document) throws IOException;
     
     public String getCorpusDocumentAggregatesString(String corpus, String document) throws IOException;
     
@@ -29,4 +29,7 @@ public interface IStorage {
     public String getCorpusDocumentStanfordString(String corpus, String document) throws IOException;
     
     public JsonNode getCorpusDocumentStanfordJson(String corpus, String document) throws IOException;
+    
+    public ObjectNode getCorpusDocumentOOPMetadata(String corpus, String document) throws IOException;
+  
 }

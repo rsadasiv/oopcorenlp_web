@@ -55,42 +55,18 @@
 		crossorigin="anonymous">
 	</script>
 	<script>
-		var docId = "<%=request.getParameter("Document")%>";
-		var corpus = "<%=request.getParameter("Corpus")%>";	
+
 	</script>
-	<script src="js/OOPDocumentViewer.js">
-		
-	</script>
+	<script src="js/oopcorenlp.js"></script>
+	<script src="js/OOPDocumentViewer.js"></script>
 
 	<script>
+
+	
     $(document).ready(function() {
-        setProperties();
-        getAnnotation(getProperties(),displayMetadataAnnotations);
-
-        getAnnotation(getProperties(),displayDocumentAnnotations);
-
-        getAnnotation(getProperties(),displayDictionAnnotations);
-      
-        getAnnotation(getProperties(),displayLedeAnnotations);
-
-        getAnnotation(getProperties(),displayGenderNumberAnnotations);
-
-        getAnnotation(getProperties(),displayDescriptionAnnotations);
-
-        getAnnotation(getProperties(),displaySemanticsAnnotations);
-        
-        getAnnotation(getProperties(),displayUncategorizedAnnotations);
-
-        //getAnnotation(getProperties(),displayActorsAnnotation);
-        getAnnotation(getProperties(),displayTextAnnotation);
-        //getText(getProperties(),displayText);
-        //getAnnotation(getProperties(),displayRawAnnotation);
-        //$( "#accordion" ).accordion({
-        //    collapsible: true,
-        //    heightStyle: "content"
-        //  });
-    	$('[data-toggle="popover"]').popover();
-    	$('[data-toggle="tooltip"]').tooltip();
+    	getProperties()["docId"] = "<%=request.getParameter("Document")%>";
+    	getProperties()["corpus"] = "<%=request.getParameter("Corpus")%>";
+		displayAnnotations();
      });
 	</script>
 	<style>
@@ -251,7 +227,7 @@
 				</div>
 			
 			</div>
-			<div class="col-lg-8" id="story_text"></div>
+			<div class="col-lg-8" id="story_text"> <%=request.getAttribute("Pst").toString() %> </div>
 		</div>
 <jsp:include page="include/footer.jsp" />
 </body>

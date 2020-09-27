@@ -94,8 +94,7 @@ function posEntities(data) {
 }
 
 function getBaseUrl() {
-	return "GetDocumentScores?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Scores=STANFORD";
-	//return "Corpora/"+getProperties()["corpus"]+"/OOP_"+getProperties()["docId"]+".json";
+	return "rest/browse/Corpora/"+getProperties()["corpus"]+"/"+getProperties()["docId"]+"/STANFORD";
 }
 
 function displayPos(divId) {

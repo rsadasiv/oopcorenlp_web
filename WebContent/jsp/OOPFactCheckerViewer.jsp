@@ -21,6 +21,7 @@
 <jsp:include page="include/icon.jsp" />
 <jsp:include page="include/meta.jsp" />
 <jsp:include page="include/bootstrapPopper.jsp" />
+
 <script src="js/oopcorenlp.js"></script>
 <script src="js/OOPFactCheckerViewer.js"></script>
 
@@ -40,7 +41,7 @@
 		<jsp:include page="include/spacerRow.jsp" />
 		<div class="row">
 	    	<div class="col-md-2"></div>
-	    	<div class="col-md-8" id="story_text"> </div>
+	    	<div class="col-md-8" id="story_text"> <%=request.getAttribute("Pst").toString() %> </div>
 	    	<div class="col-md-2"></div>
 		</div>
 	</div>

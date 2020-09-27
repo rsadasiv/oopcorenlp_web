@@ -44,6 +44,7 @@ public class OOPDocumentViewer extends AbstractOOPServlet {
 		String corpus = request.getParameter("Corpus");
 		String document = request.getParameter("Document");
         setMetadataAttributes(request, corpus, document);
+        setPstAttribute(request, corpus, document);
         request.getSession().getServletContext().getRequestDispatcher("/jsp/OOPDocumentViewer.jsp").forward(request, response);
 	}
 }

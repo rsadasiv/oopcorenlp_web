@@ -38,31 +38,6 @@ function isArray (value) {
 	return Array.isArray(value);
 }
 
-function getBaseUrl() {
-	return "GetDocumentScores?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Scores=OOP";
-	//return "Corpora/"+getProperties()["corpus"]+"/OOP_"+getProperties()["docId"]+".json";
-}
-
-function getDocumentAnnotationsUrl(annotationName) {
-	return "GetDocumentAnalysisScores?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Scope=DocumentAnnotation&Annotation="+annotationName
-}
-
-function getSentenceAnnotationsUrl(annotationName) {
-	return "GetDocumentAnalysisScores?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Scope=SentencesAnnotation&Annotation="+annotationName
-}
-
-function getSentenceAnnotationsScoresUrl(annotationName, scoreName) {
-	return "GetDocumentAnalysisScores?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Scope=SentencesAnnotation&Annotation="+annotationName+"&Subannotation="+scoreName
-}
-
-function getTokenAnnotationsUrl(annotationName) {
-	return "GetDocumentAnalysisScores?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Scope=TokensAnnotation&Annotation="+annotationName
-}
-
-function getTokenAnnotationScoresUrl(annotationName, scoreName) {
-	return "GetDocumentAnalysisScores?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Scope=TokensAnnotation&Annotation="+annotationName+"&Subannotation="+scoreName
-}
-
 function getAnnotationDisplayName(annotationName) {
 	let endIdx = annotationName.lastIndexOf("Annotation");
 	if (endIdx == -1) {
@@ -70,3 +45,12 @@ function getAnnotationDisplayName(annotationName) {
 	}
 	return annotationName.substring(annotationName.lastIndexOf("$")+1, endIdx);
 }
+
+function setLink(id, url) {
+	$(id).attr("href", url);	
+}
+
+function getSentenceRef(sentenceIdx) {
+	return "OOPDocumentViewer?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"#sentence_"+sentenceIdx;
+}
+

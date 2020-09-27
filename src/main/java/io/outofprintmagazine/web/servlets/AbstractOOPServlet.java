@@ -19,6 +19,7 @@ package io.outofprintmagazine.web.servlets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -26,22 +27,11 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.ServiceUnavailableRetryStrategy;
-import org.apache.http.client.config.CookieSpecs;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.client.LaxRedirectStrategy;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jsoup.nodes.Element;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -96,7 +86,6 @@ public abstract class AbstractOOPServlet extends HttpServlet {
     	return mapper;
     }
 
-	
     protected String plainTextToHtml(String input) throws IOException {
 	    StringBuilder contentBuilder = new StringBuilder();
 	    String sCurrentLine;
@@ -122,7 +111,54 @@ public abstract class AbstractOOPServlet extends HttpServlet {
         return contentBuilder.toString();
     }
     
-    public void setMetadataAttributes(HttpServletRequest request, String corpus, String document) throws IOException {
+    protected Element generatePst(JsonNode stats) {
+    	Element div = new Element("div");
+		int paragraphIdx = -1;
+		int tokenIdx = 0;
+		Element currentParagraphNode = null;
+		ArrayNode sentences = (ArrayNode) stats.get("sentences");
+		Iterator<JsonNode> sentencesIter = sentences.iterator();
+		while (sentencesIter.hasNext()) {
+			JsonNode sentence = sentencesIter.next();
+			if (sentence.get("ParagraphIndexAnnotation").asInt(-1) > paragraphIdx) {
+				paragraphIdx = sentence.get("ParagraphIndexAnnotation").asInt(-1);
+				currentParagraphNode = new Element("p");
+				currentParagraphNode.attr("id", "paragraph_"+paragraphIdx);
+				currentParagraphNode.appendTo(div);
+			}
+			Element sentenceNode = new Element("span");
+			sentenceNode.attr("id", "sentence_"+sentence.get("SentenceIndexAnnotation").asText());
+			sentenceNode.attr("class", "sentence");
+			sentenceNode.appendTo(currentParagraphNode);
+			ArrayNode tokens = (ArrayNode) sentence.get("tokens");
+			Iterator<JsonNode> tokensIter = tokens.iterator();
+			while (tokensIter.hasNext()) {
+				JsonNode token = tokensIter.next();
+				sentenceNode.append(token.get("TokensAnnotation").get("before").asText());
+				Element tokenNode = new Element("span");
+				tokenNode.attr("id", "token_"+tokenIdx);
+				tokenNode.attr("class", "token");
+				tokenNode.text(token.get("TokensAnnotation").get("originalText").asText());
+				tokenNode.appendTo(sentenceNode);
+				
+				tokenIdx++;
+			}
+		}
+		
+		return div;
+    }
+    
+    protected void setPstAttribute(HttpServletRequest request, String corpus, String document) throws IOException {
+
+        request.setAttribute(
+        	"Pst",
+        	generatePst(
+        			getStorage().getCorpusDocumentOOPJson(corpus, document)
+        	)
+        );
+    }
+    
+    protected void setMetadataAttributes(HttpServletRequest request, String corpus, String document) throws IOException {
         JsonNode stats = getStorage().getCorpusDocumentOOPMetadata(corpus, document);
         request.setAttribute("DocumentMetadata", stats);
         request.setAttribute("Author", stats.get("AuthorAnnotation").asText());
@@ -130,7 +166,7 @@ public abstract class AbstractOOPServlet extends HttpServlet {
         request.setAttribute("Title", stats.get("DocTitleAnnotation").asText());    	
     }
     
-    public void setStatsAttribute(HttpServletRequest request, String corpus, String document) throws IOException {
+    protected void setStatsAttribute(HttpServletRequest request, String corpus, String document) throws IOException {
 		request.setAttribute("Stats", getStorage().getCorpusDocumentOOPJson(corpus, document));
     }
     
@@ -148,14 +184,61 @@ public abstract class AbstractOOPServlet extends HttpServlet {
 					retval.put(keyName, annotationNode.get(keyName).asText());
 					break;
 				}
-				
 			}
 		}
 		return retval;
     }
     
-    public void setAnnotationDescriptionsAttribute(HttpServletRequest request, String corpus, String document) throws IOException {
+    protected void setAnnotationDescriptionsAttribute(HttpServletRequest request, String corpus, String document) throws IOException {
     	request.setAttribute("AnnotationDescriptions", getAnnotationDescription(corpus, document, null));
     }
+    
+    protected void setContentTypeJson(HttpServletResponse response) {
+    	response.setContentType("application/json; charset=utf-8");
+    }
+    
+	protected ObjectNode createObjectD3(int id, String name, BigDecimal score) {
+		ObjectNode val = getMapper().createObjectNode();
+		val.put("id", Integer.toString(id));
+		val.put("name", name);
+		val.put("value", score);
+		return val;
+	}
+	
+	protected ObjectNode createObject(int id, String name, BigDecimal score) {
+		ObjectNode val = getMapper().createObjectNode();
+		val.put("id", Integer.toString(id));
+		val.put(name, score);
+		return val;
+	}
+	
+	protected ObjectNode createObjectCloud(int id, String name, BigDecimal score) {
+		ObjectNode val = getMapper().createObjectNode();
+		val.put("id", Integer.toString(id));
+		val.put("text", name);
+		val.put("size", score);
+		return val;
+	}
+	
+	protected ArrayNode reformatD3Array(ArrayNode input, String format) {
+        ArrayNode retval = getMapper().createArrayNode();
+        Iterator<JsonNode> iter = input.iterator();
+        for (int i=0;iter.hasNext();i++) {
+        	ObjectNode o = (ObjectNode) iter.next();
+        	if ("D3".equals(format)) {
+        		retval.add(createObjectD3(o.get("id").asInt(), o.get("name").asText(), o.get("value").decimalValue()));
+        	}
+        	else if ("Cloud".equals(format)) {
+        		retval.add(createObjectCloud(o.get("id").asInt(), o.get("name").asText(), o.get("value").decimalValue()));
+        	}
+        	else if ("Object".equals(format)){
+        		retval.add(createObject(o.get("id").asInt(), o.get("name").asText(), o.get("value").decimalValue()));
+        	}
+        	else {
+        		retval.add(createObjectD3(o.get("id").asInt(), o.get("name").asText(), o.get("value").decimalValue()));
+        	}        	
+        }
+        return retval;
+	}
 
 }

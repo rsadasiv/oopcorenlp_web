@@ -21,68 +21,27 @@ function displayFactCheckerTextAnnotations(div) {
 			$.ajax(
 				{
 					dataType: "json",
-					url: getBaseUrl()
+					url: "rest/browse/Corpora/"+getProperties()["corpus"]+"/"+getProperties()["docId"]+"/OOP"
 				}
 			)
 		).done(
 			function (data) {
-				let paragraphIdx = -1;
-				let currentParagraphNode = null;
 				let tokenIdx = 0;
-				let leftCol = null;
-				let centerCol = null;
-				let rightCol = null;
 				data.sentences.forEach(function(sentence, index) {
-					if (sentence["ParagraphIndexAnnotation"] > paragraphIdx) {
-						paragraphIdx = sentence["ParagraphIndexAnnotation"];
-						currentParagraphNode = $("<p>");
-						currentParagraphNode.attr("id", "paragraph_"+paragraphIdx);
-						currentParagraphNode.attr("ref", "paragraph_"+paragraphIdx);
-						currentParagraphNode.appendTo(div);
-					}
-					let sentenceNode = $("<span>");
-					sentenceNode.attr("id", "sentence_"+sentence["SentenceIndexAnnotation"]);
-					sentenceNode.attr("ref", "sentence_"+sentence["SentenceIndexAnnotation"]);
-					sentenceNode.attr("class", "sentence");
-					//sentenceNode.text(sentence.text + " ");
-					currentParagraphNode.append(sentenceNode);
 					sentence.tokens.forEach(function(token, index) {
-						tokenIdx++;
-						sentenceNode.append(token["TokensAnnotation"].before);
-						let tokenNode = {};
+						let tokenNode = $("#token_"+tokenIdx);
 						let dataContent = getFactCheckerAnnotations(token);
 						if (dataContent.length > '<div class="popover-message"></div>'.length) {
-							tokenNode = $("<u>");
-							tokenNode.attr("id", "token_"+tokenIdx);
-							tokenNode.attr("ref", "token_"+tokenIdx);
+							tokenNode.css("text-decoration", "underline");
 							tokenNode.attr("data-toggle", "popover");
 							tokenNode.attr("data-placement", "top");
 							tokenNode.attr("data-html", "true");
 							tokenNode.attr("data-content", dataContent);
 							tokenNode.attr("trigger", "click");
 						}
-						else {
-							tokenNode = $("<span>");
-						}
-						tokenNode.attr("class", "token");
-			
-						tokenNode.text(token["TokensAnnotation"].originalText);
-						sentenceNode.append(tokenNode);
+						tokenIdx++;
 					});
-					//let sentenceNodeGlyph = $("<span>");
-					//sentenceNodeGlyph.attr("class", "ui-icon ui-icon-info");
-					//sentenceNodeGlyph.attr("data-toggle", "popover");
-					//sentenceNodeGlyph.attr("data-placement", "top");
-					//sentenceNodeGlyph.attr("data-html", "true");
-					//sentenceNodeGlyph.attr("data-content", getSentenceAnnotation(sentence));
-					//sentenceNodeGlyph.click(function(sentence) {
-					//	return function() {
-					//		window.open("GetDocumentAnalysisStats?Analysis=OOPCoreNLP&Corpus="+ properties.corpus+"&Document="+docId+"&Scope=Sentence&Id="+sentence.sentenceIndex, "_documentScores");
-					//	}
-					//}(sentence));
-					//currentParagraphNode.append(sentenceNodeGlyph);
 				});
-			
 				$("[data-toggle=popover]").popover();
 			})
 }

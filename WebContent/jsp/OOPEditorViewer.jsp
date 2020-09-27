@@ -35,7 +35,7 @@
     $(document).ready(function() {
     	getProperties()["docId"] = "<%=request.getParameter("Document")%>";
     	getProperties()["corpus"] = "<%=request.getParameter("Corpus")%>";
-        displayEditorTextAnnotations("#story_text");
+        displayEditorTextAnnotations("#story_text");	        
      });
 </script>
 
@@ -47,7 +47,7 @@
 		<jsp:include page="include/spacerRow.jsp" />
 		<div class="row">
 	    	<div class="col-md-2"></div>
-	    	<div class="col-md-8" id="story_text"> </div>
+	    	<div class="col-md-8" id="story_text"> <%=request.getAttribute("Pst").toString() %> </div>
 	    	<div class="col-md-2"></div>
 		</div>
 	</div>

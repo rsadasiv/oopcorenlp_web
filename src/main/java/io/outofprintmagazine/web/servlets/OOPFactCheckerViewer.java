@@ -44,6 +44,7 @@ public class OOPFactCheckerViewer extends AbstractOOPServlet {
 		String corpus = request.getParameter("Corpus");
 		String document = request.getParameter("Document");
         setMetadataAttributes(request, corpus, document);
+        setPstAttribute(request, corpus, document);
         request.getSession().getServletContext().getRequestDispatcher("/jsp/OOPFactCheckerViewer.jsp").forward(request, response);
 	}
 }
