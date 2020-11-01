@@ -58,7 +58,7 @@ public class DocumentAnnotation extends AbstractOOPCacheableServlet {
 				Iterator<String> subannotationIter =  o.fieldNames();
 				while (subannotationIter.hasNext()) {
 					String subannotation = subannotationIter.next();
-					retval.add(createObjectD3(0, subannotation, new BigDecimal(o.get(subannotation).asText("0.0"))));
+					retval.add(createObjectTidy(0, subannotation, new BigDecimal(o.get(subannotation).asText("0.0"))));
 				}
 			}
 			else if (annotationNode.isArray()) {
@@ -67,7 +67,7 @@ public class DocumentAnnotation extends AbstractOOPCacheableServlet {
 				while (annotationListIter.hasNext()) {
 					JsonNode subannotationNode = annotationListIter.next();
 					if (subannotationNode.hasNonNull("name") && subannotationNode.hasNonNull("value")) {
-						retval.add(createObjectD3(0, subannotationNode.get("name").asText(), new BigDecimal(subannotationNode.get("value").asText("0.0"))));
+						retval.add(createObjectTidy(0, subannotationNode.get("name").asText(), new BigDecimal(subannotationNode.get("value").asText("0.0"))));
 					}
 				}
 			}
@@ -78,7 +78,7 @@ public class DocumentAnnotation extends AbstractOOPCacheableServlet {
         	ObjectNode o = (ObjectNode) iter.next();
         	o.put("id", Integer.toString(i));
         }
-        return getMapper().writeValueAsString(reformatD3Array(retval, format));
+        return getMapper().writeValueAsString(reformatTidyArray(retval, format));
 	}
 
 }

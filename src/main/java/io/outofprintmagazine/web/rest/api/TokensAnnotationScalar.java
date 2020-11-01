@@ -58,7 +58,7 @@ public class TokensAnnotationScalar extends AbstractOOPServlet {
     			JsonNode token = tokensIterator.next();		
 	    		if (token.hasNonNull(annotation)) {
 	    			if (sentence.get(annotation).isArray()) {
-	    	        	retval.add(createObjectD3(tokenIdx, annotation, new BigDecimal(token.get(annotation).size()))); 				
+	    	        	retval.add(createObjectTidy(tokenIdx, annotation, new BigDecimal(token.get(annotation).size()))); 				
 	    			}
 	    			else if (token.get(annotation).isObject()) {
 						BigDecimal sz = new BigDecimal(0);
@@ -71,19 +71,19 @@ public class TokensAnnotationScalar extends AbstractOOPServlet {
 									)
 							);
 						}
-	    	        	retval.add(createObjectD3(tokenIdx, annotation, sz)); 
+	    	        	retval.add(createObjectTidy(tokenIdx, annotation, sz)); 
 	    			}
 	    			else {
-	    	        	retval.add(createObjectD3(tokenIdx, annotation, new BigDecimal(token.get(annotation).asText("0.0"))));
+	    	        	retval.add(createObjectTidy(tokenIdx, annotation, new BigDecimal(token.get(annotation).asText("0.0"))));
 	    			}
 	    		}
 	    		else {
-		        	retval.add(createObjectD3(tokenIdx, annotation, new BigDecimal(("0.0"))));
+		        	retval.add(createObjectTidy(tokenIdx, annotation, new BigDecimal(("0.0"))));
 	    		}
 	    		tokenIdx++;
     		}
         }
-        return getMapper().writeValueAsString(reformatD3Array(retval, format));
+        return getMapper().writeValueAsString(reformatTidyArray(retval, format));
 	}
 
 }

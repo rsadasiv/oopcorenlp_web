@@ -197,9 +197,9 @@ public abstract class AbstractOOPServlet extends HttpServlet {
     	response.setContentType("application/json; charset=utf-8");
     }
     
-	protected ObjectNode createObjectD3(int id, String name, BigDecimal score) {
+	protected ObjectNode createObjectTidy(int id, String name, BigDecimal score) {
 		ObjectNode val = getMapper().createObjectNode();
-		val.put("id", Integer.toString(id));
+		val.put("id", id);
 		val.put("name", name);
 		val.put("value", score);
 		return val;
@@ -207,26 +207,26 @@ public abstract class AbstractOOPServlet extends HttpServlet {
 	
 	protected ObjectNode createObject(int id, String name, BigDecimal score) {
 		ObjectNode val = getMapper().createObjectNode();
-		val.put("id", Integer.toString(id));
+		val.put("id", id);
 		val.put(name, score);
 		return val;
 	}
 	
 	protected ObjectNode createObjectCloud(int id, String name, BigDecimal score) {
 		ObjectNode val = getMapper().createObjectNode();
-		val.put("id", Integer.toString(id));
+		val.put("id", id);
 		val.put("text", name);
 		val.put("size", score);
 		return val;
 	}
 	
-	protected ArrayNode reformatD3Array(ArrayNode input, String format) {
+	protected ArrayNode reformatTidyArray(ArrayNode input, String format) {
         ArrayNode retval = getMapper().createArrayNode();
         Iterator<JsonNode> iter = input.iterator();
         for (int i=0;iter.hasNext();i++) {
         	ObjectNode o = (ObjectNode) iter.next();
         	if ("D3".equals(format)) {
-        		retval.add(createObjectD3(o.get("id").asInt(), o.get("name").asText(), o.get("value").decimalValue()));
+        		retval.add(createObjectTidy(o.get("id").asInt(), o.get("name").asText(), o.get("value").decimalValue()));
         	}
         	else if ("Cloud".equals(format)) {
         		retval.add(createObjectCloud(o.get("id").asInt(), o.get("name").asText(), o.get("value").decimalValue()));
@@ -235,7 +235,7 @@ public abstract class AbstractOOPServlet extends HttpServlet {
         		retval.add(createObject(o.get("id").asInt(), o.get("name").asText(), o.get("value").decimalValue()));
         	}
         	else {
-        		retval.add(createObjectD3(o.get("id").asInt(), o.get("name").asText(), o.get("value").decimalValue()));
+        		retval.add(createObjectTidy(o.get("id").asInt(), o.get("name").asText(), o.get("value").decimalValue()));
         	}        	
         }
         return retval;

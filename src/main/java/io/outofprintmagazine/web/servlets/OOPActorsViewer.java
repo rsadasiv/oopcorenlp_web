@@ -91,12 +91,17 @@ public class OOPActorsViewer extends AbstractOOPServlet {
 			selectedActor = (JsonNode) request.getAttribute("SelectedActor");
 		}
 		
-    	BigDecimal documentMBI = new BigDecimal(((JsonNode) request.getAttribute("Stats")).get("OOPMyersBriggsAnnotation").get(mbi).asText("0"));
+		JsonNode corpusMBIDoc = getStorage().getCorpusAggregatesMBJson(corpus);
+    	//BigDecimal documentMBI = new BigDecimal(((JsonNode) request.getAttribute("Stats")).get("OOPMyersBriggsAnnotation").get(mbi).asText("0"));
+		BigDecimal corpusMBI = new BigDecimal(corpusMBIDoc.get(mbi).asText("0"));
 		BigDecimal actorMBI = new BigDecimal(selectedActor.get("oopmyersBriggs")==null?"0":selectedActor.get("oopmyersBriggs").get(mbi).asText("0"));
 		String mbiScore = "0";
-		if (!documentMBI.equals(new BigDecimal(0))) {
-			mbiScore = String.format("%.0f", actorMBI.divide(documentMBI, 10, RoundingMode.HALF_DOWN).multiply(new BigDecimal(100)).floatValue());
-		}
+		//if (!documentMBI.equals(new BigDecimal(0))) {
+		//	mbiScore = String.format("%.0f", actorMBI.divide(documentMBI, 10, RoundingMode.HALF_DOWN).multiply(new BigDecimal(100)).floatValue());
+		//}
+		if (!corpusMBI.equals(new BigDecimal(0))) {
+			mbiScore = String.format("%.0f", actorMBI.divide(corpusMBI, 10, RoundingMode.HALF_DOWN).multiply(new BigDecimal(100)).floatValue());
+		}		
 		request.setAttribute(mbi, mbiScore);
     }
     

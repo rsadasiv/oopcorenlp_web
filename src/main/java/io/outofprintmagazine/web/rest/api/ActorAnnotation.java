@@ -60,7 +60,7 @@ public class ActorAnnotation extends AbstractOOPServlet {
         			Iterator<String> attributeIter = ((ObjectNode)actorNode.get("attributes").get(annotation)).fieldNames();
         			while (attributeIter.hasNext()) {
         				String subannotation = attributeIter.next();
-			        	retval.add(createObjectD3(0, subannotation, new BigDecimal(actorNode.get("attributes").get(annotation).get(subannotation).asText())));
+			        	retval.add(createObjectTidy(0, subannotation, new BigDecimal(actorNode.get("attributes").get(annotation).get(subannotation).asText())));
 			        }
         		}
         	}
@@ -71,7 +71,7 @@ public class ActorAnnotation extends AbstractOOPServlet {
         	ObjectNode actorNode = (ObjectNode) iter.next();
         	actorNode.put("id", Integer.toString(i));
         }
-        return getMapper().writeValueAsString(reformatD3Array(retval, format));
+        return getMapper().writeValueAsString(reformatTidyArray(retval, format));
 	}
 
 }

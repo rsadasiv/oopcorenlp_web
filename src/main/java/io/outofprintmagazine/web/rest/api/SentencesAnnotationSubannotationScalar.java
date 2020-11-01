@@ -72,7 +72,7 @@ public class SentencesAnnotationSubannotationScalar extends AbstractOOPCacheable
     	        			}
     	        		}
     	        	}
-    	        	retval.add(createObjectD3(i, subannotation, sz));
+    	        	retval.add(createObjectTidy(i, subannotation, sz));
     			}
     			else if (sentence.get(annotation).isObject()) {
 					BigDecimal sz = new BigDecimal(0);
@@ -87,17 +87,17 @@ public class SentencesAnnotationSubannotationScalar extends AbstractOOPCacheable
 							);
 						}
 					}
-    	        	retval.add(createObjectD3(i, subannotation, sz));
+    	        	retval.add(createObjectTidy(i, subannotation, sz));
     			}
     			else {
-    	        	retval.add(createObjectD3(i, subannotation, new BigDecimal(0.0)));
+    	        	retval.add(createObjectTidy(i, subannotation, new BigDecimal(0.0)));
     			}
     		}
     		else {
-	        	retval.add(createObjectD3(i, subannotation, new BigDecimal(0.0))); 
+	        	retval.add(createObjectTidy(i, subannotation, new BigDecimal(0.0))); 
     		}
         }
-        return getMapper().writeValueAsString(reformatD3Array(retval, format));
+        return getMapper().writeValueAsString(reformatTidyArray(retval, format));
 	}
 
 }

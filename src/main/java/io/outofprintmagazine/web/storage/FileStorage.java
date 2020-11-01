@@ -146,6 +146,24 @@ public class FileStorage implements IStorage {
 	}
 	
 	@Override
+    public String getCorpusAggregatesString(String corpus) throws IOException {
+		return getCorpusDocumentString(corpus, "CORPUS_AGGREGATES.json");
+	}
+    
+	@Override
+    public JsonNode getCorpusAggregatesJson(String corpus) throws IOException {
+		return getCorpusDocumentJson(corpus, "CORPUS_AGGREGATES.json");		
+	}
+	
+    public String getCorpusAggregatesIdfString(String corpus) throws IOException {
+		return getCorpusDocumentString(corpus, "CORPUS_AGGREGATES_IDF.json");
+	}
+    
+    public JsonNode getCorpusAggregatesIdfJson(String corpus) throws IOException {
+		return getCorpusDocumentJson(corpus, "CORPUS_AGGREGATES_IDF.json");		
+	}
+	
+	@Override
 	public ArrayNode listCorpusDocuments(String corpus) throws IOException {
 		ArrayNode retval = getMapper().createArrayNode();
 		Map<String, ObjectNode> documentMetadata = corpusDocumentMetadata.get(corpus);
@@ -209,4 +227,33 @@ public class FileStorage implements IStorage {
 		return corpusDocumentMetadata.get(corpus).get(document);
 	}
 	
+	@Override
+    public String getCorpusDocumentTfidfString(String corpus, String document) throws IOException {
+    	return getCorpusDocumentString(corpus, "/CoreNLPTfidf/TfidfScores_"+document+".json");
+	}
+    
+	@Override
+    public JsonNode getCorpusDocumentTfidfJson(String corpus, String document) throws IOException {
+    	return getCorpusDocumentJson(corpus, "/CoreNLPTfidf/TfidfScores_"+document+".json");
+	}
+
+	@Override
+    public String getCorpusDocumentZString(String corpus, String document) throws IOException {
+    	return getCorpusDocumentString(corpus, "CoreNLPZ/ZScores_"+document+".json");
+	}
+	
+	@Override
+    public JsonNode getCorpusDocumentZJson(String corpus, String document) throws IOException {
+    	return getCorpusDocumentJson(corpus, "CoreNLPZ/ZScores_"+document+".json");
+	}
+	
+	@Override
+    public String getCorpusAggregatesMBString(String corpus) throws IOException {
+    	return getCorpusDocumentString(corpus, "/CORPUS_AGGREGATES_MB.json");
+    }
+    
+	@Override
+    public JsonNode getCorpusAggregatesMBJson(String corpus) throws IOException {
+    	return getCorpusDocumentJson(corpus, "/CORPUS_AGGREGATES_MB.json");
+    }
 }

@@ -53,7 +53,7 @@ public class ActorsScalar extends AbstractOOPServlet {
         Iterator<JsonNode> iter = scores.get("OOPActorsAnnotation").iterator();
         while (iter.hasNext()) {
         	JsonNode actor = iter.next();
-        	retval.add(createObjectD3(0, actor.get("canonicalName").asText(), new BigDecimal(actor.get("importance").asText())));
+        	retval.add(createObjectTidy(0, actor.get("canonicalName").asText(), new BigDecimal(actor.get("importance").asText())));
         }
         JsonSort.sort(retval);
         iter = retval.iterator();
@@ -61,7 +61,7 @@ public class ActorsScalar extends AbstractOOPServlet {
         	ObjectNode actor = (ObjectNode) iter.next();
         	actor.put("id", Integer.toString(i));
         }
-        return getMapper().writeValueAsString(reformatD3Array(retval, format));
+        return getMapper().writeValueAsString(reformatTidyArray(retval, format));
 	}
 
 }

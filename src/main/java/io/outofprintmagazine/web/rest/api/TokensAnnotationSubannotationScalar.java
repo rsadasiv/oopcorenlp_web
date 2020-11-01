@@ -75,7 +75,7 @@ public class TokensAnnotationSubannotationScalar extends AbstractOOPServlet {
 	    	        			}
 	    	        		}
 	    	        	}
-	    	        	retval.add(createObjectD3(tokenIdx, subannotation, sz));
+	    	        	retval.add(createObjectTidy(tokenIdx, subannotation, sz));
 	    			}
 	    			else if (token.get(annotation).isObject()) {
 						BigDecimal sz = new BigDecimal(0);
@@ -90,19 +90,19 @@ public class TokensAnnotationSubannotationScalar extends AbstractOOPServlet {
 								);
 							}
 						}
-	    	        	retval.add(createObjectD3(tokenIdx, subannotation, sz));
+	    	        	retval.add(createObjectTidy(tokenIdx, subannotation, sz));
 	    			}
 	    			else {
-	    	        	retval.add(createObjectD3(tokenIdx, subannotation, new BigDecimal(0.0)));
+	    	        	retval.add(createObjectTidy(tokenIdx, subannotation, new BigDecimal(0.0)));
 	    			}
 	    		}
 	    		else {
-		        	retval.add(createObjectD3(tokenIdx, subannotation, new BigDecimal(0.0))); 
+		        	retval.add(createObjectTidy(tokenIdx, subannotation, new BigDecimal(0.0))); 
 	    		}
 	    		tokenIdx++;
         	}
         }
-        return getMapper().writeValueAsString(reformatD3Array(retval, format));
+        return getMapper().writeValueAsString(reformatTidyArray(retval, format));
 	}
 
 }

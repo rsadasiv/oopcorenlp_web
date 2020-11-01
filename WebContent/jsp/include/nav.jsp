@@ -62,6 +62,16 @@
 				</div>
 			</li>
 			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="visualizeMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Compare
+				</a>
+				<div class="dropdown-menu" aria-labelledby="visualizeMenuLink">
+					<a class="dropdown-item" href="OOPCorpusDocumentZScoresViewer?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&TargetCorpus=<%=request.getParameter("Corpus")%>">Annotation zScores</a>
+					<a class="dropdown-item" href="OOPCorpusDocumentAnnotationZScoresViewer?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&TargetCorpus=<%=request.getParameter("Corpus")%>">Subannotation zScores</a>
+					<a class="dropdown-item" href="OOPCorpusDocumentAnnotationTfidfViewer?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&TargetCorpus=<%=request.getParameter("Corpus")%>">Subannotation Tfidf</a>
+				</div>
+			</li>			
+			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" id="analyzeMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					Analyze
 				</a>

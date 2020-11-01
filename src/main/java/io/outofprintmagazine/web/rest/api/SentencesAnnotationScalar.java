@@ -56,7 +56,7 @@ public class SentencesAnnotationScalar extends AbstractOOPCacheableServlet {
     		JsonNode sentence = sentenceIterator.next();
     		if (sentence.hasNonNull(annotation)) {
     			if (sentence.get(annotation).isArray()) {
-    	        	retval.add(createObjectD3(i, annotation, new BigDecimal(sentence.get(annotation).size()))); 				
+    	        	retval.add(createObjectTidy(i, annotation, new BigDecimal(sentence.get(annotation).size()))); 				
     			}
     			else if (sentence.get(annotation).isObject()) {
 					BigDecimal sz = new BigDecimal(0);
@@ -69,17 +69,17 @@ public class SentencesAnnotationScalar extends AbstractOOPCacheableServlet {
 								)
 						);
 					}
-    	        	retval.add(createObjectD3(i, annotation, sz)); 
+    	        	retval.add(createObjectTidy(i, annotation, sz)); 
     			}
     			else {
-    	        	retval.add(createObjectD3(i, annotation, new BigDecimal(sentence.get(annotation).asText("0.0"))));
+    	        	retval.add(createObjectTidy(i, annotation, new BigDecimal(sentence.get(annotation).asText("0.0"))));
     			}
     		}
     		else {
-	        	retval.add(createObjectD3(i, annotation, new BigDecimal(("0.0"))));
+	        	retval.add(createObjectTidy(i, annotation, new BigDecimal(("0.0"))));
     		}
         }
-        return getMapper().writeValueAsString(reformatD3Array(retval, format));
+        return getMapper().writeValueAsString(reformatTidyArray(retval, format));
 	}
 
 }
