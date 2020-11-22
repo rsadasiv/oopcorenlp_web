@@ -26,8 +26,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.outofprintmagazine.web.servlets.AbstractOOPCacheableServlet;
 import io.outofprintmagazine.web.util.JsonSort;
 
-@Path("/CorpusDocumentAnnotationSubannotationsZScores")
-public class CorpusDocumentAnnotationSubannotationsZScores extends AbstractOOPCacheableServlet {
+@Path("/CorpusDocumentAnnotationSubannotationsAggregates")
+public class CorpusDocumentAnnotationSubannotationsAggregates extends AbstractOOPCacheableServlet {
 	
 	private static final long serialVersionUID = 1L;
 	@Context
@@ -57,7 +57,7 @@ public class CorpusDocumentAnnotationSubannotationsZScores extends AbstractOOPCa
     	ArrayNode retval = getMapper().createArrayNode();
     	ObjectNode corpusAggregates = (ObjectNode) getStorage().getCorpusAggregatesJson(targetCorpus);
     	ObjectNode documentAggregates = (ObjectNode) getStorage().getCorpusDocumentAggregatesJson(corpus, document);
-    	calculateZSubScores(corpusAggregates, documentAggregates, annotation, aggregateName==null?"normalized":aggregateName, retval);
+    	calculateSubScores(corpusAggregates, documentAggregates, annotation, aggregateName==null?"normalized":aggregateName, retval);
 
         JsonSort.sort(retval);
         Iterator<JsonNode> iter = retval.iterator();
@@ -68,9 +68,16 @@ public class CorpusDocumentAnnotationSubannotationsZScores extends AbstractOOPCa
         return getMapper().writeValueAsString(retval);
 	}
     
-    protected void calculateZSubScores(ObjectNode corpusAggregates, ObjectNode documentAggregates, String annotation, String aggregateName, ArrayNode retval) {
+    protected void calculateSubScores(ObjectNode corpusAggregates, ObjectNode documentAggregates, String annotation, String aggregateName, ArrayNode retval) {
 	    List<String> scoreMeasures = Arrays.asList("raw", "normalized", "count");
 	    List<String> statsMeasures = Arrays.asList("rank", "percentage", "percentile");
+		String measure = null;
+		if (scoreMeasures.contains(aggregateName)) {
+			measure = "score";
+		}
+		if (statsMeasures.contains(aggregateName)) {
+			measure = "aggregateScore";
+		}
 		Iterator<String> annotationNameIter = documentAggregates.fieldNames();
 		while (annotationNameIter.hasNext()) {
 			String annotationName = annotationNameIter.next();
@@ -81,53 +88,14 @@ public class CorpusDocumentAnnotationSubannotationsZScores extends AbstractOOPCa
 				while (aggregatedScoreIter.hasNext()) {
 					ObjectNode documentAnnotationSubScoreStatsScore = (ObjectNode) aggregatedScoreIter.next();
 					String subscoreName = documentAnnotationSubScoreStatsScore.get("name").asText();
-					ObjectNode corpusAnnotationScoreStats = (ObjectNode) getSubscoreFromCorpusAggregate(corpusAggregates, annotationName, subscoreName);
-					if (corpusAnnotationScoreStats != null) {
-						String measure = null;
-						if (scoreMeasures.contains(aggregateName)) {
-							measure = "score";
-						}
-						if (statsMeasures.contains(aggregateName)) {
-							measure = "aggregateScore";
-						}		
-
-						if (measure != null) {
-							ObjectNode corpusAnnotationScoreStatsScore = (ObjectNode) corpusAnnotationScoreStats.get(measure).get(aggregateName);
-				    		BigDecimal corpusStddev = new BigDecimal(corpusAnnotationScoreStatsScore.get("stddev").asDouble());
-				    		BigDecimal zScore = new BigDecimal(0);
-				    		if (! corpusStddev.equals(new BigDecimal(0))) {		
-					    		BigDecimal corpusMean = new BigDecimal(corpusAnnotationScoreStatsScore.get("mean").asDouble());
-					    		BigDecimal documentScore = new BigDecimal(documentAnnotationSubScoreStatsScore.get(measure).get(aggregateName).asDouble());
-					    		zScore = (documentScore.subtract(corpusMean)).divide(corpusStddev, 10, RoundingMode.HALF_DOWN);
-				    		} 
-				    		ObjectNode r = createObjectTidy(0, subscoreName, zScore);
-					    	r.put("documentScore", new BigDecimal(documentAnnotationSubScoreStatsScore.get(measure).get(aggregateName).asDouble()));    		
-					    	r.put("corpusStddev", new BigDecimal(corpusAnnotationScoreStatsScore.get("stddev").asDouble()));
-					    	r.put("corpusMin", new BigDecimal(corpusAnnotationScoreStatsScore.get("min").asDouble()));
-					    	r.put("corpusMean", new BigDecimal(corpusAnnotationScoreStatsScore.get("mean").asDouble()));
-					    	r.put("corpusMedian", new BigDecimal(corpusAnnotationScoreStatsScore.get("median").asDouble()));
-					    	r.put("corpusMax", new BigDecimal(corpusAnnotationScoreStatsScore.get("max").asDouble()));
-				    		retval.add(r);
-						}
+					if (measure != null) {
+				    	BigDecimal documentScore = new BigDecimal(documentAnnotationSubScoreStatsScore.get(measure).get(aggregateName).asDouble());
+			    		ObjectNode r = createObjectTidy(0, subscoreName, documentScore);
+			    		retval.add(r);
 					}
+
 				}
 			}
 		}
 	}
-    
-	protected ObjectNode getSubscoreFromCorpusAggregate(ObjectNode corpusAggregates, String score, String subscore) {
-		ObjectNode corpusAnnotationScoreStats = (ObjectNode) corpusAggregates.get(score);
-		if (corpusAnnotationScoreStats.has("aggregatedScores")) {
-			ArrayNode aggregatedScores = (ArrayNode) corpusAnnotationScoreStats.get("aggregatedScores");
-			for (JsonNode aggregatedScore : aggregatedScores) {
-				if (aggregatedScore.get("name").asText().equals(subscore)) {
-					return (ObjectNode) aggregatedScore;
-				}
-			}
-		}
-
-		return null;
-	}
-
-
 }

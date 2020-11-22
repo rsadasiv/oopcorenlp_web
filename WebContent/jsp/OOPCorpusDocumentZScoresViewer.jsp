@@ -100,6 +100,18 @@ $(document).ready(function() {
 			<div class="col-md-4 form-check">
 			</div>
 		</div>
+	</div>
+	<jsp:include page="include/spacerRow.jsp" />
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4"></div>
+			<div class="col-md-4 justify-content-center">
+				<p>
+					<label for="similarityScore" class="h5">Similarity:</label> <span id="similarityScore"></span>
+				</p>
+			</div>
+			<div class="col-md-4"></div>
+		</div>
 	</div>	
 	<jsp:include page="include/spacerRow.jsp" />
 	<div class="container">

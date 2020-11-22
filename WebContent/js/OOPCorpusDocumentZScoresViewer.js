@@ -30,6 +30,10 @@ function makeAnnotationsZScoresBarChart(targetCorpusName, aggregateName, svgName
 				function(rawData) {
 					drawVegaBarChart(rawData, svgName, "value")
 					setLink(svgName+"DataLink", baseUrl);
+					setValue(
+							"#similarityScore", 
+							"rest/api/CorpusDocumentAnnotationsSimilarity?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&TargetCorpus="+getProperties()["selectedCorpus"]
+					)
 				});
 		
 }

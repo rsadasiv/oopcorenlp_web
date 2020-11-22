@@ -69,6 +69,7 @@
 					<a class="dropdown-item" href="OOPCorpusDocumentZScoresViewer?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&TargetCorpus=<%=request.getParameter("Corpus")%>">Annotation zScores</a>
 					<a class="dropdown-item" href="OOPCorpusDocumentAnnotationZScoresViewer?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&TargetCorpus=<%=request.getParameter("Corpus")%>">Subannotation zScores</a>
 					<a class="dropdown-item" href="OOPCorpusDocumentAnnotationTfidfViewer?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&TargetCorpus=<%=request.getParameter("Corpus")%>">Subannotation Tfidf</a>
+					<a class="dropdown-item" href="OOPLexiconViewer?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>">Lexicon</a>
 				</div>
 			</li>			
 			<li class="nav-item dropdown">

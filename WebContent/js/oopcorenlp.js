@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 'use strict';
+//assumes jQuery
 var properties = {};
 
 
@@ -48,6 +49,20 @@ function getAnnotationDisplayName(annotationName) {
 
 function setLink(id, url) {
 	$(id).attr("href", url);	
+}
+
+function setValue(id, url) {
+	$.when( 
+			$.ajax(
+				{
+					dataType: "json",
+					url: url
+				}
+			)
+		).done(
+				function(data) {
+					$(id).text(data.value);
+				});
 }
 
 function getSentenceRef(sentenceIdx) {

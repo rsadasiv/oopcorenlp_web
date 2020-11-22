@@ -34,7 +34,7 @@ function createSentenceTextInDivCb(div) {
 }
 
 function makeSentenceBarChart(annotationName, subannotationName, svgName, window) {
-	let baseUrl = "rest/api/SentencesAnnotationSubannotationScalar?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName+"&Subannotation="+subannotationName+"&Format=D3";
+	let baseUrl = "rest/api/SentencesAnnotationSubannotationScalar?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation=OOPWordsAnnotation&Subannotation="+subannotationName+"&Format=D3";
 	$.when( 
 			$.ajax(
 				{

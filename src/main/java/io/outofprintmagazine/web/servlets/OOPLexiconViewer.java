@@ -17,6 +17,8 @@
 package io.outofprintmagazine.web.servlets;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -29,19 +31,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import io.outofprintmagazine.web.util.JsonSort;
 
 
-@WebServlet("/OOPStreamSubannotationViewer")
-public class OOPStreamSubannotationViewer extends AbstractOOPServlet {
+@WebServlet("/OOPLexiconViewer")
+public class OOPLexiconViewer extends AbstractOOPServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public OOPStreamSubannotationViewer() {
+    public OOPLexiconViewer() {
         super();
     }
-    
+
     private void setSentenceAnnotatorsAttribute(HttpServletRequest request, String corpus, String document) throws IOException {
     	JsonNode stats = (JsonNode) request.getAttribute("Stats");
     	if (stats == null) {
@@ -74,7 +80,29 @@ public class OOPStreamSubannotationViewer extends AbstractOOPServlet {
     	request.setAttribute("SentenceCount", stats.get("OOPSentenceCountAnnotation").asInt());
     }
     
+    
+    //Distribution of OOPWordsAnnotation
+    //http://localhost:8080/oopcorenlp_web/OOPCloudViewer?Corpus=Chekhov&Document=2d9b6161c6c8e1001ea23ec45b33b347&Annotation=OOPWordsAnnotation
+    //http://localhost:8080/oopcorenlp_web/rest/api/DocumentAnnotation?Corpus=Chekhov&Document=2d9b6161c6c8e1001ea23ec45b33b347&Annotation=OOPWordsAnnotation
+    //DocumentAggregates aggregatedScore
+    //http://localhost:8080/oopcorenlp_web/rest/api/CorpusDocumentAnnotationSubannotationsAggregates?Corpus=Chekhov&Document=2d9b6161c6c8e1001ea23ec45b33b347&Annotation=OOPWordsAnnotation&AggregateName=raw
+    //CorpusAggregates aggregatedScore
+    //http://localhost:8080/oopcorenlp_web/rest/api/CorpusAnnotationSubannotationsAggregates?Corpus=Chekhov&Annotation=OOPWordsAnnotation&AggregateName=raw
+    //OOPCorpusDocumentAnnotationZScoresViewer
+    //http://localhost:8080/oopcorenlp_web/OOPCorpusDocumentAnnotationZScoresViewer?Corpus=Chekhov&Document=2d9b6161c6c8e1001ea23ec45b33b347&TargetCorpus=Chekhov&Annotation=OOPWordsAnnotation&AggregateName=raw    
+    //http://localhost:8080/oopcorenlp_web/rest/api/CorpusDocumentAnnotationSubannotationsZScores?Corpus=Chekhov&Document=2d9b6161c6c8e1001ea23ec45b33b347&TargetCorpus=Chekhov&Annotation=OOPWordsAnnotation&AggregateName=raw
+    
+    //getCorpusDocumentLexiconLemma
+    //http://localhost:8080/oopcorenlp_web/rest/api/LexiconLemma?Corpus=Chekhov&Document=2d9b6161c6c8e1001ea23ec45b33b347&Lemma=garden
+    //display sentence texts
+    //http://localhost:8080/oopcorenlp_web/OOPStreamSubannotationViewer?Corpus=Chekhov&Document=2d9b6161c6c8e1001ea23ec45b33b347&Annotation=OOPWordsAnnotation&Subannotation=garden
+    //http://localhost:8080/rest/api/SentencesAnnotationSubannotationScalar?Corpus=Chekhov&Document=2d9b6161c6c8e1001ea23ec45b33b347&Annotation=OOPWordsAnnotation&Subannotation=garden&Format=D3
+    //getCorpusDocumentTopicModelLemma
+    //http://localhost:8080/oopcorenlp_web/rest/browse/Corpora/Chekhov/2d9b6161c6c8e1001ea23ec45b33b347/WORD2VEC/Lemma/garden
+    //getCorpusDocumentTopicModelLemmaPOS
+    //http://localhost:8080/oopcorenlp_web/rest/browse/Corpora/Chekhov/2d9b6161c6c8e1001ea23ec45b33b347/WORD2VEC/LemmaPOS/garden
 
+    
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -86,6 +114,15 @@ public class OOPStreamSubannotationViewer extends AbstractOOPServlet {
         setSentenceAnnotatorsAttribute(request, corpus, document);
         setAnnotationDescriptionsAttribute(request, corpus, document);
         setSentenceCountAttribute(request, corpus, document);
-        request.getSession().getServletContext().getRequestDispatcher("/jsp/OOPStreamSubannotationViewer.jsp").forward(request, response);
+        //if (((ObjectNode)request.getAttribute("Stats")).get("OOPWordsAnnotation").has(request.getParameter("Subannotation"))) {
+        	//request.setAttribute("SubannotationIsWord", new Boolean(true));
+        	request.setAttribute("Lexicon", getStorage().getCorpusDocumentLexiconLemma(corpus, document, request.getParameter("Subannotation")));
+        	request.setAttribute("TopicModelLemma", getStorage().getCorpusDocumentTopicModelLemma(corpus, document, request.getParameter("Subannotation")));
+        	request.setAttribute("TopicModelLemmaPOS", getStorage().getCorpusDocumentTopicModelLemma(corpus, document, request.getParameter("Subannotation")));        	
+        //}
+        //else {
+        //	request.setAttribute("SubannotationIsWord", new Boolean(false));
+        //}
+        request.getSession().getServletContext().getRequestDispatcher("/jsp/OOPLexiconViewer.jsp").forward(request, response);
 	}
 }

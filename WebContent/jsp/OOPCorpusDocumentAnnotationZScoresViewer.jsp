@@ -112,13 +112,28 @@ $(document).ready(function() {
 				<select id="aggregateName" class="form-control" title="Select aggregate name">
 					<option value="normalized" <%="normalized".equals(selectedAggregate)?"selected":"" %>>normalized</option>
 					<option value="count" <%="count".equals(selectedAggregate)?"selected":"" %>>count</option>
-					<option value="raw" <%="raw".equals(selectedAggregate)?"selected":"" %>>raw</option>					
+					<option value="raw" <%="raw".equals(selectedAggregate)?"selected":"" %>>raw</option>
+					<option value="rank" <%="rank".equals(selectedAggregate)?"selected":"" %>>rank</option>
+					<option value="percentage" <%="percentage".equals(selectedAggregate)?"selected":"" %>>percentage</option>
+					<option value="percentile" <%="precentile".equals(selectedAggregate)?"selected":"" %>>percentile</option>										
 				</select>
 			</div>
 			<div class="col-md-4 form-check">
 			</div>
 		</div>
 	</div>
+	<jsp:include page="include/spacerRow.jsp" />
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4"></div>
+			<div class="col-md-4 justify-content-center">
+				<p>
+					<label for="similarityScore" class="h5">Similarity:</label> <span id="similarityScore"></span>
+				</p>
+			</div>
+			<div class="col-md-4"></div>
+		</div>
+	</div>	
 	<jsp:include page="include/spacerRow.jsp" />
 	<div class="container">
 		<div class="row">

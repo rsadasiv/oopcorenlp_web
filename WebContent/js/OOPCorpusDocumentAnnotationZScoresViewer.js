@@ -30,6 +30,10 @@ function makeAnnotationsZScoresBarChart(targetCorpusName, annotation, aggregateN
 				function(rawData) {
 					drawVegaBarChart(rawData, annotation, svgName, "value")
 					setLink(svgName+"DataLink", baseUrl);
+					setValue(
+							"#similarityScore", 
+							"rest/api/CorpusDocumentAnnotationSubannotationsSimilarity?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&TargetCorpus="+getProperties()["selectedCorpus"]+"&Annotation="+annotation
+					)					
 				});
 		
 }
@@ -38,7 +42,7 @@ function drawVegaBarChart(data, annotation, svgName, valueName) {
 	console.log(svgName);
 	console.log(valueName);
 	console.log(data);
-	let baseUrl = "OOPStreamSubannotationViewer?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotation+"&Subannotation="
+	let baseUrl = "OOPLexiconViewer?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotation+"&Subannotation="
 	let chartSpec = {
 		  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
 		  "data": {

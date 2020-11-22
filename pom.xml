@@ -40,6 +40,10 @@
 
 		<!-- https://mvnrepository.com/artifact/io.openapitools.swagger/swagger-maven-plugin -->
 		<swagger-maven-plugin.version>2.1.5</swagger-maven-plugin.version>
+		
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
+	    <commons-text.version>1.9</commons-text.version>
+		
 
 	</properties>
 
@@ -154,6 +158,31 @@
 		    <version>${swagger-maven-plugin.version}</version>
 			<scope>test</scope>
 		</dependency>
+		
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-core</artifactId>
+            <version>${dl4j-master.version}</version>
+        </dependency>
+        
+		<dependency>
+		    <groupId>org.deeplearning4j</groupId>
+		    <artifactId>deeplearning4j-nlp</artifactId>
+		    <version>${dl4j-master.version}</version>
+		</dependency>
+
+        <dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>nd4j-native</artifactId>
+            <version>${dl4j-master.version}</version>
+        </dependency>		
+
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-text</artifactId>
+		    <version>${commons-text.version}</version>
+		</dependency>
+
 
 	</dependencies>
 	

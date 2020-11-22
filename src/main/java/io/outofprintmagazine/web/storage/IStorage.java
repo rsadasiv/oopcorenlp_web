@@ -51,5 +51,11 @@ public interface IStorage {
     public String getCorpusAggregatesMBString(String corpus) throws IOException;
     
     public JsonNode getCorpusAggregatesMBJson(String corpus) throws IOException;
+    
+    public JsonNode getCorpusDocumentTopicModelLemma(String corpus, String document, String lemma) throws IOException;
+    
+    public JsonNode getCorpusDocumentTopicModelLemmaPOS(String corpus, String document, String lemma) throws IOException;
+    
+    public JsonNode getCorpusDocumentLexiconLemma(String corpus, String document, String lemma) throws IOException;
   
 }

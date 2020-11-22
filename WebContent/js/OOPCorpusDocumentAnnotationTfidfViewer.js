@@ -38,7 +38,7 @@ function drawVegaBarChart(data, annotation, svgName, valueName) {
 	console.log(svgName);
 	console.log(valueName);
 	console.log(data);
-	let baseUrl = "OOPStreamSubannotationViewer?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotation+"&Subannotation="
+	let baseUrl = "OOPLexiconViewer?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotation+"&Subannotation="
 	let chartSpec = {
 		  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
 		  "data": {
