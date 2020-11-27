@@ -16,95 +16,152 @@
  ******************************************************************************/
 'use strict';
 
-function makeSentenceBarChart(annotationName, svgName, window) {
-	let baseUrl = "rest/api/SentencesAnnotationScalar?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName+"&Format=D3";
-	$.when( 
-			$.ajax(
-				{
-					dataType: "json",
-					url: baseUrl
-				}
-			)
-		).done(
-				function(rawData) {
-					drawBarChart(rawData, svgName, "value");
-					setLink(svgName+"DataLink", baseUrl);
-				});
-		
+function makeDocumentAnnotationDonutChart(annotationName, svgName, filter = 0) {
+	let baseUrl = "rest/api/DocumentAnnotation?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName;
+	$.ajax(baseUrl)
+	.then(
+		function(data) {
+			drawVegaDonutChart(data.filter(datum => datum.value > filter), svgName, annotationName)
+		}
+	);	
 }
 
-function makeSentenceScoreBarChart(annotationName, scoreName, svgName, window) {
-	let baseUrl = "rest/api/SentencesAnnotationSubannotationScalar?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName+"&Subannotation="+scoreName+"&Format=D3";
-	$.when( 
-			$.ajax(
-				{
-					dataType: "json",
-					url: baseUrl
-				}
-			)
-		).done(
-				function(rawData) {
-					drawBarChart(rawData, svgName, "value");
-					setLink(svgName+"DataLink", baseUrl);
-				});
-		
-}
-
-
-function drawBarChart(data, svgName, valueName) {
-	let svg = d3.select(svgName),
-	margin = {
-		top: 20,
-		right: 20,
-		bottom: 30,
-		left: 50
-	},
-	width = +svg.attr("width") - margin.left - margin.right,
-	height = +svg.attr("height") - margin.top - margin.bottom,
-	g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")"),
-	x = d3.scaleBand()
-		.rangeRound([0, width])
-		.padding(0.1).align(0),
-	y = d3.scaleLinear()
-		.rangeRound([height, 0]);
+function drawVegaDonutChart(data, svgName, title) {
+	let chartSpec = {
+			  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+			  "description": "A simple donut chart with embedded data.",
+			  "data": {
+			    "values": data
+			  },
+			  "title": title,
+			  "width": 200,
+			  "height": 200,
+			  "mark": {"type": "arc", "innerRadius": 50},
+			  "encoding": {
+			    "theta": {"field": "value", "type": "quantitative"},
+			    "color": {"field": "name", "type": "nominal"}
+			  },
+			  "view": {"stroke": null}
+			};	
+	vegaEmbed(svgName, chartSpec, {"renderer": "svg"});	
 	
-	x.domain(data.map(function (d) {
-		return d.id;
-	}));
-	y.domain([0, d3.max(data, function (d) {
-				return d[valueName];
-	})]);
-		
-	g.append("g")
-	.attr("transform", "translate(0," + height + ")")
-	.call(d3.axisBottom(x).tickValues([]));
-
-	g.append("g")
-	.call(d3.axisLeft(y))
-	.append("text")
-	.attr("fill", "#000")
-	.attr("transform", "rotate(-90)")
-	.attr("y", 6)
-	.attr("dy", "0.71em")
-	.attr("text-anchor", "end");
-
-	g.selectAll(".bar")
-	.data(data)
-	.enter().append("rect")
-	.attr("class", "bar")
-	.attr("x", function (d) {
-		return x(d.id);
-	})
-	.attr("y", function (d) {
-		return y(d[valueName]);
-	})
-	.attr("width", x.bandwidth())
-	.attr("height", function (d) {
-		if ((height - y(d[valueName])) < 0) {
-			return 0;
-		}
-		else {
-			return height - y(d[valueName]);
-		}
-	});
 }
+
+function makeMyersBriggsPie(data, svgName, title) {
+	let chartSpec = {
+			  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+			  "description": "A simple donut chart with embedded data.",
+			  "data": {
+			    "values": data
+			  },
+			  "title": title,
+			  "width": 100,
+			  "height": 100,
+			  "mark": {"type": "arc"},
+			  "encoding": {
+			    "theta": {"field": "value", "type": "quantitative"},
+			    "color": {"field": "name", "type": "nominal"}
+			  },
+			  "view": {"stroke": null}
+			};	
+	vegaEmbed(svgName, chartSpec, {"renderer": "svg"});	
+	
+}
+
+function makeSentenceAnnotationBarChart(annotationName, svgName) {
+	let baseUrl = "rest/api/SentencesAnnotationScalar?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName;
+	$.ajax(baseUrl)
+	.then(
+		function(data) {
+			drawVegaBarChart(data, svgName, annotationName)
+		}
+	)	
+}
+
+function makeSentenceAnnotationSubannotationBarChart(annotationName, subannotationName, svgName) {
+	let baseUrl = "rest/api/SentencesAnnotationSubannotationScalar?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName+"&Subannotation="+subannotationName;
+
+	$.ajax(baseUrl)
+	.then(
+		function(data) {
+			drawVegaBarChart(data, svgName, subannotationName)
+		}
+	)	
+}
+
+function getAnnotationData(annotationNames) {
+	let promise = $.Deferred();
+	let annotationData = new Array();
+	let attempts = 0;
+	annotationNames.forEach(function(annotationName) {
+		let baseUrl = "rest/api/SentencesAnnotationScalar?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName;
+		$.ajax(baseUrl)
+		.then(
+			function(data) {
+				annotationData = annotationData.concat(data)
+				attempts = attempts + 1;
+				if (attempts == annotationNames.length) {
+					promise.resolve(annotationData);
+				}
+			},
+			function(similarity) {
+				attempts = attempts + 1;
+				if (attempts == annotationNames.length) {
+					promise.resolve(annotationData);
+				}
+			}
+		)	
+	})
+	return promise.promise();
+}
+
+function makeSentenceAnnotationStackedBarChart(annotationNames, svgName, title) {
+	getAnnotationData(annotationNames)
+	.then(
+		function(data) {
+			drawVegaStackedBarChart(data, svgName, title)
+		}
+	)	
+}
+
+function drawVegaBarChart(data, svgName, title) {
+	let chartSpec = {
+			  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+			  "description": "A simple bar chart with embedded data.",
+			  "data": {
+			    "values": data
+			  },
+			  "width": 400,
+			  "height": 200,
+			  "title": title,
+			  "mark": "bar",
+			  "encoding": {
+			    "x": {"field": "id", "type": "nominal", "axis": {"labels": false}},
+			    "y": {"field": "value", "type": "quantitative"}
+			  }
+			};	
+	vegaEmbed(svgName, chartSpec, {"renderer": "svg"});	
+}
+
+function drawVegaStackedBarChart(data, svgName, title) {
+	console.log(data);
+	let chartSpec = {
+			  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+			  "description": "A simple bar chart with embedded data.",
+			  "data": {
+			    "values": data
+			  },
+			  "width": 400,
+			  "height": 200,
+			  "title": title,
+			  "mark": "bar",
+			  "encoding": {
+			    "x": {"field": "id", "type": "nominal", "axis": {"labels": false}},
+			    "y": {"field": "value", "type": "quantitative"},
+			    "color": {"field": "name", "type": "nominal"}
+			  }
+			};	
+	vegaEmbed(svgName, chartSpec, {"renderer": "svg"});	
+	
+}
+

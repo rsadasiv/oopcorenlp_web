@@ -262,6 +262,77 @@ if (lexicon != null) {
 			}
 		}	
 		%>
+		
+		<%
+		ArrayNode topicModelList = (ArrayNode) request.getAttribute("TopicModelLemma");
+		if (topicModelList != null) {
+		%>
+			<div class="col">
+				<div class="card">
+					<div class="card-header">
+		    			<h5 class="card-title">Topic Model</h5>
+		    		</div>
+					<div class="card-body">
+			<%
+			for (JsonNode nv : topicModelList) {
+				String name = nv.get("name").asText();
+				BigDecimal val = new BigDecimal(nv.get("value").asText("0"));
+			%>
+						<p class="card-text">
+							<label for="<%=selectedSubannotation %>_<%=name %>" class="h5">
+								<%=name %>:
+							</label>
+							<span id="<%=selectedSubannotation %>_<%=name %>">
+								<%=val %>					
+							</span>
+						</p>			
+			<%
+			}
+			%>
+					</div>
+				</div>
+			</div>
+		<%
+		}	
+		%>		
+
+		<%
+		ObjectNode topicModelPOSList = (ObjectNode) request.getAttribute("TopicModelLemmaPOS");
+		if (topicModelPOSList != null) {
+			Iterator<String> posIter = topicModelPOSList.fieldNames();
+			while (posIter.hasNext()) {
+				String pos = posIter.next();
+		%>
+			<div class="col">
+				<div class="card">
+					<div class="card-header">
+		    			<h5 class="card-title">Topic Model <%=pos %></h5>
+		    		</div>
+					<div class="card-body">
+				<%
+	
+				for (JsonNode nv : topicModelPOSList.get(pos)) {
+					String name = nv.get("name").asText();
+					BigDecimal val = new BigDecimal(nv.get("value").asText("0"));
+				%>
+							<p class="card-text">
+								<label for="<%=selectedSubannotation %>_<%=name %>_POS" class="h5">
+									<%=name %>:
+								</label>
+								<span id="<%=selectedSubannotation %>_<%=name %>_POS">
+									<%=val %>					
+								</span>
+							</p>			
+				<%
+				}
+				%>
+					</div>
+				</div>
+			</div>
+		<%
+			}
+		}	
+		%>
 
 		</div>
 

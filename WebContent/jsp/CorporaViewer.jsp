@@ -24,29 +24,48 @@
 <jsp:include page="include/icon.jsp" />
 <jsp:include page="include/meta.jsp" />
 <jsp:include page="include/bootstrap.jsp" />
-<title>OOP Corpora</title>
+<title>Corpora Viewer</title>
 </head>
 <body>
-	<jsp:include page="include/logo.jsp" />
-	<div class="container">	
-		<div class="row">
-			<div class="col-md-4"></div>
-			<div class="col-md-4 text-center">
-			<%
-			ArrayNode corporaNode = (ArrayNode)request.getAttribute("corpora");
-			Iterator<JsonNode> corporaDocumentIter = corporaNode.elements();
-			while (corporaDocumentIter.hasNext()) {
-				String corpus = corporaDocumentIter.next().asText();
-				%>
-				<p>
-					<a href="CorpusDocumentsViewer?Corpus=<%=corpus%>"><%=corpus %></a>
-				</p>
-				<%
-			}
-			%>
-			</div>
-			<div class="col-md-4"></div>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding-right: 100px">
+		<a class="navbar-brand" href="index.html">
+			<img src="images/favicon-32x32.png" width="32" height="32" alt="Home">
+		</a>
+		<div class="collapse navbar-collapse" id="navbarNavDropdown">
+			<ul class="navbar-nav nav-pills">
+	            <li class="nav-item">
+					<span class="navbar-brand navbar-text text-capitalize">
+				   		Corpora
+				   	</span>
+	            </li>
+	        </ul>
 		</div>
+	</nav>
+	<jsp:include page="include/spacerRow.jsp" />	
+	<div class="container">	
+		<ul class="list-group-flush">
+	<%
+	ArrayNode corporaNode = (ArrayNode)request.getAttribute("corpora");
+	ObjectNode batchesNode = (ObjectNode)request.getAttribute("batches");
+	Iterator<JsonNode> corporaDocumentIter = corporaNode.elements();
+	while (corporaDocumentIter.hasNext()) {
+		String corpus = corporaDocumentIter.next().asText();
+		ObjectNode batch = (ObjectNode) batchesNode.get(corpus);
+		if (batch != null) {
+		%>
+			<li class="list-group-item d-flex justify-content-between align-items-center">
+				<a href="rest/browse/Corpora/<%=corpus %>/Batch"><%=corpus%></a>
+				<a href="CorpusDocumentsViewer?Corpus=<%=corpus %>">
+				    <span class="badge badge-primary badge-pill">
+    					<%=batch.get("corpusBatchSteps").get(batch.get("corpusBatchSteps").size()-1).get("output").size() %>
+    				</span>
+    			</a>
+  			</li>
+		<%
+		}
+	}
+	%>
+		</ul>
 	</div>
 </body>
 </html>

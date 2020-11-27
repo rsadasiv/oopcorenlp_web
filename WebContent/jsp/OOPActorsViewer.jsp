@@ -29,10 +29,8 @@
 <jsp:include page="include/icon.jsp" />
 <jsp:include page="include/meta.jsp" />
 <jsp:include page="include/bootstrap.jsp" />
-<jsp:include page="include/d3v3.jsp" />
+<jsp:include page="include/vega-lite.jsp" />
 <script src="js/oopcorenlp.js"></script>
-<script src="js/d3.layout.cloud.js"></script>
-<script src="js/d3.wordcloud.js"></script>
 <script src="js/OOPActorsViewer.js"></script>
 
 <%
@@ -49,10 +47,7 @@ $(document).ready(function() {
 	getProperties()["corpus"] = "<%=request.getParameter("Corpus")%>";
 	let actor = "<%=actor%>";
 	if (actor != "") {
-		makeActorCloud(actor, "OOPNounsAnnotation", "#nounsViz");
-		makeActorCloud(actor, "OOPVerbsAnnotation", "#verbsViz");	
-		makeActorCloud(actor, "OOPAdjectivesAnnotation", "#adjectivesViz");
-		makeActorCloud(actor, "OOPAdverbsAnnotation", "#adverbsViz");
+		makeActorCloud(actor, "#cloudViz");
 	}
 	
 	$('#actors').change(
@@ -62,7 +57,6 @@ $(document).ready(function() {
 	);
 });
 </script>
-
 
 	
 <title>OOP Actors Viewer</title>
@@ -97,12 +91,13 @@ $(document).ready(function() {
 			<div class="col-md-4 form-check">
 			</div>
 		</div>
+	</div>
 
-		<div class="row">&nbsp;</div>
 <%
 if (selectedActor.get("canonicalName") != null) {
 %>
-
+	<div class="container-fluid">	
+		<jsp:include page="include/spacerRow.jsp" />
 		<div class="row">
 			<div class="col-md-2"></div>
 			<div id="carouselExampleIndicators" class="carousel slide col-md-8 text-center bg-dark" data-ride="carousel">
@@ -153,9 +148,8 @@ if (selectedActor.get("canonicalName") != null) {
 			</div>
 			<div class="col-md-2"></div>		
 		</div>
-	</div>
-	<jsp:include page="include/spacerRow.jsp" />	
-	<div class="container-fluid">
+
+		<jsp:include page="include/spacerRow.jsp" />	
 		<div class="row">
 			<div class="col">
 				<div class="card">
@@ -172,16 +166,32 @@ if (selectedActor.get("canonicalName") != null) {
 			</div>
 
 			<div class="col">
+			<%		
+			if ((!selectedActor.get("coreNlpGender").asText().equals("")) || (!selectedActor.get("oopgender").asText().equals(""))) {
+			%>	
 				<div class="card">
 					<div class="card-header">
 		    			<h5 class="card-title">Gender</h5>
 		    		</div>
 					<div class="card-body">
+					<%
+					if (!selectedActor.get("coreNlpGender").asText().equals("")) {
+					%>
 		    			<p class="card-text"><label for="coreNlpGender" class="h5">CoreNlp Gender:</label> <span id="canonicalName"><%=selectedActor.get("coreNlpGender").asText().equals("")?"N/A":selectedActor.get("coreNlpGender").asText()%></span></p>
+		    		<%
+		    		}
+					if (!selectedActor.get("oopgender").asText().equals("")) {
+		    		%>
 						<p class="card-text"><label for="oopgender" class="h5">OOP Gender:</label> <span id="oopgender"><%=selectedActor.get("oopgender").asText().equals("")?"N/A":selectedActor.get("oopgender").asText()%></span></p>
+					<%
+					}
+					%>
 					</div>
 				</div>
 				<p>&nbsp;</p>
+			<%
+			}
+			 %>
 				<div class="card">
 					<div class="card-header">
 		    			<h5 class="card-title">Sentiment</h5>
@@ -196,7 +206,7 @@ if (selectedActor.get("canonicalName") != null) {
 			<div class="col">
 				<div class="card">
 					<div class="card-header">
-		    			<h5 class="card-title">Myers-Briggs Personality Type</h5>
+		    			<h5 class="card-title">Myers-Briggs Personality Type: <%=request.getAttribute("myersBriggs") %></h5>
 		    		</div>
 					<div class="card-body">
 		    			<p class="card-text"><label for="introvertExtrovert" class="h5">Introvert/Extrovert:</label> <span id="introvertExtrovert"><%=request.getAttribute("introvert") %>/<%=request.getAttribute("extrovert") %></span></p>
@@ -207,90 +217,151 @@ if (selectedActor.get("canonicalName") != null) {
 				</div>
 			</div>
 		</div>
-	</div>
-	<jsp:include page="include/spacerRow.jsp" />	
-	<div class="container">
+
+
 		<% 
 		if (((ArrayNode)selectedActor.get("wikipediaGlosses")).size() > 0) {
 		%>			
-		<div class="row">&nbsp;</div>
-		<div class="row bg-light">
+		<jsp:include page="include/spacerRow.jsp" />	
+		<div class="row">
 			<div class="col">
-				<h5>Wikipedia</h5>	
-			<%
-
-			Iterator<JsonNode> glossesIter = ((ArrayNode)selectedActor.get("wikipediaGlosses")).iterator();
-			for (int i=0;glossesIter.hasNext();i++) {
-				JsonNode gloss = glossesIter.next();
-			%>
-				<p><%=gloss.asText("NA")%></p>
-			<%
-			}
-			%>
+				<div class="card">
+					<div class="card-header">
+		    			<h5 class="card-title">Wikipedia</h5>
+		    		</div>
+					<div class="card-body">	
+					<%
+					Iterator<JsonNode> glossesIter = ((ArrayNode)selectedActor.get("wikipediaGlosses")).iterator();
+					for (int i=0;glossesIter.hasNext();i++) {
+						JsonNode gloss = glossesIter.next();
+					%>
+						<p class="card-text"><%=gloss.asText("NA")%></p>
+					<%
+					}
+					%>
+					</div>
+				</div>
 			</div>
 		</div>			
 		<%
 		}
 		%>
-	
+		
+		<jsp:include page="include/spacerRow.jsp" />
+		<div class="row">
+			<div class="col">
+				<div class="card">
+					<div class="card-header">
+		    			<h5 class="card-title">Nouns</h5>
+		    		</div>
+					<div class="card-body">
+		    			<%
+						for (JsonNode datum : (JsonNode)request.getAttribute("OOPNounsAnnotation")) {
+		    			%>
+							<p class="card-text"><label for="nouns_<%=datum.get("name").asText() %>" class="h5"><%=datum.get("name").asText() %>:</label> <span id="nouns_<%=datum.get("name").asText() %>"><%=datum.get("value").asText() %></span></p>
+		    			<%
+		    			}
+		    			%>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card">
+					<div class="card-header">
+		    			<h5 class="card-title">Adjectives</h5>
+		    		</div>
+					<div class="card-body">
+		    			<%
+						for (JsonNode datum : (JsonNode)request.getAttribute("OOPAdjectivesAnnotation")) {
+		    			%>
+							<p class="card-text"><label for="adjectives_<%=datum.get("name").asText() %>" class="h5"><%=datum.get("name").asText() %>:</label> <span id="adjectives_<%=datum.get("name").asText() %>"><%=datum.get("value").asText() %></span></p>
+		    			<%
+		    			}
+		    			%>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card">
+					<div class="card-header">
+		    			<h5 class="card-title">Adverbs</h5>
+		    		</div>
+					<div class="card-body">
+		    			<%
+						for (JsonNode datum : (JsonNode)request.getAttribute("OOPAdverbsAnnotation")) {
+		    			%>
+							<p class="card-text"><label for="adverbs_<%=datum.get("name").asText() %>" class="h5"><%=datum.get("name").asText() %>:</label> <span id="adverbs_<%=datum.get("name").asText() %>"><%=datum.get("value").asText() %></span></p>
+		    			<%
+		    			}
+		    			%>
+					</div>
+				</div>
+			</div>					
+			<div class="col">
+				<div class="card">
+					<div class="card-header">
+		    			<h5 class="card-title">Verbs</h5>
+		    		</div>
+					<div class="card-body">
+		    			<%
+						for (JsonNode datum : (JsonNode)request.getAttribute("OOPVerbsAnnotation")) {
+		    			%>
+							<p class="card-text"><label for="verbs_<%=datum.get("name").asText() %>" class="h5"><%=datum.get("name").asText() %>:</label> <span id="verbs_<%=datum.get("name").asText() %>"><%=datum.get("value").asText() %></span></p>
+		    			<%
+		    			}
+		    			%>
+					</div>
+				</div>
+			</div>		
+		</div>
+
 		<%
 		Pattern extraQuote = Pattern.compile("^\"\\s*\"", Pattern.MULTILINE);
 		if (((ArrayNode)selectedActor.get("quotes")).size() > 0) {
 		%>
-		<div class="row">&nbsp;</div>
-		<div class="row bg-light">
+		<jsp:include page="include/spacerRow.jsp" />
+		<div class="row">
 			<div class="col">
-				<h5>Quotes</h5>	
-			<%
-			Iterator<JsonNode> quotesIter = ((ArrayNode)selectedActor.get("quotes")).iterator();
-			for (int i=0;quotesIter.hasNext();i++) {
-				JsonNode quote = quotesIter.next();
-	 			String q = quote.asText();
-	 			if (q!=null) {
-	 				q = extraQuote.matcher(q).replaceFirst("\"");
-			%>
-					<p><%=q.trim()%></p>
-
-			<%
-	 			}
-			}
-			%>
+				<div class="card">
+					<div class="card-header">
+		    			<h5 class="card-title">Quotes</h5>
+		    		</div>
+					<div class="card-body">	
+				<%
+				Iterator<JsonNode> quotesIter = ((ArrayNode)selectedActor.get("quotes")).iterator();
+				for (int i=0;quotesIter.hasNext();i++) {
+					JsonNode quote = quotesIter.next();
+		 			String q = quote.asText();
+		 			if (q!=null) {
+		 				q = extraQuote.matcher(q).replaceFirst("\"");
+				%>
+						<p class="card-text"><%=q.trim()%></p>
+	
+				<%
+		 			}
+				}
+				%>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div class="row">&nbsp;</div>	
 		<%
 		}
 		%>
 		
-		<div class="row bg-light">
-			<div class="col-md-6 text-center"><label class="h5">Nouns</label></div>
-			<div class="col-md-6 text-center"><label class="h5">Adjectives</label></div>
-		</div>
-		<div class="row">&nbsp;</div>
-
-		<div class="row">
-			<div class="col-md-6 text-center" id="nounsViz"></div>
-			<div class="col-md-6 text-center" id="adjectivesViz"></div>
-		</div>				
-		
-		<div class="row">&nbsp;</div>
-		
-		<div class="row bg-light">
-			<div class="col-md-6 text-center"><label class="h5">Verbs</label></div>
-			<div class="col-md-6 text-center"><label class="h5">Adverbs</label></div>
+		<jsp:include page="include/spacerRow.jsp" />			
+		<div class="row justify-content-center">
+			<div class="col justify-content-center" id="cloudViz">
+			</div>
 		</div>
 
-		<div class="row">&nbsp;</div>
-
-		<div class="row">
-			<div class="col-md-6 text-center" id="verbsViz"></div>
-			<div class="col-md-6 text-center" id="adverbsViz"></div>
-		</div>				
-		<div class="row">&nbsp;</div>
+	</div>
+	
+	
 <%
 }
 %>			
-	</div>
+
 	<jsp:include page="include/footer.jsp" />
 </body>
 </html>

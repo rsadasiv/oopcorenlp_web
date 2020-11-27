@@ -22,7 +22,7 @@
 <jsp:include page="include/icon.jsp" />
 <jsp:include page="include/meta.jsp" />
 <jsp:include page="include/bootstrap.jsp" />
-<jsp:include page="include/d3v5.jsp" />
+<jsp:include page="include/vega-lite.jsp" />
 <script src="js/oopcorenlp.js"></script>
 <script src="js/OOPStreamViewer.js"></script>
 
@@ -41,7 +41,7 @@ $(document).ready(function() {
 	let annotation = "<%=request.getParameter("Annotation")==null||request.getParameter("Annotation").equals("")?"VaderSentimentAnnotation":request.getParameter("Annotation")%>";
 	$("#annotators").val(annotation);
 	
-	makeSentenceBarChart(annotation, "#sentenceAnnotationViz", 0);
+	makeSentenceBarChart(annotation, "#chartViz");
 
 	$('#annotators').change(
 		function() {
@@ -69,33 +69,10 @@ $(document).ready(function() {
 			</div>
 		</div>
 	</div>
-	<jsp:include page="include/spacerRow.jsp" />
-	<div class="container">
-		<div class="row">
-			<div class="col-md-4"></div>
-			<div class="col-md-4 justify-content-center">
-				<p><%=selectedAnnotation %></p>
-				<p><%=annotationDescriptions.get(selectedAnnotation).asText() %></p>
-				<p>
-					<a id="sentenceAnnotationVizDataLink" target="_blank">
-						Data
-					</a>
-				</p>
-			</div>
-			<div class="col-md-4"></div>
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<p class="text-center font-italic" id="sentenceAnnotationVizText">
-					&nbsp;
-				</p>
-			</div>
-		</div>
-	</div>
 	<div class="container-fluid">
+		<jsp:include page="include/spacerRow.jsp" />			
 		<div class="row">
-			<div class="col-lg-12" id="sentenceViz">
-				<svg width="<%=sentenceCount>1600?new Integer(sentenceCount+100).toString():"1600"%>" height="400" id="sentenceAnnotationViz"></svg>
+			<div class="col" id="chartViz">
 			</div>
 		</div>
 	</div>			

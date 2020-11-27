@@ -26,49 +26,46 @@
 <jsp:include page="include/bootstrap.jsp" />
 <jsp:include page="include/vega-lite.jsp" />
 <script src="js/oopcorenlp.js"></script>
-<script src="js/OOPCorpusDocumentZScoresViewer.js"></script>
+<script src="js/OOPCorpusCVScoresViewer.js"></script>
 
 <%
 ObjectNode stats = (ObjectNode) request.getAttribute("Stats");
 ObjectNode annotationDescriptions = (ObjectNode) request.getAttribute("AnnotationDescriptions");
 ArrayNode corpora = (ArrayNode) request.getAttribute("corpora");
-String selectedCorpus = request.getParameter("TargetCorpus")==null?request.getParameter("Corpus"):request.getParameter("TargetCorpus");
+String selectedCorpus = request.getParameter("Corpus");
 String selectedAggregate = (request.getParameter("AggregateName")==null||request.getParameter("AggregateName").equals(""))?"normalized":request.getParameter("AggregateName");
 %>
 
 <script>
 $(document).ready(function() {
-	getProperties()["docId"] = "<%=request.getParameter("Document")%>";
-	getProperties()["corpus"] = "<%=request.getParameter("Corpus")%>";
-	getProperties()["selectedCorpus"] = "<%=selectedCorpus%>";	
+	getProperties()["corpus"] = "<%=selectedCorpus%>";
 	
-	makeAnnotationsZScoresBarChart("<%=selectedCorpus%>", "<%=selectedAggregate%>", "#corpusDocumentZScoresViz");
-	drawSimilarity("#similarityScore");
-	$('#targetCorpus').change(
+	makeAnnotationsCVScoresBarChart("<%=selectedAggregate%>", "#corpusCVScoresViz");
+
+	$('#corpus').change(
 		function() {
-	    	window.location.href = location.protocol + '//' + location.host + location.pathname + "?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&TargetCorpus=" + $('#targetCorpus option:selected').val()+"&AggregateName=" + $('#aggregateName option:selected').val();
+	    	window.location.href = location.protocol + '//' + location.host + location.pathname + "?Corpus="+ $('#corpus option:selected').val()+"&AggregateName=" + $('#aggregateName option:selected').val();
 	    }
 	);
 	
 	$('#aggregateName').change(
 			function() {
-		    	window.location.href = location.protocol + '//' + location.host + location.pathname + "?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&TargetCorpus=" + $('#targetCorpus option:selected').val()+"&AggregateName=" + $('#aggregateName option:selected').val();
+		    	window.location.href = location.protocol + '//' + location.host + location.pathname + "?Corpus="+ $('#corpus option:selected').val()+"&AggregateName=" + $('#aggregateName option:selected').val();
 		    }
 		);
 
 });
 </script>
 
-<title>OOP Corpus Document ZScores Viewer</title>	
+<title>OOP Corpus CV Scores Viewer</title>	
 </head>
 <body>
-	<jsp:include page="include/nav.jsp" />
+	<jsp:include page="include/navCorpus.jsp" />
 	<div class="container">	
 		<jsp:include page="include/spacerRow.jsp" />
-		<div class="row">
-			<div class="col-md-4"></div>
+		<div class="row justify-content-center">
 			<div class="col-md-4" id="targetCorpusPicker">
-				<select id="targetCorpus" class="form-control" title="Select target corpus">
+				<select id="corpus" class="form-control" title="Select target corpus">
 					<%
 					
 					ArrayNode corporaNode = (ArrayNode)request.getAttribute("corpora");
@@ -82,14 +79,11 @@ $(document).ready(function() {
 					%>
 				</select>
 			</div>
-			<div class="col-md-4 form-check">
-			</div>
 		</div>
 	</div>
 	<div class="container">	
 		<jsp:include page="include/spacerRow.jsp" />
-		<div class="row">
-			<div class="col-md-4"></div>
+		<div class="row justify-content-center">
 			<div class="col-md-4" id="aggregatePicker">
 				<select id="aggregateName" class="form-control" title="Select aggregate name">
 					<option value="normalized" <%="normalized".equals(selectedAggregate)?"selected":"" %>>normalized</option>
@@ -97,27 +91,17 @@ $(document).ready(function() {
 					<option value="raw" <%="raw".equals(selectedAggregate)?"selected":"" %>>raw</option>					
 				</select>
 			</div>
-			<div class="col-md-4 form-check">
-			</div>
 		</div>
 	</div>
+	
 	<jsp:include page="include/spacerRow.jsp" />
 	<div class="container">
-		<div class="row">
-			<div class="col-md-4"></div>
-			<div class="col-md-4 text-right" id="similarityScore">
-				<p class="h5">Similarity</p>
-			</div>
-			<div class="col-md-4"></div>
-		</div>
-	</div>	
-	<div class="container-fluid">
 		<div class="row justify-content-center">
-			<div class="col-lg-12" id="corpusDocumentZScoresViz">
-
+			<div class="col-md-12" id="corpusCVScoresViz">
 			</div>
 		</div>
+
 	</div>		
-	<jsp:include page="include/footer.jsp" />
+	<jsp:include page="include/footerCorpus.jsp" />
 </body>
 </html>

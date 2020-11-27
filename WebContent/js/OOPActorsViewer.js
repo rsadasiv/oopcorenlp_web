@@ -1,36 +1,89 @@
-function makeActorCloud(selectedActor, annotationName, svgName) {
-	$.when( 
-			$.ajax(
-				{
-					dataType: "json",
-					//url: "rest/browse/Corpora/"+getProperties()["corpus"]+"/"+getProperties()["docId"]+"/OOP"
-					url: "rest/api/ActorAnnotation?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Actor="+encodeURI(selectedActor)+"&Annotation="+annotationName+"&Format=Cloud"
-				}
-			)
-		).done(
-				function(rawData) {
-//					let data = [];
-//					for (const actor of rawData.OOPActorsAnnotation) {
-//						if (actor.canonicalName == selectedActor && actor.attributes.hasOwnProperty(annotationName)) {
-//							for (const annotation of Object.keys(actor.attributes[annotationName])) {
-//								if (isNumber(actor.attributes[annotationName][annotation]) || isString(actor.attributes[annotationName][annotation])) {
-//									data.push({"text": annotation, "size": actor.attributes[annotationName][annotation]});
-//								}
-//								else {
-//									data.push({"text": annotation, "size": 0});
-//								}
-//							}
-//							data.sort((a, b) => (parseFloat(a.size) < parseFloat(b.size)) ? 1 : -1);
-
-						    d3.wordcloud()
-						    .size([400, 200])
-						    .selector(svgName)
-						    .scale('linear')
-						    .spiral('rectangular')
-						    .words($.extend(true, [], rawData.slice(0,50)))
-						    .start();
-//						}
-//					}
-				});
-		
+function makeActorCloud(selectedActor, svgName) {
+	let baseUrl = "rest/api/ActorAnnotation?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Actor="+encodeURI(selectedActor)+"&Annotation="
+	let data = []
+	$.when($.ajax({dataType: "json", url: baseUrl+"OOPNounsAnnotation"})
+	)
+	.done(function(OOPNounsAnnotation) {
+		data = data.concat(OOPNounsAnnotation);
+		$.when(	$.ajax({dataType: "json", url: baseUrl+"OOPVerbsAnnotation"}))
+		.done(function(OOPVerbsAnnotation) {
+			data = data.concat(OOPVerbsAnnotation);
+			$.when(	$.ajax({dataType: "json", url: baseUrl+"OOPAdjectivesAnnotation"}))
+			.done(function(OOPAdjectivesAnnotation) {
+				data = data.concat(OOPAdjectivesAnnotation);
+				$.when( $.ajax({dataType: "json", url: baseUrl+"OOPAdverbsAnnotation"}))
+				.done(function(OOPAdverbsAnnotation) {
+					data = data.concat(OOPAdverbsAnnotation);
+					drawVegaCloud(data, svgName)
+				})
+			})
+		})
+	})
 }
+
+function drawVegaCloud(data, svgName) {
+
+	let chartSpec = {
+	  "$schema": "https://vega.github.io/schema/vega/v5.json",
+	  "description": "Character's attributes.",
+	  "width": 800,
+	  "height": 400,
+	  "padding": 0,
+	  "title": "",
+	  "data": [
+	    {
+	      "name": "table",
+	      "values": data,
+		  "transform": [
+	        {
+	          "type": "formula", "as": "angle",
+	          "expr": "[-45, -30, 0, 30, 45, 90][~~(random() * 6)]"
+	        }
+		  ],
+	    }
+	  ],		  
+	  "scales": [
+	    {
+	      "name": "color",
+	      "type": "ordinal",
+	      "domain": {"data": "table", "field": "name"},
+	      "range": {"scheme": "category20b"}
+	    }
+	  ],
+
+	  "marks": [
+	    {
+	      "type": "text",
+	      "from": {"data": "table"},
+	      "encode": {
+	        "enter": {
+	          "text": {"field": "name"},
+	          "align": {"value": "center"},
+	          "baseline": {"value": "alphabetic"},
+	          "fill": {"scale": "color", "field": "name"}
+	        },
+	        "update": {
+	          "fillOpacity": {"value": 1}
+	        },
+	        "hover": {
+	          "fillOpacity": {"value": 0.5}
+	        }
+	      },
+	      "transform": [
+	        {
+	          "type": "wordcloud",
+	          "size": [800, 400],
+	          "rotate": {"field": "datum.angle"},
+	          "font": "serif",
+	          "fontSize": {"field": "datum.value"},
+	          "fontSizeRange": [18, 96],
+	          "padding": 2
+	        }
+	      ]
+	    }
+	  ]
+	}
+;
+	vegaEmbed(svgName, chartSpec);	
+	
+}	

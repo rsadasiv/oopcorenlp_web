@@ -7,27 +7,26 @@
 	</button>
 
 	<div class="collapse navbar-collapse" id="navbarNavDropdown">
-		<ul class="navbar-nav nav-pills">
-            <li class="nav-item">
+		<ul class="navbar-nav">
+            <li class="nav-item dropdown">
+            	<a class="nav-link dropdown-toggle" href="#" id="metadataMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<span class="navbar-brand navbar-text text-capitalize">
 			   		<%=request.getAttribute("Title").toString().toLowerCase()%>, <%=request.getAttribute("Author").toString().toLowerCase()%>
 			   	</span>
-            </li>
-        </ul>
-
-		<ul class="navbar-nav ml-auto">
-			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" href="#" id="metadataMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					Metadata
-				</a>
-				<div class="dropdown-menu" aria-labelledby="metadataMenuLink">
+			   	</a>
+				<div class="dropdown-menu" aria-labelledby="metadataMenuLink">				
 		   			<span class="dropdown-item" id="corpusDocumentId">DocID: <%=request.getParameter("Document")%></span>
 		   			<span class="dropdown-item" id="corpusDocumentTitle">Title: <%=request.getAttribute("Title").toString()%></span>
 		   			<span class="dropdown-item" id="corpusDocumentAuthor">Author: <%=request.getAttribute("Author").toString()%></span>
 		   			<span class="dropdown-item" id="corpusDocumentDate">Date: <%=request.getAttribute("Date").toString()%></span> 
 		 			<a class="dropdown-item" target="_viewer" href="rest/browse/Corpora/<%=request.getParameter("Corpus")%>/<%=request.getParameter("Document")%>/PIPELINE">Pipeline info</a>
-				</div>
-			</li>		
+		 			<a class="dropdown-item" target="_viewer" href="rest/browse/Corpora/<%=request.getParameter("Corpus")%>/Batch">Batch info</a>
+
+				</div>			   	
+            </li>
+        </ul>
+
+		<ul class="navbar-nav ml-auto">					
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" id="readMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					Read
@@ -62,10 +61,10 @@
 				</div>
 			</li>
 			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" href="#" id="visualizeMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link dropdown-toggle" href="#" id="compareMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					Compare
 				</a>
-				<div class="dropdown-menu" aria-labelledby="visualizeMenuLink">
+				<div class="dropdown-menu" aria-labelledby="compareMenuLink">
 					<a class="dropdown-item" href="OOPCorpusDocumentZScoresViewer?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&TargetCorpus=<%=request.getParameter("Corpus")%>">Annotation zScores</a>
 					<a class="dropdown-item" href="OOPCorpusDocumentAnnotationZScoresViewer?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&TargetCorpus=<%=request.getParameter("Corpus")%>">Subannotation zScores</a>
 					<a class="dropdown-item" href="OOPCorpusDocumentAnnotationTfidfViewer?Corpus=<%=request.getParameter("Corpus")%>&Document=<%=request.getParameter("Document")%>&TargetCorpus=<%=request.getParameter("Corpus")%>">Subannotation Tfidf</a>

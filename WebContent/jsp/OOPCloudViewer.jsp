@@ -22,10 +22,7 @@
 <jsp:include page="include/icon.jsp" />
 <jsp:include page="include/meta.jsp" />
 <jsp:include page="include/bootstrap.jsp" />
-
-<jsp:include page="include/d3v3.jsp" />
-<script src="js/d3.layout.cloud.js"></script>
-<script src="js/d3.wordcloud.js"></script>
+<jsp:include page="include/vega-lite.jsp" />
 
 <script src="js/oopcorenlp.js"></script>
 <script src="js/OOPCloudViewer.js"></script>
@@ -70,28 +67,11 @@ $(document).ready(function() {
 			<div class="col-md-4 form-check">
 			</div>
 		</div>
-
 	</div>
-	
-	<jsp:include page="include/spacerRow.jsp" />
-	
-	<div class="container">
+	<div class="container-fluid">
+		<jsp:include page="include/spacerRow.jsp" />			
 		<div class="row">
-			<div class="col-md-4"></div>
-			<div class="col-md-4 justify-content-center">
-				<p><%=selectedAnnotation %></p>
-				<p><%=annotationDescriptions.get(selectedAnnotation).asText() %></p>
-				<p>
-					<a id="cloudVizDataLink" target="_blank">
-						Data
-					</a>
-				</p>
-			</div>
-			<div class="col-md-4"></div>
-		</div>
-		<div class="row">
-			<div class="col-md-12 justify-content-center text-center">
-				<svg width="1000" height="600" id="cloudViz"></svg>
+			<div class="col" id="cloudViz">
 			</div>
 		</div>
 	</div>

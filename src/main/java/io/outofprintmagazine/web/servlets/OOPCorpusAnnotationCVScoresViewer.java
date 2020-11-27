@@ -17,6 +17,10 @@
 package io.outofprintmagazine.web.servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,45 +29,44 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
-@WebServlet(name="CorporaViewer", urlPatterns={"/index.html","/CorporaViewer"})
-public class CorporaViewer extends AbstractOOPServlet {
+@WebServlet("/OOPCorpusAnnotationCVScoresViewer")
+public class OOPCorpusAnnotationCVScoresViewer extends AbstractOOPServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CorporaViewer() {
+    public OOPCorpusAnnotationCVScoresViewer() {
         super();
     }
     
+    private void setDocumentAnnotatorsAttribute(HttpServletRequest request, String corpus) throws IOException {
+    	ObjectNode documentAggregates = (ObjectNode) getStorage().getCorpusAggregatesJson(corpus);
+    	List<String> documentAnnotators = new ArrayList<String>();
+		Iterator<String> annotationNameIter = documentAggregates.fieldNames();
+		while (annotationNameIter.hasNext()) {
+			String annotationName = annotationNameIter.next();
+    		if (!annotationName.startsWith("metadata")) {
+    			documentAnnotators.add(annotationName);
+    		}
+    	}
+    	Collections.sort(documentAnnotators);
+    	request.setAttribute("Annotators", documentAnnotators);
+    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ArrayNode corpora = getStorage().listCorpora();
+		String corpus = request.getParameter("Corpus");
+        setDocumentAnnotatorsAttribute(request, corpus);
 		request.setAttribute(
 				"corpora", 
-				corpora
+				getStorage().listCorpora()
 		);
-		ObjectNode batches = getMapper().createObjectNode();
-		for (JsonNode corpusNode : corpora) {
-			String corpusName = corpusNode.asText();
-			try {
-				batches.set(corpusName, getStorage().getCorpusBatchJson(corpusName));
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		request.setAttribute(
-				"batches", 
-				batches
-		);
-        request.getSession().getServletContext().getRequestDispatcher("/jsp/CorporaViewer.jsp").forward(request, response);
+        request.getSession().getServletContext().getRequestDispatcher("/jsp/OOPCorpusAnnotationCVScoresViewer.jsp").forward(request, response);
 	}
 }

@@ -18,6 +18,7 @@
 <%@ page import="com.fasterxml.jackson.databind.node.*" %>
 <%@ page import="com.fasterxml.jackson.databind.*" %>
 <%@ page import="java.util.*" %>
+<%@ page import="io.outofprintmagazine.web.util.JsonSort" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -28,78 +29,39 @@
 <title>Corpus Documents Viewer</title>
 </head>
 <body>
-	<jsp:include page="include/logo.jsp" />
-		
-<div class="container-fluid">
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th scope="col"></th>
-				<th scope="col">Metadata</th>
-				<th scope="col">Read</th>
-				<th scope="col">Interact</th>
-				<th scope="col">Visualize</th>
-				<th scope="col">Analyze</th>
-			</tr>
-		</thead>
-		<tbody>
-<%
-String corpus = request.getParameter("Corpus");
-ObjectNode json = (ObjectNode) request.getAttribute("corpora");
-ArrayNode corporaNode = (ArrayNode) json.get("Documents");
-Iterator<JsonNode> corporaDocumentIter = corporaNode.elements();
-while (corporaDocumentIter.hasNext()) {
-	JsonNode d = corporaDocumentIter.next();
-	String corpusDocumentId = d.get("DocIDAnnotation").asText();
-%>
-   	<tr>
-   		<td scope="row">
-   			<%
-   				if (d.has("OOPThumbnailAnnotation")) {
-   					%>
-   					<img src="<%=d.get("OOPThumbnailAnnotation") %>" />
-   					<% 
-   				}
-   			%>
-   		</td>
-   		<th scope="row">
-   			<p>DocID: <%= corpusDocumentId %></p>
-   			<p>Title: <%= d.get("DocTitleAnnotation").asText()%></p>
-   			<p>Author: <%= d.get("AuthorAnnotation").asText()%></p>
-   			<p>Date: <%= d.get("DocDateAnnotation").asText()%></p> 
- 			<p><a href="rest/browse/Corpora/<%=request.getParameter("Corpus")%>/<%=request.getParameter("Document")%>/PIPELINE">Pipeline info</a></p>  			
-   		</th>
-   		<td>
-   			<p><a href="TextViewer?Corpus=<%= corpus %>&Document=<%= corpusDocumentId %>">Plain Text</a></p>
-			<p><a href="TextOutOfPrintViewer?Corpus=<%= corpus %>&Document=<%= corpusDocumentId %>">Out Of Print</a></p>
-			<p><a href="TextMediumViewer?Corpus=<%= corpus %>&Document=<%= corpusDocumentId %>">Medium</a></p>
-			<p><a href="Corpora/<%= corpus %>/POLLY_<%= corpusDocumentId %>.mp3">Audio</a></p>
-		</td>
-		<td>
-			<p><a href="OOPStoryArcViewer?Corpus=<%= corpus %>&Document=<%= corpusDocumentId %>">Story Arc</a></p>
-			<p><a href="OOPPullQuotesViewer?Corpus=<%= corpus %>&Document=<%= corpusDocumentId %>">Pull Quotes</a></p>			
-			<p><a href="OOPFactCheckerViewer?Corpus=<%= corpus %>&Document=<%= corpusDocumentId %>">Fact Checker</a></p>
-			<p><a href="OOPEditorViewer?Corpus=<%= corpus %>&Document=<%= corpusDocumentId %>">Editor</a></p>
-		</td>
-		<td>
-			<p><a href="OOPActorsViewer?Corpus=<%= corpus %>&Document=<%= corpusDocumentId %>">Actors</a></p>
-			<p><a href="OOPCloudViewer?Corpus=<%= corpus %>&Document=<%= corpusDocumentId %>">Word Clouds</a></p>
-			<p><a href="OOPStreamViewer?Corpus=<%= corpus %>&Document=<%= corpusDocumentId %>">Sentences</a></p>
-			<p><a href="OOPStreamViewerTokens?Corpus=<%= corpus %>&Document=<%= corpusDocumentId %>">Tokens</a></p>
-		</td>
-		<td>
-			<p><a href="OOPDocumentViewer?Corpus=<%= corpus %>&Document=<%= corpusDocumentId %>">OOPCoreNLP</a></p>
-			<p><a href="rest/browse/Corpora/<%=request.getParameter("Corpus")%>/<%=request.getParameter("Document")%>/OOP">OOPCoreNLP json</a></p>
-			<p><a href="StanfordBratViewer?Corpus=<%= corpus %>&Document=<%= corpusDocumentId %>">StanfordCoreNLP</a></p>
-			<p><a href="rest/browse/Corpora/<%=request.getParameter("Corpus")%>/<%=request.getParameter("Document")%>/STANFORD">StanfordCoreNLP json</a></p>			
-		</td>
-	</tr>
-<%
-
-}
-%>
-		</tbody>
-	</table>
-</div>
+	<jsp:include page="include/navCorpus.jsp" />
+	<jsp:include page="include/spacerRow.jsp" />
+	<div class="container">	
+		<ul class="list-group-flush">
+		<%
+		String corpus = request.getParameter("Corpus");
+		ArrayNode documentsNode = (ArrayNode) request.getAttribute("documents");
+		JsonSort.sortSimilarity(documentsNode);
+		Iterator<JsonNode> documentsIter = documentsNode.elements();
+		while (documentsIter.hasNext()) {
+			JsonNode d = documentsIter.next();
+			String corpusDocumentId = d.get("DocIDAnnotation").asText();
+		%>
+			<li class="list-group-item d-flex justify-content-between align-items-center">
+		<%
+			if (d.has("OOPThumbnailAnnotation")) {
+				%>
+				<img src="<%=d.get("OOPThumbnailAnnotation") %>" />
+				<% 
+			}
+		%>
+				<a href="rest/browse/Corpora/<%=request.getParameter("Corpus") %>/<%=corpusDocumentId %>/PIPELINE"><%=d.get("DocTitleAnnotation").asText() %></a>
+    			<a href="TextViewer?Corpus=<%=corpus %>&Document=<%= corpusDocumentId %>">
+    				<span class="badge badge-primary badge-pill">
+    					<%= d.get("CorpusSimilarity").asText()%>
+    				</span>
+    			</a>
+ 			</li>
+		<% 
+		}
+		%>
+		</ul>
+	</div>
+	<jsp:include page="include/footerCorpus.jsp" />	
 </body>
 </html>

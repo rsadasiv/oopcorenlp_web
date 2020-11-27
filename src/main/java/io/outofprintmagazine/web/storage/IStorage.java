@@ -9,6 +9,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public interface IStorage {
 		
 	public ArrayNode listCorpora() throws IOException;
+	
+    public String getCorpusBatchString(String corpus) throws IOException;
+    
+    public JsonNode getCorpusBatchJson(String corpus) throws IOException;
 
 	public ArrayNode listCorpusDocuments(String corpus) throws IOException;
 	

@@ -154,6 +154,13 @@ public class OOPPullQuotesViewer extends AbstractOOPServlet {
      	likeSentences.sort((s1, s2) -> s2.length() - s1.length());
      	comparisonSentences.addAll(likeSentences);
      	
+     	List<String> dateSentences = new ArrayList<String>();
+ 		for (JsonNode phraseAnnotation : ((ArrayNode)oop.get("OOPDatesAnnotation"))) {
+ 			dateSentences.add(StringUtils.capitalize(phraseAnnotation.get("name").asText().trim()));
+     	}
+     	dateSentences.sort((s1, s2) -> s2.length() - s1.length());
+     	comparisonSentences.addAll(dateSentences);
+     	
      	
      	//quotes
      	Pattern extraQuote = Pattern.compile("^\"\\s*\"", Pattern.MULTILINE);

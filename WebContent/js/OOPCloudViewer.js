@@ -17,7 +17,7 @@
 'use strict';
 
 function makeCloud(annotationName, svgName) {
-	let baseUrl = "rest/api/DocumentAnnotation?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName+"&Format=Cloud";
+	let baseUrl = "rest/api/DocumentAnnotation?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName;
 	$.when( 
 			$.ajax(
 				{
@@ -27,30 +27,73 @@ function makeCloud(annotationName, svgName) {
 			)
 		).done(
 				function(data) {
-					drawCloud(data.slice(0,50), svgName);
-					setLink(svgName+"DataLink", baseUrl);
+					drawVegaCloud(data, svgName);
 				}
 		);
 }
 
+function drawVegaCloud(data, svgName, title) {
+	let chartSpec = {
+	  "$schema": "https://vega.github.io/schema/vega/v5.json",
+	  "description": "",
+	  "width": 800,
+	  "height": 400,
+	  "padding": 0,
+	  "title": title,
+	  "data": [
+	    {
+	      "name": "table",
+	      "values": data,
+		  "transform": [
+	        {
+	          "type": "formula", "as": "angle",
+	          "expr": "[-45, -30, 0, 30, 45, 90][~~(random() * 6)]"
+	        }
+		  ],
+	    }
+	  ],		  
+	  "scales": [
+	    {
+	      "name": "color",
+	      "type": "ordinal",
+	      "domain": {"data": "table", "field": "name"},
+	      "range": {"scheme": "category20b"}
+	    }
+	  ],
 
-function drawCloud(data, svgName) {
-	let svg = d3.select(svgName),
-	margin = {
-		top: 20,
-		right: 20,
-		bottom: 30,
-		left: 50
-	},
-	width = +svg.attr("width") - margin.left - margin.right,
-	height = +svg.attr("height") - margin.top - margin.bottom;
-	
-    d3.wordcloud()
-    .size([width, height])
-    .selector(svgName)
-    .scale('linear')
-    .spiral('rectangular')
-    .words(data)
-    .start();
-}
+	  "marks": [
+	    {
+	      "type": "text",
+	      "from": {"data": "table"},
+	      "encode": {
+	        "enter": {
+	          "text": {"field": "name"},
+	          "align": {"value": "center"},
+	          "baseline": {"value": "alphabetic"},
+	          "fill": {"scale": "color", "field": "name"}
+	        },
+	        "update": {
+	          "fillOpacity": {"value": 1}
+	        },
+	        "hover": {
+	          "fillOpacity": {"value": 0.5}
+	        }
+	      },
+	      "transform": [
+	        {
+	          "type": "wordcloud",
+	          "size": [800, 400],
+	          "rotate": {"field": "datum.angle"},
+	          "font": "serif",
+	          "fontSize": {"field": "datum.value"},
+	          "fontSizeRange": [18, 96],
+	          "padding": 2
+	        }
+	      ]
+	    }
+	  ]
+	};
+	vegaEmbed(svgName, chartSpec);
+}	
+
 

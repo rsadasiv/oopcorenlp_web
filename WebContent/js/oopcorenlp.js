@@ -65,6 +65,22 @@ function setValue(id, url) {
 				});
 }
 
+function appendValue(id, url) {
+	$.when( 
+			$.ajax(
+				{
+					dataType: "json",
+					url: url
+				}
+			)
+		).done(
+				function(data) {
+					let para = $("p");
+					para.text(data.value);
+					$(id).append(para);
+				});
+}
+
 function getSentenceRef(sentenceIdx) {
 	return "OOPDocumentViewer?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"#sentence_"+sentenceIdx;
 }

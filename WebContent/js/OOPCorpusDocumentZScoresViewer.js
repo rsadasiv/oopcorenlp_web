@@ -29,13 +29,47 @@ function makeAnnotationsZScoresBarChart(targetCorpusName, aggregateName, svgName
 		).done(
 				function(rawData) {
 					drawVegaBarChart(rawData, svgName, "value")
-					setLink(svgName+"DataLink", baseUrl);
-					setValue(
-							"#similarityScore", 
-							"rest/api/CorpusDocumentAnnotationsSimilarity?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&TargetCorpus="+getProperties()["selectedCorpus"]
-					)
 				});
 		
+}
+
+function getSimilarity() {
+	let promise = $.Deferred();
+	let paras = new Array();
+	let attempts = 0;
+	let baseUrl = "rest/api/CorpusDocumentAnnotationsSimilarity?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&TargetCorpus="
+	$.ajax("rest/browse/Corpora")
+	.then(function(data) {
+		data.forEach(function(corpusName) {
+			$.ajax(baseUrl+corpusName)
+			.then(
+				function(similarity) {
+					paras.push({name: corpusName, value: similarity.value});
+					attempts = attempts + 1;
+					if (attempts == data.length) {
+						promise.resolve(paras);
+					}
+				},
+				function(similarity) {
+					attempts = attempts + 1;
+					if (attempts == data.length) {
+						promise.resolve(paras);
+					}
+				}
+			)	
+		})
+	})
+	return promise.promise();
+}
+
+function drawSimilarity(svgName) {
+	getSimilarity()
+	.then(function(paras) {
+		paras.sort((a, b) => (b.value - a.value));
+		paras.forEach(function(similarity) {
+			$(svgName).append("<p>"+similarity.name+": " +similarity.value.toFixed(10)+"</p>");	
+		})
+	})
 }
 
 function drawVegaBarChart(data, svgName, valueName) {

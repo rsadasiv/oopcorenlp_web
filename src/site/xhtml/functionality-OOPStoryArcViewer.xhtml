@@ -6,12 +6,31 @@
 	<body>
 		<h2>OOPStoryArcViewer</h2>
 		 <p>
-		 	Story Arc<br/>
+		 	Title: OOP Story Arc Viewerc<br/>
 		 	URI: OOPStoryArcViewer<br/>
-		 	Routing: servlets/OOPStoryArcViewer.java -> OOPStoryArcViewer.jsp<br/>	
+		 	Routing: servlets/OOPStoryArcViewer.java -> jsp/OOPStoryArcViewer.jsp -> js/OOPStoryArcViewer.js<br/>	
 		 	Parameters: Corpus, Document<br/>
 		 	Content type: text/html<br/>
-		 	Output: Curated list of annotations and visualization types to show change over the course of the text.<br/>
+		 </p>
+		 <p>
+		 	Curated list of annotations and visualization types to show change over the course of the text.<br/>
+		 	Donut charts for selected categorical Document level scores: <br/>
+		 	<ul>
+		 		<li>OOPPronounAnnotation</li>
+		 		<li>OOPPossessivesAnnotation</li>
+		 		<li>OOPPeopleAnnotation</li>
+		 		<li>OOPVerbTenseAnnotation</li>		 				 		
+		 	</ul>
+		 	Bar charts for selected quantitative sentence level scores: <br/>
+		 	<ul>
+		 		<li>OOPFleschKincaidAnnotation</li>
+		 		<li>VaderSentimentAnnotation</li>
+		 		<li>OOPPeopleAnnotation</li>
+		 		<li>OOPPunctuationMarkAnnotation (Quotation)</li>		 				 		
+		 	</ul>
+			Stacked bar chart for Verbs (OOPVerbsAnnotation, OOPActionlessVerbsAnnotation).<br/>
+			Pie charts for Myers-Briggs personality types.<br/>
+			Mouse-over anywhere in the chart activates the vega-embed action menu (circle with three dots on far right).<br/>
 		 </p>
 	</body>
 </html>

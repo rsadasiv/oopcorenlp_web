@@ -20,7 +20,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.ServletConfig;
@@ -29,6 +31,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.text.similarity.CosineSimilarity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.nodes.Element;
@@ -241,4 +244,31 @@ public abstract class AbstractOOPServlet extends HttpServlet {
         return retval;
 	}
 
+	protected Double calculateSimilarity(String targetCorpus, String corpus, String document) throws IOException {
+    	ObjectNode corpusAggregates = (ObjectNode) getStorage().getCorpusAggregatesJson(targetCorpus);
+    	ObjectNode documentAggregates = (ObjectNode) getStorage().getCorpusDocumentAggregatesJson(corpus, document);
+		CosineSimilarity similarity = new CosineSimilarity();
+		Map<CharSequence,Integer> corpusScores = new HashMap<CharSequence, Integer>();
+		Map<CharSequence,Integer> documentScores = new HashMap<CharSequence, Integer>();
+		Iterator<String> annotationNameIter = documentAggregates.fieldNames();
+		while (annotationNameIter.hasNext()) {
+			String annotationName = annotationNameIter.next();
+			if (documentAggregates.get(annotationName).isObject()) {
+				if (!annotationName.equals("metadata")  && corpusAggregates.has(annotationName) && corpusAggregates.get(annotationName).isObject()) {
+					ObjectNode documentAnnotationScoreStats = (ObjectNode) documentAggregates.get(annotationName);
+					ObjectNode corpusAnnotationScoreStats = (ObjectNode) corpusAggregates.get(annotationName);
+			    	BigDecimal documentAnnotationScore = new BigDecimal(documentAnnotationScoreStats.get("scoreStats").get("score").get("normalized").asText());
+			    	BigDecimal corpusAnnotationScore = new BigDecimal(corpusAnnotationScoreStats.get("score").get("normalized").get("median").asText());		    		
+			    	corpusScores.put(annotationName, corpusAnnotationScore.multiply(new BigDecimal(10000)).intValue());
+			    	documentScores.put(annotationName, documentAnnotationScore.multiply(new BigDecimal(10000)).intValue());
+				}
+			}
+		}
+		return similarity.cosineSimilarity(corpusScores, documentScores);
+	}
+	
+	protected void setDocumentListAttribute(HttpServletRequest request, String corpus) throws IOException {
+    	request.setAttribute("documentList",getStorage().listCorpusDocuments(corpus));
+	}
+	
 }

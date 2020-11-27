@@ -154,6 +154,16 @@ public class FileStorage implements IStorage {
 	}
 	
 	@Override
+    public String getCorpusBatchString(String corpus) throws IOException {
+		return getCorpusDocumentString(corpus, corpus+"Batch.json");		
+	}
+    
+	@Override
+    public JsonNode getCorpusBatchJson(String corpus) throws IOException {
+		return getCorpusDocumentJson(corpus, corpus+"Batch.json");		
+	}
+	
+	@Override
     public String getCorpusAggregatesString(String corpus) throws IOException {
 		return getCorpusDocumentString(corpus, "CORPUS_AGGREGATES.json");
 	}
@@ -291,15 +301,14 @@ public class FileStorage implements IStorage {
     
 	@Override
     public JsonNode getCorpusDocumentTopicModelLemmaPOS(String corpus, String document, String lemma) throws IOException {
-		ArrayNode retval = getMapper().createArrayNode();
+		ObjectNode retval = getMapper().createObjectNode();
 		try {
 			Word2Vec vec = WordVectorSerializer.readWord2VecModel(
 					getCorpusFilePath(corpus, "Word2Vec/Lemmas_POS_"+document+".word2vec")
 			);
 			for (VocabWord vocabWord : vec.getVocab().vocabWords()) {
 				if (vocabWord.getWord().startsWith(lemma)) {
-					ObjectNode lemmaPOS = getMapper().createObjectNode();
-					ArrayNode similarity = lemmaPOS.putArray(vocabWord.getWord());
+					ArrayNode similarity = retval.putArray(vocabWord.getWord());
 					for (String similarWord : vec.wordsNearest(vocabWord.getWord(), 25)) {
 						double cosSim = vec.similarity(vocabWord.getWord(), similarWord);
 						ObjectNode tidy = getMapper().createObjectNode();
@@ -307,7 +316,6 @@ public class FileStorage implements IStorage {
 						tidy.put("value", cosSim);
 						similarity.add(tidy);
 					}
-					retval.add(lemmaPOS);
 				}
 			}
 		}

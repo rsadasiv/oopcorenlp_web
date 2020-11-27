@@ -33,8 +33,8 @@
 
 <title>Stanford Brat Viewer</title>
 <script>
-	getProperties()["docId"] = "<%=request.getParameter("Document")%>";
-	getProperties()["corpus"] = "<%=request.getParameter("Corpus")%>";
+	properties["docId"] = "<%=request.getParameter("Document")%>";
+	properties["corpus"] = "<%=request.getParameter("Corpus")%>";
 	var annotation = "<%=request.getParameter("Annotation")==null?"pos":request.getParameter("Annotation")%>";
 
     $(document).ready(function() {
@@ -63,7 +63,7 @@
         
         $('#annotators').change(
         		function() {
-        	    	window.location.href = location.protocol + '//' + location.host + location.pathname + "?Corpus="+ corpus+"&Document=" + docId + "&Annotation=" + $('#annotators option:selected').val();
+        	    	window.location.href = location.protocol + '//' + location.host + location.pathname + "?Corpus="+ properties["corpus"]+"&Document=" + properties["docId"] + "&Annotation=" + $('#annotators option:selected').val();
         	    }
         	);
 

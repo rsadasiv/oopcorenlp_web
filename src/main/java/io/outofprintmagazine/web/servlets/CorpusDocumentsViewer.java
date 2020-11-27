@@ -23,7 +23,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -38,16 +37,15 @@ public class CorpusDocumentsViewer extends AbstractOOPServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String corpus = request.getParameter("Corpus");
-		ArrayNode documentsArray = (ArrayNode)getStorage().listCorpusDocuments(corpus);
-		//File[] documents = new File(request.getSession().getServletContext().getRealPath("/Corpora/"+pCorpus+"/")).listFiles(File::isFile);
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode json = mapper.createObjectNode();
-		ArrayNode corporaNode = json.putArray("Documents");
+		ArrayNode documentsArray = (ArrayNode) getStorage().listCorpusDocuments(corpus);
+		ArrayNode documentsNode = getMapper().createArrayNode();
 		for (int i=0;i<documentsArray.size();i++) {
 			String document = documentsArray.get(i).asText();
-			corporaNode.add(getStorage().getCorpusDocumentOOPMetadata(corpus, document));
+			ObjectNode documentNode = getStorage().getCorpusDocumentOOPMetadata(corpus, document).deepCopy();
+			documentNode.put("CorpusSimilarity", calculateSimilarity(corpus, corpus, document));
+			documentsNode.add(documentNode);
 		}
-		request.setAttribute("corpora", json);
+		request.setAttribute("documents", documentsNode);
 		request.getSession().getServletContext().getRequestDispatcher("/jsp/CorpusDocumentsViewer.jsp").forward(request, response);
 	}
 }

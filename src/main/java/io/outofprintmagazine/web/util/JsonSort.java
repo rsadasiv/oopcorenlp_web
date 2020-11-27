@@ -122,5 +122,40 @@ public class JsonSort {
 		}
 	}
 	
+	public static void sortSimilarity(ArrayNode ar) {
+		List<JsonNode> asList = new ArrayList<JsonNode>();
+		for (JsonNode n : ar) {
+			asList.add(n);
+		}
+		Collections.sort(asList, new SimilarityComparator());
+
+		ar.removeAll();
+		ar.addAll(asList);
+	}
+	
+	public static class SimilarityComparator implements Comparator<JsonNode> {
+		public int compare(JsonNode o1, JsonNode o2) {
+			if (o1 == null && o2 == null) {
+				return 0;
+			}
+
+			if (o1 == null) {
+				return -1;
+			}
+			if (o2 == null) {
+				return 1;
+			}
+
+			if (o1.isObject() && o2.isObject()) {
+				int retval = new BigDecimal(o2.get("CorpusSimilarity").asText("0")).compareTo(new BigDecimal(o1.get("CorpusSimilarity").asText("0")));
+				if (retval == 0) {
+					retval = o1.get("DocIDAnnotation").asText().compareTo(o2.get("DocIDAnnotation").asText());
+				}
+				return retval;
+			} else {
+				return 1;
+			}
+		}
+	}
 	
 }
