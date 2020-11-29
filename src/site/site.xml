@@ -3,31 +3,46 @@
 	<body>
 	    <menu name="Overview">
 	      <item name="Audience" href="audience.html"/>
-	      <item name="Functionality" href="functionality.html" collapse="true">
-	      	<item name="CorporaViewer" href="functionality-corporaViewer.html" />
-	      	<item name="CorpusDocumentsViewer" href="functionality-corpusDocumentsViewer.html" />
-	      	<item name="Pipeline" href="functionality-pipelineInfo.html" />
-	      	<item name="Plain Text" href="functionality-plainText.html" />
-	      	<item name="TextOutOfPrintViewer" href="functionality-TextOutOfPrintViewer.html" />	      		      		      	
-	      	<item name="TextMediumViewer" href="functionality-TextMediumViewer.html" />
-	      	<item name="Audio" href="functionality-audio.html" />
-	      	<item name="OOPStoryArcViewer" href="functionality-OOPStoryArcViewer.html" />
-	      	<item name="OOPPullQuotesViewer" href="functionality-OOPPullQuotesViewer.html" />
-	      	<item name="OOPEditorViewer" href="functionality-OOPEditorViewer.html" />	
-	      	<item name="OOPActorsViewer" href="functionality-OOPActorsViewer.html" />
-	      	<item name="OOPCloudViewer" href="functionality-OOPCloudViewer.html" />
-	      	<item name="OOPStreamViewer" href="functionality-OOPStreamViewer.html" />
-	      	<item name="OOPStreamViewerTokens" href="functionality-OOPStreamViewerTokens.html" />	      	
-	      	<item name="OOPDocumentViewer" href="functionality-OOPDocumentViewer.html" />
-	      	<item name="OOP" href="functionality-oop.html" />
-	      	<item name="StanfordBratViewer" href="functionality-StanfordBratViewer.html" />
-	      	<item name="Stanford" href="functionality-stanford.html" />		      			      	
+	      <item name="Functionality" href="functionality.html" collapse="true">			
+    
+	      		<item name="CorporaViewer" href="functionality-corporaViewer.html" />
+	      		<item name="BatchInfo" href="functionality-batchInfo.html" />
+	      		<item name="CorpusCVScoresViewer" href="functionality-corpusCVScoresViewer.html" />
+	      		<item name="CorpusAnnotationCVScoresViewer" href="functionality-corpusAnnotationCVScoresViewer.html" />
+	      		<item name="CorpusDocumentsViewer" href="functionality-corpusDocumentsViewer.html" />
+	      		<item name="Pipeline" href="functionality-pipelineInfo.html" />
+	
+	      		<item name="TextViewer" href="functionality-TextViewer.html" />
+	      		<item name="TextOutOfPrintViewer" href="functionality-TextOutOfPrintViewer.html" />	      		      		      	
+	      		<item name="TextMediumViewer" href="functionality-TextMediumViewer.html" />
+	      		<item name="Audio" href="functionality-audio.html" />
+	 
+	      		<item name="OOPPullQuotesViewer" href="functionality-OOPPullQuotesViewer.html" />
+	      		<item name="OOPActorsViewer" href="functionality-OOPActorsViewer.html" />
+	      		<item name="OOPFactCheckerViewer" href="functionality-OOPFactCheckerViewer.html" />
+				<item name="OOPEditorViewer" href="functionality-OOPEditorViewer.html" />
+ 			
+				<item name="OOPStoryArcViewer" href="functionality-OOPStoryArcViewer.html" />
+	      		<item name="OOPCloudViewer" href="functionality-OOPCloudViewer.html" />
+	      		<item name="OOPStreamViewer" href="functionality-OOPStreamViewer.html" />
+	      		<item name="OOPStreamViewerTokens" href="functionality-OOPStreamViewerTokens.html" />
+	
+	      		<item name="ZScoresViewer" href="functionality-OOPCorpusDocumentZScoresViewer.html" />
+	      		<item name="AnnotationZScoresViewer" href="functionality-OOPCorpusDocumentAnnotationZScoresViewer.html" />
+	      		<item name="AnnotationTfidfViewer" href="functionality-OOPCorpusDocumentAnnotationTfidfViewer.html" />
+	      		<item name="OOPLexiconViewer" href="functionality-OOPLexiconViewer.html" />
+	      	   	
+	      		<item name="OOPDocumentViewer" href="functionality-OOPDocumentViewer.html" />
+	      		<item name="OOP" href="functionality-oop.html" />
+	      		<item name="StanfordBratViewer" href="functionality-StanfordBratViewer.html" />
+	      		<item name="Stanford" href="functionality-stanford.html" />	
+     			      	
 	      </item>
-	      <item name="Developers" href="developers.html" collapse="true">
+	      <item name="Developers" href="developers.html" collapse="true">     
 	      	<item name="Overview" href="developers-overview.html" />
 	      	<item name="Dependencies" href="developers-dependencies.html" />
 	      	<item name="Compliation" href="developers-compilation.html" />
-	      	<item name="Testing" href="developers-testing.html" />
+	      	<item name="Testing" href="developers-testing.html" />      	
 	      	<item name="Deployment" href="developers-deployment.html" />
 	      	<item name="Project Documentation" href="developers-documentation.html" />
 	      	<item name="Source Code" href="developers-code.html" />

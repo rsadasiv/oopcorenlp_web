@@ -72,7 +72,6 @@ function drawSimilarity(annotation, svgName) {
 }
 
 function drawVegaBarChart(data, annotation, svgName, valueName) {
-	let baseUrl = "OOPLexiconViewer?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotation+"&Subannotation="
 	let chartSpec = {
 		  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
 		  "data": {
@@ -82,17 +81,13 @@ function drawVegaBarChart(data, annotation, svgName, valueName) {
 		  //"width": "container",
 		  //"height": "container",
 		  "width": 800,
-		  "mark": {"type": "bar"},
-		  "transform": [
-			  {"calculate": "'" + baseUrl + "' + datum.name", "as": "url" },
-			  {"calculate": "datum.value", "as": "zScore" },
-		],		  
+		  "mark": {"type": "bar"},	  
 		  "encoding": {
-		    "y": {"field": "name", "type": "nominal", "axis": {"labelAngle": 0}, "sort": "zScore"},
-		    "x": {"field": "zScore", "type": "quantitative"},
-		    "href": {"field": "url", "type": "nominal"},
+		    "y": {"field": "name", "type": "nominal", "axis": {"labelAngle": 0}, "sort": "value"},
+		    "x": {"field": "value", "type": "quantitative"},
 		    "tooltip": [
-		    	{"field": "zScore", "type": "quantitative"},
+		    	{"field": "name", "type": "nominal"},
+		    	{"field": "value", "type": "quantitative"},
 		    	{"field": "documentScore", "type": "quantitative"},
 		    	{"field": "corpusMin", "type": "quantitative"},
 		    	{"field": "corpusMedian", "type": "quantitative"},

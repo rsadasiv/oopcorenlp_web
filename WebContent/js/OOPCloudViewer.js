@@ -16,6 +16,46 @@
  ******************************************************************************/
 'use strict';
 
+function makeBar(annotationName, svgName) {
+	let baseUrl = "rest/api/DocumentAnnotation?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName;
+	$.when( 
+			$.ajax(
+				{
+					dataType: "json",
+					url: baseUrl 
+				}
+			)
+		).done(
+				function(data) {
+					drawVegaBar(data, svgName);
+				}
+		);
+}
+
+function drawVegaBar(data, svgName, title) {
+	let chartSpec = {
+			  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+			  "description": "A simple bar chart with embedded data.",
+			  "data": {
+			    "values": data
+			  },
+			  "width": 800,
+			  "height": 400,
+			  "title": title,
+			  "mark": {"type": "bar"},
+			  "encoding": {
+			    "x": {"field": "id", "type": "nominal", "axis": {"labels": false}},
+			    "y": {"field": "value", "type": "quantitative"},
+			    "tooltip": [
+			        {"field": "name", "type": "nominal"},
+			        {"field": "value", "type": "quantitative"}
+			      ]
+			  }
+			};	
+	vegaEmbed(svgName, chartSpec, {"renderer": "svg"});	
+}
+
+
 function makeCloud(annotationName, svgName) {
 	let baseUrl = "rest/api/DocumentAnnotation?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName;
 	$.when( 

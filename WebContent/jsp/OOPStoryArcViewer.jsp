@@ -47,7 +47,7 @@ ObjectNode stats = (ObjectNode) request.getAttribute("Stats");
     $(document).ready(function() {
     	getProperties()["docId"] = "<%=request.getParameter("Document")%>";
     	getProperties()["corpus"] = "<%=request.getParameter("Corpus")%>";
-    	makeDocumentAnnotationDonutChart("OOPPeopleAnnotation", "#OOPPeopleAnnotationDonut", 1);
+    	makeDocumentAnnotationTop5DonutChart("OOPPeopleAnnotation", "#OOPPeopleAnnotationDonut", 1);
     	makeDocumentAnnotationDonutChart("OOPPronounAnnotation", "#OOPPronounAnnotationDonut");
     	makeDocumentAnnotationDonutChart("OOPPossessivesAnnotation", "#OOPPossessivesAnnotationDonut");    	
     	makeDocumentAnnotationDonutChart("OOPVerbTenseAnnotation", "#OOPVerbTenseAnnotationDonut");

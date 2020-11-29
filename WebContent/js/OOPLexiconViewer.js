@@ -16,106 +16,40 @@
  ******************************************************************************/
 'use strict';
 
-function createSentenceTextInDivCb(div) {
-	return function(sentenceIdx) {
-		$.when(
-				$.ajax(
-					{
-						dataType: "json",
-						url: "rest/browse/Corpora/"+getProperties()["corpus"]+"/"+getProperties()["docId"]+"/OOP/sentences/"+sentenceIdx+"/text"
-					}
-				)
-			).done(
-					function(raw_data) {
-						 $(div).html("<a target=\"_blank\" href=\"" + getSentenceRef(sentenceIdx) + "\">" + raw_data + "</a>");
-					}
-			);
-	}
+function makeSentenceBarChart(annotationName, subannotationName, svgName) {
+	let baseUrl = "rest/api/SentencesAnnotationSubannotationScalarText?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation=OOPWordsAnnotation&Subannotation="+subannotationName;
+	
+	$.ajax(baseUrl)
+	.then(
+		function(data) {
+			drawVegaBarChart(data, svgName);
+		}
+	)	
 }
 
-function makeSentenceBarChart(annotationName, subannotationName, svgName, window) {
-	let baseUrl = "rest/api/SentencesAnnotationSubannotationScalar?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation=OOPWordsAnnotation&Subannotation="+subannotationName+"&Format=D3";
-	$.when( 
-			$.ajax(
-				{
-					dataType: "json",
-					url: baseUrl
-				}
-			)
-		).done(
-				function(rawData) {
-					drawBarChart(rawData, svgName, "value", createSentenceTextInDivCb(svgName+"Text"));
-					setLink(svgName+"DataLink", baseUrl);
-				});
-		
-}
-
-
-function drawBarChart(data, svgName, valueName, onclick) {
-	console.log(svgName);
-	console.log(data);
-	let svg = d3.select(svgName),
-	margin = {
-		top: 20,
-		right: 20,
-		bottom: 30,
-		left: 50
-	},
-	width = +svg.attr("width") - margin.left - margin.right,
-	height = +svg.attr("height") - margin.top - margin.bottom,
-	g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-	let x = d3.scaleBand()
-		.rangeRound([0, width])
-		.padding(0.1).align(0);
-
-	let y = d3.scaleLinear()
-		.rangeRound([height, 0]);
-	
-	
-	x.domain(data.map(function (d) {
-		return d.id;
-	}));
-	y.domain([0, d3.max(data, function (d) {
-				return d[valueName];
-	})]);
-		
-	g.append("g")
-	.attr("transform", "translate(0," + height + ")")
-	.call(d3.axisBottom(x).tickValues([]));
-
-	g.append("g")
-	.call(d3.axisLeft(y))
-	.append("text")
-	.attr("fill", "#000")
-	.attr("transform", "rotate(-90)")
-	.attr("y", 6)
-	.attr("dy", "0.71em")
-	.attr("text-anchor", "end");
-
-	g.selectAll(".bar")
-	.data(data)
-	.enter().append("rect")
-	.attr("class", "bar")
-	.attr("x", function (d) {
-		return x(d.id);
-	})
-	.attr("y", function (d) {
-		return y(d[valueName]);
-	})
-	.attr("width", x.bandwidth())
-	.attr("height", function (d) {
-		if ((height - y(d[valueName])) < 0) {
-			return 0;
-		}
-		else {
-			return height - y(d[valueName]);
-		}
-	})
-	.on("click", function(d, i) {
-		d3.select(svgName).selectAll(".bar").style("fill", "steelblue");
-        d3.select(this).style("fill", "black");
-        onclick(i);
-	});
-
+function drawVegaBarChart(data, svgName, title) {
+	let baseUrl = "OOPDocumentViewer?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"#sentence_"
+	let chartSpec = {
+			  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+			  "description": "A simple bar chart with embedded data.",
+			  "data": {
+			    "values": data
+			  },
+			  "width": 800,
+			  "height": 400,
+			  "title": title,
+			  "mark": "bar",
+			  "transform": [
+				  {"calculate": "'" + baseUrl + "' + datum.id", "as": "url" }
+			  ],
+			  "encoding": {
+			    "x": {"field": "id", "type": "nominal", "axis": {"labels": false}},
+			    "y": {"field": "value", "type": "quantitative"},
+			    "href": {"field": "url", "type": "nominal"},
+			    "tooltip": [
+			    	{"field": "text", "type": "nominal"}
+			    ]
+			  }
+			};	
+	vegaEmbed(svgName, chartSpec, {"renderer": "svg"});	
 }

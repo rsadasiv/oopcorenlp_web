@@ -42,6 +42,7 @@ $(document).ready(function() {
 	$("#annotators").val(annotation);
 	
 	makeCloud(annotation, "#cloudViz");
+	makeBar(annotation, "#barViz");
 	
 	$('#annotators').change(
 			function() {
@@ -71,8 +72,9 @@ $(document).ready(function() {
 	<div class="container-fluid">
 		<jsp:include page="include/spacerRow.jsp" />			
 		<div class="row">
-			<div class="col" id="cloudViz">
-			</div>
+			<div class="col" id="barViz"></div>
+			<div class="col" id="cloudViz"></div>
+
 		</div>
 	</div>
 	

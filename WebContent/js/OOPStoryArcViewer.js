@@ -26,6 +26,16 @@ function makeDocumentAnnotationDonutChart(annotationName, svgName, filter = 0) {
 	);	
 }
 
+function makeDocumentAnnotationTop5DonutChart(annotationName, svgName, filter = 0) {
+	let baseUrl = "rest/api/DocumentAnnotation?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName;
+	$.ajax(baseUrl)
+	.then(
+		function(data) {
+			drawTop5VegaDonutChart(data.filter(datum => datum.value > filter), svgName, annotationName)
+		}
+	);	
+}
+
 function drawVegaDonutChart(data, svgName, title) {
 	let chartSpec = {
 			  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
@@ -33,6 +43,38 @@ function drawVegaDonutChart(data, svgName, title) {
 			  "data": {
 			    "values": data
 			  },
+			  "title": title,
+			  "width": 200,
+			  "height": 200,
+			  "mark": {"type": "arc", "innerRadius": 50},
+			  "encoding": {
+			    "theta": {"field": "value", "type": "quantitative"},
+			    "color": {"field": "name", "type": "nominal"}
+			  },
+			  "view": {"stroke": null}
+			};	
+	vegaEmbed(svgName, chartSpec, {"renderer": "svg"});	
+	
+}
+
+function drawTop5VegaDonutChart(data, svgName, title) {
+	let chartSpec = {
+			  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+			  "description": "A simple donut chart with embedded data.",
+			  "data": {
+			    "values": data
+			  },
+			  "transform": [
+			    {
+			      "window": [{
+			        "op": "rank",
+			        "as": "rank"
+			      }],
+			      "sort": [{ "field": "value", "order": "descending" }]
+			    }, {
+			      "filter": "datum.rank <= 5"
+			    }
+			  ],			  
 			  "title": title,
 			  "width": 200,
 			  "height": 200,
@@ -77,6 +119,8 @@ function makeSentenceAnnotationBarChart(annotationName, svgName) {
 		}
 	)	
 }
+
+
 
 function makeSentenceAnnotationSubannotationBarChart(annotationName, subannotationName, svgName) {
 	let baseUrl = "rest/api/SentencesAnnotationSubannotationScalar?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName+"&Subannotation="+subannotationName;
@@ -142,6 +186,9 @@ function drawVegaBarChart(data, svgName, title) {
 			};	
 	vegaEmbed(svgName, chartSpec, {"renderer": "svg"});	
 }
+
+
+
 
 function drawVegaStackedBarChart(data, svgName, title) {
 	console.log(data);

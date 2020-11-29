@@ -58,11 +58,11 @@ let coreNLPAnnotationCategories = {
 		"OOPIfAnnotation",
 		"OOPBecauseAnnotation",
 		"OOPPeopleAnnotation",
-		"OOPTopicsAnnotation",
-		"OOPVerbTenseAnnotation",
 		"OOPDatesAnnotation",
 		"OOPLocationsAnnotation",
-		"OOPQuotesAnnotation"
+		"OOPQuotesAnnotation",
+		"OOPLikeAnnotation",
+		"OOPAsAnnotation"		
 	],
 	"GenderNumber": [
 		"OOPGenderAnnotation",
@@ -75,15 +75,15 @@ let coreNLPAnnotationCategories = {
 		"OOPPointlessAdjectivesAnnotation",
 		"OOPAdverbsAnnotation",
 		"OOPPointlessAdverbsAnnotation",
-		"OOPLikeAnnotation",
-		"OOPAsAnnotation",
 		"OOPFlavorsAnnotation",
 		"OOPColorsAnnotation",
 	],
 	"Semantics": [
+		"OOPTopicsAnnotation",
 		"OOPNounsAnnotation",
 		"OOPNounGroupsAnnotation",
 		"OOPNounHypernymsAnnotation",
+		"OOPVerbTenseAnnotation",			
 		"OOPVerbsAnnotation",
 		"OOPActionlessVerbsAnnotation",
 		"OOPVerbGroupsAnnotation",
@@ -453,7 +453,7 @@ function displayDictionAnnotations(data, cb) {
 
 function displayLedeAnnotations(data, cb) {
 	$('#lede_div').empty();
-	listMapAnnotationToUl(data, coreNLPAnnotationCategories["Lede"], $('#lede_div'));
+	listMapAnnotationToUlNoColorPicker(data, coreNLPAnnotationCategories["Lede"], $('#lede_div'));
 
 	cb && typeof cb === 'function' && cb(data);
 }

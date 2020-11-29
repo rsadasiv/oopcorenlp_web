@@ -33,7 +33,8 @@ ObjectNode stats = (ObjectNode) request.getAttribute("Stats");
 ObjectNode annotationDescriptions = (ObjectNode) request.getAttribute("AnnotationDescriptions");
 ArrayNode corpora = (ArrayNode) request.getAttribute("corpora");
 String selectedCorpus = request.getParameter("TargetCorpus")==null?request.getParameter("Corpus"):request.getParameter("TargetCorpus");
-String selectedAnnotation = request.getParameter("Annotation")==null||request.getParameter("Annotation").equals("")?"VaderSentimentAnnotation":request.getParameter("Annotation");
+String selectedAnnotation = request.getParameter("Annotation")==null||request.getParameter("Annotation").equals("")?"OOPWordsAnnotation":request.getParameter("Annotation");
+request.setAttribute("Annotation", selectedAnnotation);
 %>
 
 <script>
@@ -99,32 +100,12 @@ $(document).ready(function() {
 			</div>
 		</div>
 	</div>
-	<jsp:include page="include/spacerRow.jsp" />
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<p class="text-center font-italic" id="corpusDocumentAnnotationTfidfVizText">
-					&nbsp;
-				</p>
-			</div>
-		</div>
-	</div>
-	<div class="container-fluid">
-		<div class="row justify-content-center">
-			<div class="col-lg-12" id="corpusDocumentAnnotationTfidfViz">
 
-			</div>
-		</div>
+	<div class="container-fluid">
+		<jsp:include page="include/spacerRow.jsp" />
 		<div class="row">
-			<div class="col-md-4"></div>
-			<div class="col-md-4 justify-content-center">
-				<p>
-					<a id="corpusDocumentAnnotationTfidfVizDataLink" target="_blank">
-						Data
-					</a>
-				</p>
+			<div class="col" id="corpusDocumentAnnotationTfidfViz">
 			</div>
-			<div class="col-md-4"></div>
 		</div>
 	</div>		
 	<jsp:include page="include/footer.jsp" />

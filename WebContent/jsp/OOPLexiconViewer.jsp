@@ -30,7 +30,7 @@
 <jsp:include page="include/icon.jsp" />
 <jsp:include page="include/meta.jsp" />
 <jsp:include page="include/bootstrap.jsp" />
-<jsp:include page="include/d3v5.jsp" />
+<jsp:include page="include/vega-lite.jsp" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css" integrity="sha512-yVvxUQV0QESBt1SyZbNJMAwyKvFTLMyXSyBHDO4BG5t7k/Lw34tyqlSDlKIrIENIzCl+RVUNjmCPG+V/GMesRw==" crossorigin="anonymous" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js" integrity="sha512-rMGGF4wg1R73ehtnxXBt5mbUfN9JUJwbk21KMlnLZDJh7BkPmeovBuddZCENJddHYYMkCh9hPFnPmS9sspki8g==" crossorigin="anonymous"></script>
 <script src="js/oopcorenlp.js"></script>
@@ -51,7 +51,7 @@ $(document).ready(function() {
 	getProperties()["corpus"] = "<%=request.getParameter("Corpus")%>";
 	$('Subannotation').chosen({ width:'200px' });
 	let annotation = "<%=request.getParameter("Annotation")==null||request.getParameter("Annotation").equals("")?"VaderSentimentAnnotation":request.getParameter("Annotation")%>";	
-	makeSentenceBarChart(annotation, "<%=request.getParameter("Subannotation")%>", "#sentenceAnnotationViz", 0);
+	makeSentenceBarChart(annotation, "<%=request.getParameter("Subannotation")%>", "#sentenceAnnotationViz");
 	$('#Subannotation').change(
 			function() {
 		    	window.location.href = location.protocol + '//' + location.host + location.pathname + "?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Subannotation=" + $('#Subannotation option:selected').val();
@@ -265,7 +265,7 @@ if (lexicon != null) {
 		
 		<%
 		ArrayNode topicModelList = (ArrayNode) request.getAttribute("TopicModelLemma");
-		if (topicModelList != null) {
+		if (topicModelList != null && topicModelList.size() > 0) {
 		%>
 			<div class="col">
 				<div class="card">
@@ -298,7 +298,7 @@ if (lexicon != null) {
 
 		<%
 		ObjectNode topicModelPOSList = (ObjectNode) request.getAttribute("TopicModelLemmaPOS");
-		if (topicModelPOSList != null) {
+		if (topicModelPOSList != null && topicModelPOSList.size() > 0) {
 			Iterator<String> posIter = topicModelPOSList.fieldNames();
 			while (posIter.hasNext()) {
 				String pos = posIter.next();
@@ -336,57 +336,9 @@ if (lexicon != null) {
 
 		</div>
 
-		<div class="row">	
-			<div class="col">
-				<div class="card">
-					<div class="card-header">
-		    			<h5 class="card-title">Sentences</h5>
-		    		</div>	
-					<div class="card-body">
-				<%
-				ArrayNode sentences = (ArrayNode) lexicon.get("lists").get("SentenceTextAnnotation");
-				if (sentences != null) {
-					Iterator<JsonNode> sentencesIter = sentences.iterator();
-					while (sentencesIter.hasNext()) {
-						JsonNode n = sentencesIter.next();
-					%>
-						<p class="card-text"><%=n.asText("") %></p>
-				<%
-					}
-				}
-				%>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<jsp:include page="include/spacerRow.jsp" />
-	<div class="container">
+		<jsp:include page="include/spacerRow.jsp" />			
 		<div class="row">
-			<div class="col-md-4"></div>
-			<div class="col-md-4 justify-content-center">
-				<p><%=selectedAnnotation %></p>
-				<p><%=annotationDescriptions.get(selectedAnnotation).asText() %></p>
-				<p>
-					<a id="sentenceAnnotationVizDataLink" target="_blank">
-						Data
-					</a>
-				</p>
-			</div>
-			<div class="col-md-4"></div>
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<p class="text-center font-italic" id="sentenceAnnotationVizText">
-					&nbsp;
-				</p>
-			</div>
-		</div>
-	</div>
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-lg-12" id="sentenceViz">
-				<svg width="<%=sentenceCount>1600?new Integer(sentenceCount+100).toString():"1600"%>" height="400" id="sentenceAnnotationViz"></svg>
+			<div class="col" id="sentenceAnnotationViz">
 			</div>
 		</div>
 	</div>
