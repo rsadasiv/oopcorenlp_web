@@ -2,7 +2,6 @@ package io.outofprintmagazine.web.rest.api;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
