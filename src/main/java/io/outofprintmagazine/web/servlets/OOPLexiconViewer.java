@@ -112,7 +112,9 @@ public class OOPLexiconViewer extends AbstractOOPServlet {
         	//request.setAttribute("SubannotationIsWord", new Boolean(true));
         	request.setAttribute("Lexicon", getStorage().getCorpusDocumentLexiconLemma(corpus, document, request.getParameter("Subannotation")));
         	request.setAttribute("TopicModelLemma", getStorage().getCorpusDocumentTopicModelLemma(corpus, document, request.getParameter("Subannotation")));
-        	request.setAttribute("TopicModelLemmaPOS", getStorage().getCorpusDocumentTopicModelLemmaPOS(corpus, document, request.getParameter("Subannotation")));        	
+        	request.setAttribute("TopicModelLemmaPOS", getStorage().getCorpusDocumentTopicModelLemmaPOS(corpus, document, request.getParameter("Subannotation")));  
+        	request.setAttribute("CorpusTopicModelLemma", getStorage().getCorpusTopicModelLemma(corpus, request.getParameter("Subannotation")));
+        	request.setAttribute("CorpusTopicModelLemmaPOS", getStorage().getCorpusTopicModelLemmaPOS(corpus, request.getParameter("Subannotation")));
         //}
         //else {
         //	request.setAttribute("SubannotationIsWord", new Boolean(false));

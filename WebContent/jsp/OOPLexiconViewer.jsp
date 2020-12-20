@@ -249,7 +249,7 @@ if (lexicon != null) {
 								<%=subannotationName %>:
 							</label>
 							<span id="<%=annotationName %>_<%=subannotationName %>">
-								<%=lexicon.get("attributes").get(annotationName).get(subannotationName).asText() %>					
+								<%=new BigDecimal(lexicon.get("attributes").get(annotationName).get(subannotationName).asDouble()) %>					
 							</span>
 						</p>			
 				<%
@@ -262,7 +262,9 @@ if (lexicon != null) {
 			}
 		}	
 		%>
-		
+		</div>
+		<jsp:include page="include/spacerRow.jsp" />
+		<div class="row">		
 		<%
 		ArrayNode topicModelList = (ArrayNode) request.getAttribute("TopicModelLemma");
 		if (topicModelList != null && topicModelList.size() > 0) {
@@ -283,7 +285,7 @@ if (lexicon != null) {
 								<%=name %>:
 							</label>
 							<span id="<%=selectedSubannotation %>_<%=name %>">
-								<%=val %>					
+								<%=String.format("%.0f", val.doubleValue()*100) %>					
 							</span>
 						</p>			
 			<%
@@ -295,6 +297,39 @@ if (lexicon != null) {
 		<%
 		}	
 		%>		
+
+		<%
+		ArrayNode corpusTopicModelList = (ArrayNode) request.getAttribute("CorpusTopicModelLemma");
+		if (corpusTopicModelList != null && corpusTopicModelList.size() > 0) {
+		%>
+			<div class="col">
+				<div class="card">
+					<div class="card-header">
+		    			<h5 class="card-title">Corpus Topic Model</h5>
+		    		</div>
+					<div class="card-body">
+			<%
+			for (JsonNode nv : corpusTopicModelList) {
+				String name = nv.get("name").asText();
+				BigDecimal val = new BigDecimal(nv.get("value").asText("0"));
+			%>
+						<p class="card-text">
+							<label for="<%=selectedSubannotation %>_<%=name %>" class="h5">
+								<%=name %>:
+							</label>
+							<span id="<%=selectedSubannotation %>_<%=name %>">
+								<%=String.format("%.0f", val.doubleValue()*100) %>				
+							</span>
+						</p>			
+			<%
+			}
+			%>
+					</div>
+				</div>
+			</div>
+		<%
+		}	
+		%>	
 
 		<%
 		ObjectNode topicModelPOSList = (ObjectNode) request.getAttribute("TopicModelLemmaPOS");
@@ -320,7 +355,7 @@ if (lexicon != null) {
 									<%=name %>:
 								</label>
 								<span id="<%=selectedSubannotation %>_<%=name %>_POS">
-									<%=val %>					
+									<%=String.format("%.0f", val.doubleValue()*100) %>					
 								</span>
 							</p>			
 				<%
@@ -333,6 +368,44 @@ if (lexicon != null) {
 			}
 		}	
 		%>
+		
+		<%
+		ObjectNode corpusTopicModelPOSList = (ObjectNode) request.getAttribute("CorpusTopicModelLemmaPOS");
+		if (corpusTopicModelPOSList != null && corpusTopicModelPOSList.size() > 0) {
+			Iterator<String> posIter = corpusTopicModelPOSList.fieldNames();
+			while (posIter.hasNext()) {
+				String pos = posIter.next();
+		%>
+			<div class="col">
+				<div class="card">
+					<div class="card-header">
+		    			<h5 class="card-title">Corpus Topic Model <%=pos %></h5>
+		    		</div>
+					<div class="card-body">
+				<%
+	
+				for (JsonNode nv : corpusTopicModelPOSList.get(pos)) {
+					String name = nv.get("name").asText();
+					BigDecimal val = new BigDecimal(nv.get("value").asText("0"));
+				%>
+							<p class="card-text">
+								<label for="<%=selectedSubannotation %>_<%=name %>_POS" class="h5">
+									<%=name %>:
+								</label>
+								<span id="<%=selectedSubannotation %>_<%=name %>_POS">
+									<%=String.format("%.0f", val.doubleValue()*100) %>					
+								</span>
+							</p>			
+				<%
+				}
+				%>
+					</div>
+				</div>
+			</div>
+		<%
+			}
+		}	
+		%>		
 
 		</div>
 

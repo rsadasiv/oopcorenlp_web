@@ -340,12 +340,63 @@ public class FileStorage implements IStorage {
     	);
     }
 	
+	
+	@Override
+    public JsonNode getCorpusTopicModelLemma(String corpus, String lemma) throws IOException {
+		ArrayNode retval = getMapper().createArrayNode();
+		try {
+			Word2Vec vec = WordVectorSerializer.readWord2VecModel(
+					getCorpusFilePath(corpus, "CorpusWord2Vec/CORPUS_AGGREGATES_WORD2VEC_Lemmas.word2vec")
+			);
+			
+			for (String similarWord : vec.wordsNearest(lemma, 25)) {
+				double cosSim = vec.similarity(lemma, similarWord);
+				ObjectNode tidy = getMapper().createObjectNode();
+				tidy.put("name", similarWord);
+				tidy.put("value", cosSim);
+				retval.add(tidy);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return retval;
+    }
+    
+    
+	@Override
+    public JsonNode getCorpusTopicModelLemmaPOS(String corpus, String lemma) throws IOException {
+		ObjectNode retval = getMapper().createObjectNode();
+		try {
+			Word2Vec vec = WordVectorSerializer.readWord2VecModel(
+					getCorpusFilePath(corpus, "CorpusWord2Vec/CORPUS_AGGREGATES_WORD2VEC_Lemmas_POS.word2vec")
+			);
+			for (VocabWord vocabWord : vec.getVocab().vocabWords()) {
+				if (vocabWord.getWord().startsWith(lemma)) {
+					ArrayNode similarity = retval.putArray(vocabWord.getWord());
+					for (String similarWord : vec.wordsNearest(vocabWord.getWord(), 25)) {
+						double cosSim = vec.similarity(vocabWord.getWord(), similarWord);
+						ObjectNode tidy = getMapper().createObjectNode();
+						tidy.put("name", similarWord);
+						tidy.put("value", cosSim);
+						similarity.add(tidy);
+					}
+				}
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return retval;
+    }
+	
 	@Override
     public JsonNode getCorpusDocumentTopicModelLemma(String corpus, String document, String lemma) throws IOException {
 		ArrayNode retval = getMapper().createArrayNode();
 		try {
 			Word2Vec vec = WordVectorSerializer.readWord2VecModel(
-					getCorpusFilePath(corpus, "Word2Vec/Lemmas_"+document+".word2vec")
+					getCorpusFilePath(corpus, "DocumentWord2Vec/Lemmas_"+document+".word2vec")
 			);
 			
 			for (String similarWord : vec.wordsNearest(lemma, 25)) {
@@ -369,7 +420,7 @@ public class FileStorage implements IStorage {
 		ObjectNode retval = getMapper().createObjectNode();
 		try {
 			Word2Vec vec = WordVectorSerializer.readWord2VecModel(
-					getCorpusFilePath(corpus, "Word2Vec/Lemmas_POS_"+document+".word2vec")
+					getCorpusFilePath(corpus, "DocumentWord2Vec/Lemmas_POS_"+document+".word2vec")
 			);
 			for (VocabWord vocabWord : vec.getVocab().vocabWords()) {
 				if (vocabWord.getWord().startsWith(lemma)) {
