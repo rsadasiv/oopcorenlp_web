@@ -196,6 +196,7 @@
 				<configuration>
 					<warSourceDirectory>WebContent</warSourceDirectory>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<argLine>--illegal-access=permit</argLine>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -223,6 +224,7 @@
 	                <configuration>
 	                	<properties>
                 			<cargo.servlet.port>8888</cargo.servlet.port>
+                			<cargo.start.jvmargs>--illegal-access=permit</cargo.start.jvmargs>
                 		</properties>
 	                </configuration>
 	                <deployables>

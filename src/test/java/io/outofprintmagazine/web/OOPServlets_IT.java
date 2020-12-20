@@ -7,25 +7,23 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 
 
 public class OOPServlets_IT {
 	
 	public static String serverUri = "http://localhost:8888";
 	public static String webappUri = "/oopcorenlp_web";
-	public static String corpus = "Sample";
-	public static String document = "de4c996ccd44e38f38cb673d2e5bd3c2";
+
+	public static String corpus = null; //"Sample";
+	public static String document = null; //"b1c0b1bf9462122f5aa52514511e1f8c";
 
 	
 	public static String getUri() {
@@ -44,11 +42,27 @@ public class OOPServlets_IT {
 		return new URL(getURLString(path));
 	}
 	
+	public static String getCorpus() throws MalformedURLException, IOException {
+		if (corpus == null) {
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode corpora = mapper.readTree(new URL(getUri()+"/rest/browse/Corpora"));
+			corpus = corpora.get(0).asText("Sample");
+		}
+		return corpus;
+	}
+	
+	public static String getDocument() throws MalformedURLException, IOException {
+		if (document == null) {
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode corpusDocuments = mapper.readTree(new URL(getUri()+"/rest/browse/Corpora/"+getCorpus()));
+			document = corpusDocuments.get(0).asText("b1c0b1bf9462122f5aa52514511e1f8c");
+		}
+		return document;
+	}
+	
 	public OOPServlets_IT() {
 		super();
 	}
-	
-	
 
 	@Test
 	public void sanityCheck_IT() throws IOException {
@@ -70,86 +84,86 @@ public class OOPServlets_IT {
     @Test
     public void corporaViewer_IT() throws Exception {
     	Document doc = Jsoup.connect(getURLString("CorporaViewer")).get();
-    	Elements corpusLink = doc.select("a[href=CorpusDocumentsViewer?Corpus="+corpus+"]");
-		assertTrue(corpusLink.size() > 0, String.format("no corpus link: %s", corpus));
+    	Elements corpusLink = doc.select("a[href=CorpusDocumentsViewer?Corpus="+getCorpus()+"]");
+		assertTrue(corpusLink.size() > 0, String.format("no corpus link: %s", getCorpus()));
     }
     
     @Test
     public void corpusDocumentsViewer_IT() throws Exception {
-    	Document doc = Jsoup.connect(getURLString("CorpusDocumentsViewer?Corpus="+corpus)).get();
-    	Elements corpusLink = doc.select("a[href=TextViewer?Corpus="+corpus+"&Document="+document+"]");
-		assertTrue(corpusLink.size() > 0, String.format("no corpus document link: %s %s", corpus, document));
+    	Document doc = Jsoup.connect(getURLString("CorpusDocumentsViewer?Corpus="+getCorpus())).get();
+    	Elements corpusLink = doc.select("a[href=TextViewer?Corpus="+getCorpus()+"&Document="+getDocument()+"]");
+		assertTrue(corpusLink.size() > 0, String.format("no corpus document link: %s %s", getCorpus(), getDocument()));
     }
     
     @Test
     public void OOPStoryArcViewer_IT() throws Exception {
-    	Document doc = Jsoup.connect(getURLString("OOPStoryArcViewer", corpus, document)).get();
-    	assertTrue(doc.select("#corpusDocumentTitle").size() == 1, String.format("no document title: %s %s", corpus, document));
-    	assertTrue(doc.select("#corpusDocumentAuthor").size() == 1, String.format("no document author: %s %s", corpus, document));
-    	assertTrue(doc.select("#corpusDocumentDate").size() == 1, String.format("no document date: %s %s", corpus, document));
+    	Document doc = Jsoup.connect(getURLString("OOPStoryArcViewer", getCorpus(), getDocument())).get();
+    	assertTrue(doc.select("#corpusDocumentTitle").size() == 1, String.format("no document title: %s %s", getCorpus(), getDocument()));
+    	assertTrue(doc.select("#corpusDocumentAuthor").size() == 1, String.format("no document author: %s %s", getCorpus(), getDocument()));
+    	assertTrue(doc.select("#corpusDocumentDate").size() == 1, String.format("no document date: %s %s", getCorpus(), getDocument()));
     }
     
     @Test
     public void OOPPullQuotesViewer_IT() throws Exception {
-    	Document doc = Jsoup.connect(getURLString("OOPPullQuotesViewer", corpus, document)).get();
-    	assertTrue(doc.select("#corpusDocumentTitle").size() == 1, String.format("no document title: %s %s", corpus, document));
-    	assertTrue(doc.select("#corpusDocumentAuthor").size() == 1, String.format("no document author: %s %s", corpus, document));
-    	assertTrue(doc.select("#corpusDocumentDate").size() == 1, String.format("no document date: %s %s", corpus, document));
+    	Document doc = Jsoup.connect(getURLString("OOPPullQuotesViewer", getCorpus(), getDocument())).get();
+    	assertTrue(doc.select("#corpusDocumentTitle").size() == 1, String.format("no document title: %s %s", getCorpus(), getDocument()));
+    	assertTrue(doc.select("#corpusDocumentAuthor").size() == 1, String.format("no document author: %s %s", getCorpus(), getDocument()));
+    	assertTrue(doc.select("#corpusDocumentDate").size() == 1, String.format("no document date: %s %s", getCorpus(), getDocument()));
     }
     
     @Test
     public void OOPEditorViewer_IT() throws Exception {
-    	Document doc = Jsoup.connect(getURLString("OOPEditorViewer", corpus, document)).get();
-    	assertTrue(doc.select("#corpusDocumentTitle").size() == 1, String.format("no document title: %s %s", corpus, document));
-    	assertTrue(doc.select("#corpusDocumentAuthor").size() == 1, String.format("no document author: %s %s", corpus, document));
-    	assertTrue(doc.select("#corpusDocumentDate").size() == 1, String.format("no document date: %s %s", corpus, document));
+    	Document doc = Jsoup.connect(getURLString("OOPEditorViewer", getCorpus(), getDocument())).get();
+    	assertTrue(doc.select("#corpusDocumentTitle").size() == 1, String.format("no document title: %s %s", getCorpus(), getDocument()));
+    	assertTrue(doc.select("#corpusDocumentAuthor").size() == 1, String.format("no document author: %s %s", getCorpus(), getDocument()));
+    	assertTrue(doc.select("#corpusDocumentDate").size() == 1, String.format("no document date: %s %s", getCorpus(), getDocument()));
     }
     
     @Test
     public void OOPActorsViewer_IT() throws Exception {
-    	Document doc = Jsoup.connect(getURLString("OOPActorsViewer", corpus, document)).get();
-    	assertTrue(doc.select("#corpusDocumentTitle").size() == 1, String.format("no document title: %s %s", corpus, document));
-    	assertTrue(doc.select("#corpusDocumentAuthor").size() == 1, String.format("no document author: %s %s", corpus, document));
-    	assertTrue(doc.select("#corpusDocumentDate").size() == 1, String.format("no document date: %s %s", corpus, document));
+    	Document doc = Jsoup.connect(getURLString("OOPActorsViewer", getCorpus(), getDocument())).get();
+    	assertTrue(doc.select("#corpusDocumentTitle").size() == 1, String.format("no document title: %s %s", getCorpus(), getDocument()));
+    	assertTrue(doc.select("#corpusDocumentAuthor").size() == 1, String.format("no document author: %s %s", getCorpus(), getDocument()));
+    	assertTrue(doc.select("#corpusDocumentDate").size() == 1, String.format("no document date: %s %s", getCorpus(), getDocument()));
     }    
 
     @Test
     public void OOPCloudViewer_IT() throws Exception {
-    	Document doc = Jsoup.connect(getURLString("OOPCloudViewer", corpus, document)).get();
-    	assertTrue(doc.select("#corpusDocumentTitle").size() == 1, String.format("no document title: %s %s", corpus, document));
-    	assertTrue(doc.select("#corpusDocumentAuthor").size() == 1, String.format("no document author: %s %s", corpus, document));
-    	assertTrue(doc.select("#corpusDocumentDate").size() == 1, String.format("no document date: %s %s", corpus, document));
+    	Document doc = Jsoup.connect(getURLString("OOPCloudViewer", getCorpus(), getDocument())).get();
+    	assertTrue(doc.select("#corpusDocumentTitle").size() == 1, String.format("no document title: %s %s", getCorpus(), getDocument()));
+    	assertTrue(doc.select("#corpusDocumentAuthor").size() == 1, String.format("no document author: %s %s", getCorpus(), getDocument()));
+    	assertTrue(doc.select("#corpusDocumentDate").size() == 1, String.format("no document date: %s %s", getCorpus(), getDocument()));
     }
     
     @Test
     public void OOPStreamViewer_IT() throws Exception {
-    	Document doc = Jsoup.connect(getURLString("OOPStreamViewer", corpus, document)).get();
-    	assertTrue(doc.select("#corpusDocumentTitle").size() == 1, String.format("no document title: %s %s", corpus, document));
-    	assertTrue(doc.select("#corpusDocumentAuthor").size() == 1, String.format("no document author: %s %s", corpus, document));
-    	assertTrue(doc.select("#corpusDocumentDate").size() == 1, String.format("no document date: %s %s", corpus, document));
+    	Document doc = Jsoup.connect(getURLString("OOPStreamViewer", getCorpus(), getDocument())).get();
+    	assertTrue(doc.select("#corpusDocumentTitle").size() == 1, String.format("no document title: %s %s", getCorpus(), getDocument()));
+    	assertTrue(doc.select("#corpusDocumentAuthor").size() == 1, String.format("no document author: %s %s", getCorpus(), getDocument()));
+    	assertTrue(doc.select("#corpusDocumentDate").size() == 1, String.format("no document date: %s %s", getCorpus(), getDocument()));
     }
     
     @Test
     public void OOPStreamViewerTokens_IT() throws Exception {
-    	Document doc = Jsoup.connect(getURLString("OOPStreamViewerTokens", corpus, document)).get();
-    	assertTrue(doc.select("#corpusDocumentTitle").size() == 1, String.format("no document title: %s %s", corpus, document));
-    	assertTrue(doc.select("#corpusDocumentAuthor").size() == 1, String.format("no document author: %s %s", corpus, document));
-    	assertTrue(doc.select("#corpusDocumentDate").size() == 1, String.format("no document date: %s %s", corpus, document));
+    	Document doc = Jsoup.connect(getURLString("OOPStreamViewerTokens", getCorpus(), getDocument())).get();
+    	assertTrue(doc.select("#corpusDocumentTitle").size() == 1, String.format("no document title: %s %s", getCorpus(), getDocument()));
+    	assertTrue(doc.select("#corpusDocumentAuthor").size() == 1, String.format("no document author: %s %s", getCorpus(), getDocument()));
+    	assertTrue(doc.select("#corpusDocumentDate").size() == 1, String.format("no document date: %s %s", getCorpus(), getDocument()));
     }
     
     @Test
     public void OOPDocumentViewer_IT() throws Exception {
-    	Document doc = Jsoup.connect(getURLString("OOPDocumentViewer", corpus, document)).get();
-    	assertTrue(doc.select("#corpusDocumentTitle").size() == 1, String.format("no document title: %s %s", corpus, document));
-    	assertTrue(doc.select("#corpusDocumentAuthor").size() == 1, String.format("no document author: %s %s", corpus, document));
-    	assertTrue(doc.select("#corpusDocumentDate").size() == 1, String.format("no document date: %s %s", corpus, document));
+    	Document doc = Jsoup.connect(getURLString("OOPDocumentViewer", getCorpus(), getDocument())).get();
+    	assertTrue(doc.select("#corpusDocumentTitle").size() == 1, String.format("no document title: %s %s", getCorpus(), getDocument()));
+    	assertTrue(doc.select("#corpusDocumentAuthor").size() == 1, String.format("no document author: %s %s", getCorpus(), getDocument()));
+    	assertTrue(doc.select("#corpusDocumentDate").size() == 1, String.format("no document date: %s %s", getCorpus(), getDocument()));
     }
     
     @Test
     public void StanfordBratViewer_IT() throws Exception {
-    	Document doc = Jsoup.connect(getURLString("StanfordBratViewer", corpus, document)).get();
-    	assertTrue(doc.select("#corpusDocumentTitle").size() == 1, String.format("no document title: %s %s", corpus, document));
-    	assertTrue(doc.select("#corpusDocumentAuthor").size() == 1, String.format("no document author: %s %s", corpus, document));
-    	assertTrue(doc.select("#corpusDocumentDate").size() == 1, String.format("no document date: %s %s", corpus, document));
+    	Document doc = Jsoup.connect(getURLString("StanfordBratViewer", getCorpus(), getDocument())).get();
+    	assertTrue(doc.select("#corpusDocumentTitle").size() == 1, String.format("no document title: %s %s", getCorpus(), getDocument()));
+    	assertTrue(doc.select("#corpusDocumentAuthor").size() == 1, String.format("no document author: %s %s", getCorpus(), getDocument()));
+    	assertTrue(doc.select("#corpusDocumentDate").size() == 1, String.format("no document date: %s %s", getCorpus(), getDocument()));
     }    
 }

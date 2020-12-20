@@ -93,7 +93,8 @@ public class FileStorage implements IStorage {
 	}
 	
 	private void initCorpora() throws IOException {
-		File[] directories = new File(properties.getProperty("fileCorpus_Path")).listFiles(File::isDirectory);
+		File[] directories = new File(
+				properties.getProperty("fileCorpus_Path")).listFiles(File::isDirectory);
 		for (int i=0;i<directories.length;i++) {
 			String corpus = directories[i].getName();
 			Map<String, ObjectNode> documentMetadata = new HashMap<String, ObjectNode>();
@@ -103,7 +104,11 @@ public class FileStorage implements IStorage {
 	}
 	
 	private void initCorpusDocumentMetadata(String corpus, Map<String, ObjectNode> documentMetadata) throws IOException  {
-		File[] documents = new File(getCorpusPath(corpus)).listFiles(File::isFile);
+		File[] documents = new File(
+				getCorpusPath(corpus)
+				+ System.getProperty("file.separator", "/")	
+				+ "Analyze"
+		).listFiles(File::isFile);
 		for (int i=0;i<documents.length;i++) {
 			if (documents[i].getName().substring(0, documents[i].getName().lastIndexOf(".")).startsWith("OOP_")) {
 				String document = documents[i].getName().substring(4, documents[i].getName().lastIndexOf("."));
@@ -111,7 +116,7 @@ public class FileStorage implements IStorage {
 						document,
 						(ObjectNode) getCorpusDocumentJson(
 								corpus,
-								"OOP_" + document + ".json"
+								"Analyze" + System.getProperty("file.separator", "/") + "OOP_" + document + ".json"
 						).get("metadata").deepCopy()
 				);
 			}
@@ -119,7 +124,12 @@ public class FileStorage implements IStorage {
 	}
 
 	protected InputStream getCorpusDocumentStream(String corpus, String scratchFileName) throws IOException  {
-        File f = new File(getCorpusFilePath(corpus, scratchFileName));
+        File f = new File(
+        		getCorpusFilePath(
+        				corpus, 
+        				scratchFileName
+        		)
+        );
         FileInputStream fin = new FileInputStream(f);
         return fin;
 	}
@@ -165,20 +175,32 @@ public class FileStorage implements IStorage {
 	
 	@Override
     public String getCorpusAggregatesString(String corpus) throws IOException {
-		return getCorpusDocumentString(corpus, "CORPUS_AGGREGATES.json");
+		return getCorpusDocumentString(
+				corpus, 
+				"CorpusAggregate" + System.getProperty("file.separator", "/") + "CORPUS_AGGREGATES.json"
+		);
 	}
     
 	@Override
     public JsonNode getCorpusAggregatesJson(String corpus) throws IOException {
-		return getCorpusDocumentJson(corpus, "CORPUS_AGGREGATES.json");		
+		return getCorpusDocumentJson(
+				corpus,
+				"CorpusAggregate" + System.getProperty("file.separator", "/") + "CORPUS_AGGREGATES.json"
+		);
 	}
 	
     public String getCorpusAggregatesIdfString(String corpus) throws IOException {
-		return getCorpusDocumentString(corpus, "CORPUS_AGGREGATES_IDF.json");
+		return getCorpusDocumentString(
+				corpus, 
+				"CorpusAggregate" + System.getProperty("file.separator", "/") + "CORPUS_AGGREGATES_IDF.json"
+		);
 	}
     
     public JsonNode getCorpusAggregatesIdfJson(String corpus) throws IOException {
-		return getCorpusDocumentJson(corpus, "CORPUS_AGGREGATES_IDF.json");		
+		return getCorpusDocumentJson(
+				corpus, 
+				"CorpusAggregate" + System.getProperty("file.separator", "/") + "CORPUS_AGGREGATES_IDF.json"
+		);		
 	}
 	
 	@Override
@@ -196,48 +218,74 @@ public class FileStorage implements IStorage {
 
 	@Override
     public String getCorpusDocumentTxtString(String corpus, String document) throws IOException {
-    	return getCorpusDocumentString(corpus, "/TXT_"+document+".txt");
+    	return getCorpusDocumentString(
+    			corpus,	
+				"Analyze" + System.getProperty("file.separator", "/") + "TXT_"+document+".txt"
+    	);
     }
     
 	@Override
     public String getCorpusDocumentOOPString(String corpus, String document) throws IOException {
-    	return getCorpusDocumentString(corpus, "/OOP_"+document+".json");
+    	return getCorpusDocumentString(
+    			corpus,
+				"Analyze" + System.getProperty("file.separator", "/") + "OOP_"+document+".json"
+    	);
     }
     
 	@Override
     public JsonNode getCorpusDocumentOOPJson(String corpus, String document) throws IOException {
-    	return getCorpusDocumentJson(corpus, "/OOP_"+document+".json");
+    	return getCorpusDocumentJson(
+    			corpus,
+				"Analyze" + System.getProperty("file.separator", "/") + "OOP_"+document+".json"
+    	);
     }
     
 	@Override
     public String getCorpusDocumentAggregatesString(String corpus, String document) throws IOException {
-    	return getCorpusDocumentString(corpus, "/AGGREGATES_"+document+".json");
+    	return getCorpusDocumentString(
+    			corpus, 
+				"Analyze" + System.getProperty("file.separator", "/") + "AGGREGATES_"+document+".json");
     }
     
 	@Override
     public JsonNode getCorpusDocumentAggregatesJson(String corpus, String document) throws IOException {
-    	return getCorpusDocumentJson(corpus, "/AGGREGATES_"+document+".json");
+    	return getCorpusDocumentJson(
+    			corpus, 
+				"Analyze" + System.getProperty("file.separator", "/") + "AGGREGATES_"+document+".json"
+		);
     }
     
 
 	@Override
 	public String getCorpusDocumentPipelineString(String corpus, String document) throws IOException {
-    	return getCorpusDocumentString(corpus, "/PIPELINE_"+document+".json");
+    	return getCorpusDocumentString(
+    			corpus,
+				"Analyze" + System.getProperty("file.separator", "/") + "PIPELINE_"+document+".json"
+    	);
 	}
 
 	@Override
 	public JsonNode getCorpusDocumentPipelineJson(String corpus, String document) throws IOException {
-    	return getCorpusDocumentJson(corpus, "/PIPELINE_"+document+".json");
+    	return getCorpusDocumentJson(
+				corpus,
+				"Analyze" + System.getProperty("file.separator", "/") + "PIPELINE_"+document+".json"
+		);
 	}
 
 	@Override
 	public String getCorpusDocumentStanfordString(String corpus, String document) throws IOException {
-    	return getCorpusDocumentString(corpus, "/STANFORD_"+document+".json");
+    	return getCorpusDocumentString(
+				corpus,
+				"Analyze" + System.getProperty("file.separator", "/") + "STANFORD_"+document+".json"
+		);
 	}
 
 	@Override
 	public JsonNode getCorpusDocumentStanfordJson(String corpus, String document) throws IOException {
-    	return getCorpusDocumentJson(corpus, "/STANFORD_"+document+".json");
+    	return getCorpusDocumentJson(
+				corpus,
+				"Analyze" + System.getProperty("file.separator", "/") + "STANFORD_"+document+".json"
+		);
 	}
 	
 	@Override
@@ -247,32 +295,49 @@ public class FileStorage implements IStorage {
 	
 	@Override
     public String getCorpusDocumentTfidfString(String corpus, String document) throws IOException {
-    	return getCorpusDocumentString(corpus, "/CoreNLPTfidf/TfidfScores_"+document+".json");
+    	return getCorpusDocumentString(
+    			corpus, 
+				"CoreNLPTfidf" + System.getProperty("file.separator", "/") + "TfidfScores_"+document+".json"
+		);
 	}
     
 	@Override
     public JsonNode getCorpusDocumentTfidfJson(String corpus, String document) throws IOException {
-    	return getCorpusDocumentJson(corpus, "/CoreNLPTfidf/TfidfScores_"+document+".json");
+    	return getCorpusDocumentJson(
+    			corpus, 
+				"CoreNLPTfidf" + System.getProperty("file.separator", "/") + "TfidfScores_"+document+".json"
+		);
 	}
 
 	@Override
     public String getCorpusDocumentZString(String corpus, String document) throws IOException {
-    	return getCorpusDocumentString(corpus, "CoreNLPZ/ZScores_"+document+".json");
+    	return getCorpusDocumentString(
+    			corpus, 
+				"CoreNLPZ" + System.getProperty("file.separator", "/") + "ZScores_"+document+".json"
+		);
 	}
 	
 	@Override
     public JsonNode getCorpusDocumentZJson(String corpus, String document) throws IOException {
-    	return getCorpusDocumentJson(corpus, "CoreNLPZ/ZScores_"+document+".json");
+    	return getCorpusDocumentJson(
+    			corpus, 
+				"CoreNLPZ" + System.getProperty("file.separator", "/") + "ZScores_"+document+".json");
 	}
 	
 	@Override
     public String getCorpusAggregatesMBString(String corpus) throws IOException {
-    	return getCorpusDocumentString(corpus, "/CORPUS_AGGREGATES_MB.json");
+    	return getCorpusDocumentString(
+    			corpus,
+				"CorpusAggregate" + System.getProperty("file.separator", "/") + "CORPUS_AGGREGATES_MB.json"
+    	);
     }
     
 	@Override
     public JsonNode getCorpusAggregatesMBJson(String corpus) throws IOException {
-    	return getCorpusDocumentJson(corpus, "/CORPUS_AGGREGATES_MB.json");
+    	return getCorpusDocumentJson(
+    			corpus,
+				"CorpusAggregate" + System.getProperty("file.separator", "/") + "CORPUS_AGGREGATES_MB.json"
+    	);
     }
 	
 	@Override
