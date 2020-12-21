@@ -21,7 +21,7 @@
 		<maven-cargo-plugin.version>1.7.15</maven-cargo-plugin.version>
 		
 		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
-		<javax.servlet-api.version>3.1.0</javax.servlet-api.version>
+		<javax.servlet-api.version>4.0.1</javax.servlet-api.version>
 		
 		<!-- https://mvnrepository.com/artifact/javax.servlet/jsp-api -->
 		<jsp-api.version>2.0</jsp-api.version>
