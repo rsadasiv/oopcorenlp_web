@@ -84,7 +84,7 @@ public class CorpusDocumentAnnotationsZScores extends AbstractOOPCacheableServle
 			    		zScore = (documentScore.subtract(corpusMean)).divide(corpusStddev, 10, RoundingMode.HALF_DOWN);
 		    		}
 		    		ObjectNode r = createObjectTidy(0, annotationName, zScore);
-			    	r.put("documentScore", new BigDecimal(documentAnnotationScoreStatsScore.get("normalized").asDouble()));    		
+			    	r.put("documentScore", new BigDecimal(documentAnnotationScoreStatsScore.get(aggregateName).asDouble()));    		
 			    	r.put("corpusStddev", new BigDecimal(corpusAnnotationScoreStatsScore.get("stddev").asDouble()));
 			    	r.put("corpusMin", new BigDecimal(corpusAnnotationScoreStatsScore.get("min").asDouble()));
 			    	r.put("corpusMean", new BigDecimal(corpusAnnotationScoreStatsScore.get("mean").asDouble()));
