@@ -79,7 +79,13 @@
 		  border-bottom: 1px solid black;
 		  border-right: 1px solid black;
 		  border-left: 1px solid black;
-		}		
+		}
+		.bg-highlight1 { background-color: #ed6a5a!important;}
+		.bg-highlight2 { background-color: #f4f1bb!important;}
+		.bg-highlight3 { background-color: #9bc1bc!important;}
+		.bg-highlight4 { background-color: #5ca4a9!important;}
+		.bg-highlight5 { background-color: #e6ebe0!important;}
+			
 	</style>
 </head>
 <body>

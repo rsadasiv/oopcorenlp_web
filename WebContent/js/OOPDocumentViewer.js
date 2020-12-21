@@ -285,12 +285,11 @@ function createAccordionButton(displayName, score, annotationName) {
 	btn.text(displayName +": "+score);
 	h5.append(btn);
 	let colors = [
-		"bg-primary",
-		"bg-secondary",
-		"bg-success",
-		"bg-danger",
-		"bg-warning",
-		"bg-info"
+		"bg-highlight1",
+		"bg-highlight2",
+		"bg-highlight3",
+		"bg-highlight4",
+		"bg-highlight5"
 	]
 	colors.forEach(function(color, index) {
 		let cp = $("<div>");
@@ -303,7 +302,7 @@ function createAccordionButton(displayName, score, annotationName) {
 				}
 			}(annotationName));
 		})
-		h5.append(cp);
+		h5.prepend(cp);
 	});
 	return d1;
 }
@@ -371,12 +370,11 @@ function scalarAnnotationToLi(data, annotationName, annotationGroupName) {
 	let lbl = ""
 	li.append("<span data-toggle='toolip' data-placement='right' title='"+fullName+"' boundary='window'>"+displayName+ "</span>: "+ dataValue);
 	let colors = [
-		"bg-primary",
-		"bg-secondary",
-		"bg-success",
-		"bg-danger",
-		"bg-warning",
-		"bg-info"
+		"bg-highlight1",
+		"bg-highlight2",
+		"bg-highlight3",
+		"bg-highlight4",
+		"bg-highlight5"
 	]
 	colors.forEach(function(color, index) {
 		let cp = $("<div>");
@@ -389,7 +387,7 @@ function scalarAnnotationToLi(data, annotationName, annotationGroupName) {
 				}
 			}(annotationGroupName));
 		})
-		li.append(cp);
+		li.prepend(cp);
 	});
 	return li;
 }
