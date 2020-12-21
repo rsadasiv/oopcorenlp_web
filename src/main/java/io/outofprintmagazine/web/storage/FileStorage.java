@@ -112,14 +112,14 @@ public class FileStorage implements IStorage {
 		for (int i=0;i<documents.length;i++) {
 			if (documents[i].getName().substring(0, documents[i].getName().lastIndexOf(".")).startsWith("OOP_")) {
 				String document = documents[i].getName().substring(4, documents[i].getName().lastIndexOf("."));
-				ObjectNode stats = (ObjectNode) getCorpusDocumentJson(
+				JsonNode stats = getCorpusDocumentJson(
 						corpus,
 						"Analyze" + System.getProperty("file.separator", "/") + "OOP_" + document + ".json"
 				);
-				if (stats != null && stats.hasNonNull("metadata")) {
+				if (stats != null && !stats.isNull() && stats.hasNonNull("metadata")) {
 					documentMetadata.put(
 							document,
-							stats.get("metadata").deepCopy()
+							(ObjectNode) stats.get("metadata").deepCopy()
 					);
 				}
 			}
