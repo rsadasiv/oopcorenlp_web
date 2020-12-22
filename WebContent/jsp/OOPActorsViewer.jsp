@@ -246,6 +246,11 @@ if (selectedActor.get("canonicalName") != null) {
 		<%
 		}
 		%>
+		<jsp:include page="include/spacerRow.jsp" />			
+		<div class="row justify-content-center">
+			<div class="col justify-content-center" id="cloudViz">
+			</div>
+		</div>
 		
 		<jsp:include page="include/spacerRow.jsp" />
 		<div class="row">
@@ -348,13 +353,6 @@ if (selectedActor.get("canonicalName") != null) {
 		<%
 		}
 		%>
-		
-		<jsp:include page="include/spacerRow.jsp" />			
-		<div class="row justify-content-center">
-			<div class="col justify-content-center" id="cloudViz">
-			</div>
-		</div>
-
 	</div>
 	
 	

@@ -56,6 +56,7 @@ ObjectNode stats = (ObjectNode) request.getAttribute("Stats");
 		makeSentenceAnnotationBarChart("OOPPeopleAnnotation", "#OOPPeopleAnnotationViz");
 		makeSentenceAnnotationSubannotationBarChart("OOPPunctuationMarkAnnotation", "Quotation", "#OOPPunctuationMarkAnnotationViz");
 		makeSentenceAnnotationStackedBarChart(["OOPVerbsAnnotation", "OOPActionlessVerbsAnnotation"], "#OOPVerbsAnnotationViz", "Verbs");
+		makeSentenceAnnotationStackedBarChart(["OOPAdjectivesAnnotation", "OOPAdverbsAnnotation"], "#OOPModifiersAnnotationViz", "Descriptions");
 		makeMyersBriggsPie(
 				[
 					{"id": 0, "name": "Introvert", "value": <%=request.getAttribute("introvert") %>},
@@ -111,7 +112,9 @@ ObjectNode stats = (ObjectNode) request.getAttribute("Stats");
 
 			<div class="col" id="OOPPeopleAnnotationViz"></div>		
 
-			<div class="col" id="OOPVerbsAnnotationViz"></div>		
+			<div class="col" id="OOPVerbsAnnotationViz"></div>
+			
+			<div class="col" id="OOPModifiersAnnotationViz"></div>
 		</div>
 		
 		<jsp:include page="include/spacerRow.jsp" />

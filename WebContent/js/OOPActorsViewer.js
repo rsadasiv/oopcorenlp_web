@@ -84,6 +84,6 @@ function drawVegaCloud(data, svgName) {
 	  ]
 	}
 ;
-	vegaEmbed(svgName, chartSpec);	
+	vegaEmbed(svgName, chartSpec, {"renderer": "svg"});	
 	
 }	

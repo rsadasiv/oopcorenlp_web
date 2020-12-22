@@ -133,7 +133,7 @@ function drawVegaCloud(data, svgName, title) {
 	    }
 	  ]
 	};
-	vegaEmbed(svgName, chartSpec);
+	vegaEmbed(svgName, chartSpec, {"renderer": "svg"});
 }	
 
 

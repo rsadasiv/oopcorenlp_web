@@ -55,6 +55,6 @@ function drawVegaBarChart(data, annotation, svgName, valueName) {
 		    ],
 		  }
 		};	
-	vegaEmbed(svgName, chartSpec);	
+	vegaEmbed(svgName, chartSpec, {"renderer": "svg"});	
 	
 }
