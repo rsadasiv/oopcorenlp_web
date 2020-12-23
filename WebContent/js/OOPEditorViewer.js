@@ -72,7 +72,7 @@ function getEditorAnnotationsSentence(sentence, normalSentenceLength) {
 		"OOPVerblessSentencesAnnotation" : 0
 	};
 	let annotationsDesc = {
-		"OOPFleschKincaidAnnotation" : .8
+		//"OOPFleschKincaidAnnotation" : .8
 	};
 	
 	let retval = '<div class="popover-message">';
@@ -103,17 +103,31 @@ function getEditorAnnotationsToken(token) {
 		"OOPPointlessAdverbsAnnotation",
 		"OOPPointlessAdjectivesAnnotation",
 		"OOPNonAffirmativeAnnotation",
-		"OOPAngliciseAnnotation"
+		"OOPAngliciseAnnotation",
+		"OOPAmericanizeAnnotation"
 	];
 	let subAnnotations = {
 		"OOPTemporalNGramsAnnotation" : "novel",
 		"OOPBiberAnnotation" : "PASS",
 		"OOPBiberAnnotation" : "EX"
 	};
+	let pairedAnnotations = [
+		{
+			"srcAnnotation": "OOPPronounAnnotation",
+			"srcSubAnnotation": "she", 
+			"targetAnnotation": "OOPPeopleAnnotation",
+			"message": "No antecedent"
+		},
+		{
+			"srcAnnotation": "OOPPronounAnnotation",
+			"srcSubAnnotation": "he", 
+			"targetAnnotation": "OOPPeopleAnnotation",
+			"message": "No antecedent"
+		}		
+	];
 	let retval = '<div class="popover-message">';
 	for (let scoreName in token) {
 		if (annotations.includes(scoreName)) {
-			console.log(token);
 			if (isNumber(token[scoreName])) {
 				if (token[scoreName] > 0) {
 					retval += ("<p>" + getAnnotationDisplayName(scoreName) + "</p>");
@@ -123,17 +137,34 @@ function getEditorAnnotationsToken(token) {
 				retval += ("<p>" + token[scoreName] + "</p>");
 			}				
 		}
-		else if (annotationsLemma.includes(scoreName)) {
+		if (annotationsLemma.includes(scoreName)) {
 			let lemma = token["TokensAnnotation"].lemma;
 			if (token[scoreName][lemma] > 0) {
 				retval += ("<p>" + getAnnotationDisplayName(scoreName) + "</p>");
 			}
 		}
-		else if (Object.keys(subAnnotations).includes(scoreName)) {
+		if (Object.keys(subAnnotations).includes(scoreName)) {
 			if (Object.keys(token[scoreName]).includes(subAnnotations[scoreName])) {
 				retval += ("<p>" + getAnnotationDisplayName(scoreName) + ": " + subAnnotations[scoreName] + "</p>");
 			}
 		}
+		pairedAnnotations.forEach(function(rule, idx) {
+			if (rule.srcAnnotation == scoreName) {
+				if (rule.hasOwnProperty("srcSubAnnotation")) {
+					if (token[scoreName].hasOwnProperty([rule.srcSubAnnotation])) {
+						if (!token.hasOwnProperty(rule.targetAnnotation)) {
+							retval += ("<p>" + rule.message + "</p>");
+						}						
+					}
+				
+				}
+				else {
+					if (!token.hasOwnProperty(rule.targetAnnotation)) {
+						retval += ("<p>" + rule.message + "</p>");
+					}
+				}
+			}			
+		});
 	}
 	retval += "</div>";
 	return retval;

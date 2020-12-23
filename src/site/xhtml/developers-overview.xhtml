@@ -8,9 +8,11 @@
 		<p>
 			oopcorenlp_web is a java web application (war). This is not a React/Angular style Single Page App; routes are driven collaboratively via URLs.<br/>
 			oopcorenlp_web uses the <a href="https://maven.apache.org/">maven</a> (v3.6.3) toolchain.<br/>
-			The back end follows a servlet -> jsp -> js architectural pattern and the front end is javascript v8 code leveraging jQuery, Bootstrap, and vega-lite.<br/> 
+			The back end follows a servlet -> jsp -> js architectural pattern and the front end is javascript v8 code leveraging <a href="https://jquery.com/">jQuery</a>, <a href="https://getbootstrap.com/">Bootstrap</a>, and <a href="https://vega.github.io/">Vega</a>.<br/>
+			The back end also provides two REST interfaces: /rest/browse and /rest/api.
 			The back end is unencrypted, unauthenticated, stateless and read-only; it only supports the HTTP GET verb and does not maintain HTTP sessions.<br/>
-			While there is a lot of javascript code in the project, oopcorenlp_web does not use any sort of javascript minification or webpack tooling.<br/>				
+			While there is a lot of javascript code in the project, oopcorenlp_web does not use any sort of javascript minification or webpack tooling. Everything loads in the browser via CDN link. The only exception is:<br/>
+			The StanfordBratViewer uses the<a href="http://brat.nlplab.org/">brat visualisation/annotation software</a> via code from the <a href="https://stanfordnlp.github.io/CoreNLP/">CoreNLP package</a>.<br/>				
 		</p>
 		<p>
 			The back end has been tested under <a href="https://tomcat.apache.org/index.html">Tomcat</a> (v9.0.x).

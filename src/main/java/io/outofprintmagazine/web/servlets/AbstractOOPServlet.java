@@ -121,6 +121,7 @@ public abstract class AbstractOOPServlet extends HttpServlet {
 		Element currentParagraphNode = null;
 		ArrayNode sentences = (ArrayNode) stats.get("sentences");
 		Iterator<JsonNode> sentencesIter = sentences.iterator();
+		Element prependTokenNode = null;
 		while (sentencesIter.hasNext()) {
 			JsonNode sentence = sentencesIter.next();
 			if (sentence.get("ParagraphIndexAnnotation").asInt(-1) > paragraphIdx) {
@@ -135,16 +136,51 @@ public abstract class AbstractOOPServlet extends HttpServlet {
 			sentenceNode.appendTo(currentParagraphNode);
 			ArrayNode tokens = (ArrayNode) sentence.get("tokens");
 			Iterator<JsonNode> tokensIter = tokens.iterator();
+			boolean firstToken = true;
+			JsonNode previousToken = null;
 			while (tokensIter.hasNext()) {
 				JsonNode token = tokensIter.next();
-				sentenceNode.append(token.get("TokensAnnotation").get("before").asText());
-				Element tokenNode = new Element("span");
-				tokenNode.attr("id", "token_"+tokenIdx);
-				tokenNode.attr("class", "token");
-				tokenNode.text(token.get("TokensAnnotation").get("originalText").asText());
-				tokenNode.appendTo(sentenceNode);
-				
+				if (firstToken) {
+					if (prependTokenNode != null) {
+						prependTokenNode.appendTo(sentenceNode);
+					}
+					prependTokenNode = null;
+					firstToken = false;
+				}
+				if (tokensIter.hasNext()) {
+					sentenceNode.append(token.get("TokensAnnotation").get("before").asText());
+					Element tokenNode = new Element("span");
+					tokenNode.attr("id", "token_"+tokenIdx);
+					tokenNode.attr("class", "token");
+					tokenNode.text(token.get("TokensAnnotation").get("originalText").asText());
+					tokenNode.appendTo(sentenceNode);
+				}
+				//british quotes
+				else {
+					if (
+						token.get("TokensAnnotation").get("originalText").asText().equals("\"") &&
+						previousToken != null &&
+						(
+								previousToken.get("TokensAnnotation").get("originalText").asText().equals(".") ||
+								previousToken.get("TokensAnnotation").get("originalText").asText().equals("?")
+						)
+					) {
+						prependTokenNode = new Element("span");
+						prependTokenNode.attr("id", "token_"+tokenIdx);
+						prependTokenNode.attr("class", "token");
+						prependTokenNode.text(token.get("TokensAnnotation").get("originalText").asText());
+					}
+					else {
+						sentenceNode.append(token.get("TokensAnnotation").get("before").asText());
+						Element tokenNode = new Element("span");
+						tokenNode.attr("id", "token_"+tokenIdx);
+						tokenNode.attr("class", "token");
+						tokenNode.text(token.get("TokensAnnotation").get("originalText").asText());
+						tokenNode.appendTo(sentenceNode);
+					}
+				}
 				tokenIdx++;
+				previousToken = token;
 			}
 		}
 		
