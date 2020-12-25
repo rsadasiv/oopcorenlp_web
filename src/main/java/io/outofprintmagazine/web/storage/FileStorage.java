@@ -99,7 +99,12 @@ public class FileStorage implements IStorage {
 			String corpus = directories[i].getName();
 			Map<String, ObjectNode> documentMetadata = new HashMap<String, ObjectNode>();
 			corpusDocumentMetadata.put(corpus, documentMetadata);
-			initCorpusDocumentMetadata(corpus, documentMetadata);
+			try {
+				initCorpusDocumentMetadata(corpus, documentMetadata);
+			}
+			catch (Exception e) {
+				getLogger().info(e);
+			}
 		}
 	}
 	
