@@ -431,7 +431,7 @@ public class FileStorage implements IStorage {
 					getCorpusFilePath(corpus, "DocumentWord2Vec/Lemmas_POS_"+document+".word2vec")
 			);
 			for (VocabWord vocabWord : vec.getVocab().vocabWords()) {
-				if (vocabWord.getWord().startsWith(lemma)) {
+				if (vocabWord.getWord().startsWith(lemma + "_")) {
 					ArrayNode similarity = retval.putArray(vocabWord.getWord());
 					for (String similarWord : vec.wordsNearest(vocabWord.getWord(), 25)) {
 						double cosSim = vec.similarity(vocabWord.getWord(), similarWord);

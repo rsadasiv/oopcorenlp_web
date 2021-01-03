@@ -10,26 +10,89 @@
 			oopcorenlp_web is an extensible web application that allows users to browse, interact, visualize, and analyze oopcorenlp output.
 		</p>
 		<p>
-			The front end has been tested on recent versions of Chrome, Firefox, and Edge.<br />
-			Some visualizations require a lot of pixels. Don't try to run this on your phone.<br />
+			The front end has been tested on recent versions of Chrome, Firefox, and Edge for PC, iPad, and iPhone.<br />
+			The Vega visualizations use a mouseover verb that works best on PC.<br />
 			Some endpoints return raw JSON. Installing a browser plugin such as JSON Formatter will make reading these responses in the browser much more pleasant.<br />
 			Some JSON documents can be quite large. A stand-alone JSON tool such as Huge JSON Viewer will make navigating full documents outside the webapp much more pleasant.<br />
 		</p>
 		<p>
-			Does this text tell a story? <a href="OOPCorpusDocumentAnnotationZScoresViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1&amp;TargetCorpus=Chekhov&amp;Annotation=OOPBiberDimensionsAnnotation&amp;AggregateName=normalized">
+			Does this text tell a story? <a href="https://beta.outofprintmagazine.io/oopcorenlp_web/OOPCorpusDocumentAnnotationZScoresViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1&amp;TargetCorpus=Chekhov&amp;Annotation=OOPBiberDimensionsAnnotation&amp;AggregateName=normalized">
 				Biber Dimension Two
 			</a><br />
-			Does this text create a world? <a href="OOPCorpusDocumentAnnotationZScoresViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1&amp;TargetCorpus=Chekhov&amp;Annotation=OOPBiberDimensionsAnnotation&amp;AggregateName=normalized">
+			Does this text create a world? <a href="https://beta.outofprintmagazine.io/oopcorenlp_web/OOPCorpusDocumentAnnotationZScoresViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1&amp;TargetCorpus=Chekhov&amp;Annotation=OOPBiberDimensionsAnnotation&amp;AggregateName=normalized">
 				Biber Dimension Three
 			</a><br />
-			What is this text about? <a href="OOPCorpusDocumentAnnotationTfidfViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1&amp;TargetCorpus=Chekhov">TFIDF</a><br />
-			Who is this text about? <a href="OOPActorsViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1n">Named Entity Recognition</a><br />
-			If you are interested in X, you might be interested in this. <a href="OOPCloudViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1&amp;Annotation=OOPWikipediaPageviewTopicsAnnotation">
+			What is this text about? <a href="https://beta.outofprintmagazine.io/oopcorenlp_web/OOPCorpusDocumentAnnotationTfidfViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1&amp;TargetCorpus=Chekhov">TFIDF</a><br />
+			Who is this text about? <a href="https://beta.outofprintmagazine.io/oopcorenlp_web/OOPActorsViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1n">Named Entity Recognition</a><br />
+			If you are interested in X, you might be interested in this. <a href="https://beta.outofprintmagazine.io/oopcorenlp_web/OOPCloudViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1&amp;Annotation=OOPWikipediaPageviewTopicsAnnotation">
 				Wikipedia Pageviews
 			</a><br/>			
-			Does this text need copy editing? <a href="OOPEditorViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1">Perfecttense</a><br />
-			How are you drawing these conclusions? <a href="OOPDocumentViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1">OOP NLP</a><br />
-			I need to see the details. <a href="StanfordBratViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1">Core NLP</a><br />
+			Does this text need copy editing? <a href="https://beta.outofprintmagazine.io/oopcorenlp_web/OOPEditorViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1">Perfecttense</a><br />
+			How are you drawing these conclusions? <a href="https://beta.outofprintmagazine.io/oopcorenlp_web/OOPDocumentViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1">OOP NLP</a><br />
+			I need to see the details. <a href="https://beta.outofprintmagazine.io/oopcorenlp_web/StanfordBratViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1">Core NLP</a><br />
 		</p>
+		<p>
+			<h3>Specific example: The Lady with the Dog</h3>
+
+			<ul>
+				<li>
+					<a href="https://beta.outofprintmagazine.io/oopcorenlp_web/CorpusDocumentsViewer?Corpus=Chekhov">
+						It is the most typical story in the corpus.
+					</a>
+				</li>
+				<li>
+					<a href="https://beta.outofprintmagazine.io/oopcorenlp_web/OOPStoryArcViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1">
+						It uses the most common literary POV: 3rd person, past tense, male protagonist. It has a common mix of sentence length, sentiment, dialog, action, and description.
+					</a>
+				</li>
+				<li>
+					<a href="https://beta.outofprintmagazine.io/oopcorenlp_web/OOPCloudViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1&amp;Annotation=OOPPeopleAnnotation">
+						It’s a two-hander; the two actors are Dmitri Dmitritch Gurov and Anna Sergeyevna.
+					</a>
+				</li>
+				<li>
+					<a href="https://beta.outofprintmagazine.io/oopcorenlp_web/OOPActorsViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1&amp;Actor=Dmitri%20Dmitritch%20Gurov">
+						Dmitri Dmitritch Gurov is the most important character. He is a Russian man, and he has a wife and daughter. He appears in the first sentence and throughout, and his personality type (INTJ) closely matches the overall personality type of the document (INTJ).
+					</a>
+				</li>
+				<li>
+					<a href="https://beta.outofprintmagazine.io/oopcorenlp_web/OOPActorsViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1&amp;Actor=Anna%20Sergeyevna">
+						Anna Sergeyevna is the second most important character. She is a woman, and she has a husband. She appears in the first fifth of the story and remains throughout, and her personality type (INTJ) closely matches the overall personality type of the document (INTJ), although she is less Judging and more Perceiving than Dmitri Dmitritch Gurov is.					
+					</a>
+				</li>
+				<li>
+					Her dog is introduced before we know her name, but, spoiler alert, she also has a <a href="https://beta.outofprintmagazine.io/oopcorenlp_web/OOPCorpusDocumentAnnotationTfidfViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1&amp;TargetCorpus=Chekhov&amp;Annotation=OOPWordsAnnotation">dog</a>,
+					and the dog is a <a href="https://beta.outofprintmagazine.io/oopcorenlp_web/OOPLexiconViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1&amp;Subannotation=dog">Pomeranian</a>.					
+				</li>
+				<li>
+					<a href="https://beta.outofprintmagazine.io/oopcorenlp_web/OOPCloudViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1&amp;Annotation=OOPLocationsAnnotation">
+						The story takes place in Moscow and Yalta.
+					</a>
+				</li>
+				<li>
+					There are many good candidates for pull quotes, but I like the last sentence: <br/>
+					<a href="https://beta.outofprintmagazine.io/oopcorenlp_web/OOPPullQuotesViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1">
+						"And it seemed as though in a little while the solution would be found, and then a new and splendid life would begin; and it was clear to both of them that they had still a long, long road before them, and that the most complicated and difficult part of it was only just beginning."
+					</a>
+				</li>
+				<li>
+					<a href="https://beta.outofprintmagazine.io/oopcorenlp_web/OOPStreamViewer?Corpus=Chekhov&apm;Document=bbca725652284b0f7848783adab8cbe">
+						Happier sentences are also longer sentences.
+					</a>
+				</li>
+				<li>
+					<a href="https://beta.outofprintmagazine.io/oopcorenlp_web/OOPPullQuotesViewer?Corpus=Chekhov&Document=bbca725652284b0f7848783adab8cbe1">
+						The saddest sentences are given to Anna Sergeyevna.
+					</a>
+				</li>				
+				<li>
+					Gurov's wife and Moscow friends refer to him as "Dimitri", while in his scenes with Anna he is referred to as "Dmitri". 
+					<a href="https://beta.outofprintmagazine.io/oopcorenlp_web/OOPActorsViewer?Corpus=Chekhov&amp;Document=bbca725652284b0f7848783adab8cbe1&amp;Actor=Dimitri">
+						"Dimitri" is both a different personality type (ISTJ) and is portrayed more positively than "Dmitri".
+					</a>
+				</li>																						
+			</ul>
+
+		</p>		
 	</body>
 </html>
