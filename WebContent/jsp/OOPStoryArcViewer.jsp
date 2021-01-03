@@ -53,7 +53,8 @@ ObjectNode stats = (ObjectNode) request.getAttribute("Stats");
     	makeDocumentAnnotationDonutChart("OOPVerbTenseAnnotation", "#OOPVerbTenseAnnotationDonut");
 		makeSentenceAnnotationBarChart("OOPFleschKincaidAnnotation", "#OOPFleschKincaidAnnotationViz");
 		makeSentenceAnnotationBarChart("VaderSentimentAnnotation", "#VaderSentimentAnnotationViz");
-		makeSentenceAnnotationBarChart("OOPPeopleAnnotation", "#OOPPeopleAnnotationViz");
+		//makeSentenceAnnotationBarChart("OOPPeopleAnnotation", "#OOPPeopleAnnotationViz");
+		makeSentenceAnnotationTop5StackedBarChart("OOPPeopleAnnotation", "#OOPPeopleAnnotationViz", "OOPPeopleAnnotation", 5)
 		makeSentenceAnnotationSubannotationBarChart("OOPPunctuationMarkAnnotation", "Quotation", "#OOPPunctuationMarkAnnotationViz");
 		makeSentenceAnnotationStackedBarChart(["OOPVerbsAnnotation", "OOPActionlessVerbsAnnotation"], "#OOPVerbsAnnotationViz", "Verbs");
 		makeSentenceAnnotationStackedBarChart(["OOPAdjectivesAnnotation", "OOPAdverbsAnnotation"], "#OOPModifiersAnnotationViz", "Descriptions");

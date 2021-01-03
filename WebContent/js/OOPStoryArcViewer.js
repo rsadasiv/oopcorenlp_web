@@ -147,11 +147,25 @@ function getAnnotationData(annotationNames) {
 				if (attempts == annotationNames.length) {
 					promise.resolve(annotationData);
 				}
-			},
-			function(similarity) {
+			}
+		)	
+	})
+	return promise.promise();
+}
+
+function getAnnotationSubannotationData(annotationName, subannotationNames) {
+	let promise = $.Deferred();
+	let subannotationData = new Array();
+	let attempts = 0;
+	subannotationNames.forEach(function(subannotationName) {
+		let baseUrl = "rest/api/SentencesAnnotationSubannotationScalar?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName+"&Subannotation="+subannotationName;
+		$.ajax(baseUrl)
+		.then(
+			function(data) {
+				subannotationData = subannotationData.concat(data)
 				attempts = attempts + 1;
-				if (attempts == annotationNames.length) {
-					promise.resolve(annotationData);
+				if (attempts == subannotationNames.length) {
+					promise.resolve(subannotationData);
 				}
 			}
 		)	
@@ -166,6 +180,26 @@ function makeSentenceAnnotationStackedBarChart(annotationNames, svgName, title) 
 			drawVegaStackedBarChart(data, svgName, title)
 		}
 	)	
+}
+
+function makeSentenceAnnotationTop5StackedBarChart(annotationName, svgName, title, filter = 0) {	
+	//get the subannotation ranks
+	let baseUrl = "rest/api/DocumentAnnotation?Corpus="+getProperties()["corpus"]+"&Document="+getProperties()["docId"]+"&Annotation="+annotationName;
+	$.ajax(baseUrl)
+	.then(
+		function(rankedSubannotations) {
+			let subannotationNames = [];
+			for (let i=0;i<filter;i++) {
+				subannotationNames.push(rankedSubannotations[i].name);
+			}
+			getAnnotationSubannotationData(annotationName, subannotationNames)
+			.then(
+				function(data) {
+					drawVegaStackedBarChart(data, svgName, title)
+				}
+			)				
+		}
+	)		
 }
 
 function drawVegaBarChart(data, svgName, title) {
@@ -191,7 +225,6 @@ function drawVegaBarChart(data, svgName, title) {
 
 
 function drawVegaStackedBarChart(data, svgName, title) {
-	console.log(data);
 	let chartSpec = {
 			  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
 			  "description": "A simple bar chart with embedded data.",
