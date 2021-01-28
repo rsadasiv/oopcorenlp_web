@@ -18,7 +18,7 @@
 		
 		<maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
 		<maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
-		<maven-cargo-plugin.version>1.7.15</maven-cargo-plugin.version>
+		<maven-cargo-plugin.version>1.8.5</maven-cargo-plugin.version>
 		
 		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
 		<javax.servlet-api.version>3.1.0</javax.servlet-api.version>
