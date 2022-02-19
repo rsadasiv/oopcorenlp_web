@@ -32,7 +32,7 @@
 		<!-- https://mvnrepository.com/artifact/org.glassfish.jersey.core/jersey-common -->
 		<!-- https://mvnrepository.com/artifact/org.glassfish.jersey.containers/jersey-container-servlet -->	
 		<!-- https://mvnrepository.com/artifact/org.glassfish.jersey.containers/jersey-container-servlet-core -->
-		<jersey-container.version>2.31</jersey-container.version>
+		<jersey-container.version>3.0.4</jersey-container.version>
 
 		<!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-core -->
 		<!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-jaxrs2 -->
