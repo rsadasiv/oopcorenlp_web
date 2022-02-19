@@ -39,7 +39,7 @@
 		<swagger-v3.version>2.1.4</swagger-v3.version>
 
 		<!-- https://mvnrepository.com/artifact/io.openapitools.swagger/swagger-maven-plugin -->
-		<swagger-maven-plugin.version>2.1.5</swagger-maven-plugin.version>
+		<swagger-maven-plugin.version>2.1.6</swagger-maven-plugin.version>
 		
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
 	    <commons-text.version>1.9</commons-text.version>
