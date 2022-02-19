@@ -13,7 +13,7 @@
 	</parent>
 
 	<properties>
-		<maven-war-plugin.version>3.3.1</maven-war-plugin.version>
+		<maven-war-plugin.version>3.3.2</maven-war-plugin.version>
 		<tomcat7-maven-plugin.version>2.2</tomcat7-maven-plugin.version>
 		
 		<maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
@@ -36,10 +36,10 @@
 
 		<!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-core -->
 		<!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-jaxrs2 -->
-		<swagger-v3.version>2.1.4</swagger-v3.version>
+		<swagger-v3.version>2.1.7</swagger-v3.version>
 
 		<!-- https://mvnrepository.com/artifact/io.openapitools.swagger/swagger-maven-plugin -->
-		<swagger-maven-plugin.version>2.1.5</swagger-maven-plugin.version>
+		<swagger-maven-plugin.version>2.1.6</swagger-maven-plugin.version>
 		
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
 	    <commons-text.version>1.9</commons-text.version>
