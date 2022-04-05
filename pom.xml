@@ -36,7 +36,7 @@
 
 		<!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-core -->
 		<!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-jaxrs2 -->
-		<swagger-v3.version>2.1.13</swagger-v3.version>
+		<swagger-v3.version>2.2.0</swagger-v3.version>
 
 		<!-- https://mvnrepository.com/artifact/io.openapitools.swagger/swagger-maven-plugin -->
 		<swagger-maven-plugin.version>2.1.6</swagger-maven-plugin.version>
