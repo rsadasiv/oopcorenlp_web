@@ -42,7 +42,7 @@
 		<swagger-maven-plugin.version>2.1.6</swagger-maven-plugin.version>
 		
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
-	    <commons-text.version>1.9</commons-text.version>
+	    <commons-text.version>1.10.0</commons-text.version>
 		
 
 	</properties>
